@@ -1,0 +1,23 @@
+{
+  # We expect this environment variable to be a valid Caddy global config
+  # for example, "email user@example.com" or "auto_https off"
+  {$CADDY_GLOBAL_OPTIONS}
+}
+
+{$CADDY_HOST}  # Set host with environment variable
+
+route {
+    reverse_proxy /api* server:4567
+    try_files {path} {path}/ /
+    file_server
+}
+
+@static {
+  file
+  path *.ico *.css *.js *.gif *.jpg *.jpeg *.png *.svg *.webp *.woff *.woff2 *.ttf *.otf *.eot
+}
+
+header @static Cache-Control max-age=5184000
+
+encode zstd gzip
+

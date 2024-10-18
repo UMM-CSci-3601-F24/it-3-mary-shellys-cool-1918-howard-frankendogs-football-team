@@ -1,0 +1,46 @@
+$borderSize: 5px;
+.cell {
+  width:  100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: $borderSize solid rgb(182, 182, 182);
+  box-sizing: border-box;
+  $borderSize: calc(.125 * width);
+}
+
+.bold-top {
+  border-top: $borderSize solid rgb(0, 0, 0);
+}
+.bold-right {
+  border-right: $borderSize solid rgb(0, 0, 0);
+}
+.bold-bottom {
+  border-bottom: $borderSize solid rgb(0, 0, 0);
+}
+.bold-left {
+  border-left: $borderSize solid rgb(0, 0, 0);
+}
+
+.cell-input {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  border: none;
+}
+
+.cell-input:focus {
+  outline: none !important;
+  border:1px solid rgb(0, 0, 0);
+  box-shadow: 0 3px 3px #818181;
+  border-radius: 15%;
+}
+
+.cell-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

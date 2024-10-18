@@ -1,0 +1,12 @@
+docker-compose*
+.dockerignore
+.git
+.gitignore
+README.md
+LICENSE
+.vscode
+
+.gradle
+.settings
+.classpath
+.project
