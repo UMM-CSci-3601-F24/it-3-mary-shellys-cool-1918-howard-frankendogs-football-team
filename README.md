@@ -8,6 +8,8 @@
 - [Changing the name](#changing-the-name)
 - [Contributors](#contributors)
 
+Josie, El, Owen, Iteration 2, fall 2024 
+
 This is your starter code for Iteration 1.
 
 There is quite a lot of example code in this production template that you don't
