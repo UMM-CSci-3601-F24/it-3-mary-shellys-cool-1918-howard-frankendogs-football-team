@@ -25,10 +25,12 @@ import { Router } from '@angular/router';
 export class AddWordComponent {
   addWordForm = new FormGroup({
     word: new FormControl('', Validators.compose([
+      //requires field to be non-empty and at lease one character
       Validators.required,
       Validators.minLength(1)
     ])),
     wordGroup: new FormControl('', Validators.compose([
+      //requires field to be non-empty and at lease one character
       Validators.required,
       Validators.minLength(1),
     ])),
@@ -68,11 +70,13 @@ export class AddWordComponent {
   submitForm() {
     this.wordService.addWord(this.addWordForm.value).subscribe({
       next: () => {
+        // Generates a snackBar message
         this.snackBar.open(
           `Added word group: ${this.addWordForm.value.wordGroup}`,
           null,
           {duration: 2000}
         );
+        // brings you back to main anagram page
         this.router.navigate(['/anagram']);
       },
       error: err => {

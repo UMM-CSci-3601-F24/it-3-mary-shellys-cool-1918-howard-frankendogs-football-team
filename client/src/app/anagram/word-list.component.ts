@@ -88,6 +88,8 @@ export class WordListComponent {
     );
 
   filteredWords = computed(() => {
+    // takes list of words returned by server
+    // then sends them through the client side sortWords)
     const serverFilteredWords = this.serverFilteredWords();
     return this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
@@ -95,24 +97,28 @@ export class WordListComponent {
     });
   });
 
+  /**
+   * calls deleteWord and returns a snackbar
+   * @param id - id of word to be deleted
+   */
   deleteWord(id: string) {
-    // const tempSortType = this.sortType.toString;
     this.wordService.deleteWord(id).subscribe(() => {
-      // this is to refresh the page eventually
-      // this.sortType.set(undefined);
-      // this.sortType.set(tempSortType.toString());
+      /* this is to refresh the page eventually
+        also could delete from both client and sever to refresh
+       this.sortType.set(undefined);
+       this.sortType.set(tempSortType.toString()); */
       this.snackBar.open(`We deleted a word!`, 'OK', {duration: 6000});
     })
   }
 
+  /**
+   * Deletes all words in the wordGroup
+   * pulls group from the wordGroup search box as of 10/20/24
+   * @param group - name of wordGroup to be deleted
+   */
   deleteWordGroup(group: string) {
     this.wordService.deleteWordGroup(group).subscribe(() => {
       this.snackBar.open(`We deleted a word group!`, 'OK', {duration: 6000});
     })
-    // if(group.length >= 1) {
-
-    // } else {
-    //   this.snackBar.open('Failed to delete word group', 'OK', {duration: 6000});
-    // }
   }
 }

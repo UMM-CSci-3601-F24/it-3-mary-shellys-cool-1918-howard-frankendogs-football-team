@@ -72,13 +72,13 @@ class WordControllerSpec {
 
   @BeforeAll
   static void setupAll() {
-      String mongoAddr = System.getenv().getOrDefault("MONGO_ADDR", "localhost");
+    String mongoAddr = System.getenv().getOrDefault("MONGO_ADDR", "localhost");
 
-      mongoClient = MongoClients.create(
-        MongoClientSettings.builder().applyToClusterSettings(builder ->
-          builder.hosts(Arrays.asList(new ServerAddress(mongoAddr)))).build());
+    mongoClient = MongoClients.create(
+      MongoClientSettings.builder().applyToClusterSettings(builder ->
+      builder.hosts(Arrays.asList(new ServerAddress(mongoAddr)))).build());
 
-          db = mongoClient.getDatabase("test");
+    db = mongoClient.getDatabase("test");
   }
 
   @AfterAll
@@ -87,69 +87,71 @@ class WordControllerSpec {
     mongoClient.close();
   }
 
-    @BeforeEach
-    void setupEach() throws IOException {
-        MockitoAnnotations.openMocks(this);
-        MongoCollection<Document> wordDocuments = db.getCollection("words");
-        wordDocuments.drop();
-        List<Document> testWords = new ArrayList<>();
-        testWords.add(
-            new Document()
-            .append("word", "playstation")
-            .append("wordGroup", "console"));
-        testWords.add(
-            new Document()
-            .append("word", "xbox")
-            .append("wordGroup", "console"));
-        testWords.add(
-            new Document()
-            .append("word", "nintendo")
-            .append("wordGroup", "console"));
-        testWords.add(
-            new Document()
-            .append("word", "skibbidy")
-            .append("wordGroup", "brainrot"));
-        testWords.add(
-            new Document()
-            .append("word", "sigma")
-            .append("wordGroup", "brainrot"));
-        testWords.add(
-            new Document()
-            .append("word", "cooked")
-            .append("wordGroup", "brainrot"));
+  @BeforeEach
+  void setupEach() throws IOException {
+    MockitoAnnotations.openMocks(this);
+    MongoCollection<Document> wordDocuments = db.getCollection("words");
+    wordDocuments.drop();
+    List<Document> testWords = new ArrayList<>();
+      testWords.add(
+        new Document()
+        .append("word", "playstation")
+        .append("wordGroup", "console"));
+      testWords.add(
+        new Document()
+        .append("word", "xbox")
+        .append("wordGroup", "console"));
+      testWords.add(
+        new Document()
+        .append("word", "nintendo")
+        .append("wordGroup", "console"));
+      testWords.add(
+        new Document()
+        .append("word", "skibbidy")
+        .append("wordGroup", "brainrot"));
+      testWords.add(
+        new Document()
+        .append("word", "sigma")
+        .append("wordGroup", "brainrot"));
+      testWords.add(
+        new Document()
+        .append("word", "cooked")
+        .append("wordGroup", "brainrot"));
 
-          wordId = new ObjectId();
-            Document testWordId = new Document()
-            .append("word", "janky")
-            .append("wordGroup", "slang")
-            .append("_id", wordId);
+      wordId = new ObjectId();
+        Document testWordId = new Document()
+        .append("word", "janky")
+        .append("wordGroup", "slang")
+        .append("_id", wordId);
 
-        wordDocuments.insertMany(testWords);
-        wordDocuments.insertOne(testWordId);
+      wordDocuments.insertMany(testWords);
+      wordDocuments.insertOne(testWordId);
 
-        wordController = new WordController(db);
-    }
+      wordController = new WordController(db);
+  }
 
   @Test
   public void canBuildController() throws IOException {
-      Javalin mockServer = Mockito.mock(Javalin.class);
-      wordController.addRoutes(mockServer);
-      //used to be :
-      // verify(mockServer, Mockito.atLeast(2)).get(any(), any());
-      //changed because only have one get function for wordController, reinstate if reinstate get words by group
-      verify(mockServer, Mockito.atLeastOnce()).get(any(), any());
-      verify(mockServer, Mockito.atLeastOnce()).post(any(), any());
-      verify(mockServer, Mockito.atLeastOnce()).delete(any(), any());
+    Javalin mockServer = Mockito.mock(Javalin.class);
+    wordController.addRoutes(mockServer);
+    /*
+     * This tests how many 'get', 'delete' and 'post' routes there are  
+     * Change the get count to: verify(mockServer, Mockito.atLeast(2)).get(any(), any());
+     * when reinstate get words by group
+     */
+    verify(mockServer, Mockito.atLeastOnce()).get(any(), any());
+    verify(mockServer, Mockito.atLeastOnce()).post(any(), any());
+    verify(mockServer, Mockito.atLeastOnce()).delete(any(), any());
   }
 
-    @Test
-    void canGetAllWords() throws IOException {
-        when(ctx.queryParamMap()).thenReturn(Collections.emptyMap());
-        wordController.getWords(ctx);
-        verify(ctx).json(wordArrayListCaptor.capture());
-        verify(ctx).status(HttpStatus.OK);
-        assertEquals(db.getCollection("words").countDocuments(), wordArrayListCaptor.getValue().size());
-    }
+  @Test
+  void canGetAllWords() throws IOException {
+    when(ctx.queryParamMap()).thenReturn(Collections.emptyMap());
+    wordController.getWords(ctx);
+    verify(ctx).json(wordArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(db.getCollection("words").countDocuments(), wordArrayListCaptor.getValue().size());
+  }
 
   @Test
   void canGetTodosWithWordGroupBrainRot() throws IOException {
@@ -452,30 +454,22 @@ class WordControllerSpec {
 //         assertTrue(newWords.stream().anyMatch(word ->
 //             word.get("word").equals(addedWord.get("word"))
 
-@Test
-void deleteListWords() throws IOException {
-    String testWordGroup = "testGroup";
-    db.getCollection("words").insertMany(Arrays.asList(
-        new Document().append("word", "word1").append("wordGroup", testWordGroup),
-        new Document().append("word", "word2").append("wordGroup", testWordGroup),
-        new Document().append("word", "word3").append("wordGroup", "otherGroup") // This shouldn't be deleted
-    ));
-    assertEquals(2, db.getCollection("words")
-      .countDocuments(eq("wordGroup", testWordGroup)));
-    when(ctx.pathParam("wordGroup")).thenReturn(testWordGroup);
-    wordController.deleteListWords(ctx);
-    verify(ctx).status(HttpStatus.OK);
-    assertEquals(0, db.getCollection("words")
-      .countDocuments(eq("wordGroup", testWordGroup)));
-    assertEquals(1, db.getCollection("words")
-      .countDocuments(eq("wordGroup", "otherGroup")));
+  @Test
+  void deleteListWords() throws IOException {
+      String testWordGroup = "testGroup";
+      db.getCollection("words").insertMany(Arrays.asList(
+          new Document().append("word", "word1").append("wordGroup", testWordGroup),
+          new Document().append("word", "word2").append("wordGroup", testWordGroup),
+          new Document().append("word", "word3").append("wordGroup", "otherGroup") // This shouldn't be deleted
+      ));
+      assertEquals(2, db.getCollection("words")
+        .countDocuments(eq("wordGroup", testWordGroup)));
+      when(ctx.pathParam("wordGroup")).thenReturn(testWordGroup);
+      wordController.deleteListWords(ctx);
+      verify(ctx).status(HttpStatus.OK);
+      assertEquals(0, db.getCollection("words")
+        .countDocuments(eq("wordGroup", testWordGroup)));
+      assertEquals(1, db.getCollection("words")
+        .countDocuments(eq("wordGroup", "otherGroup")));
+  }
 }
-
-}
-
-
-
-
-
-
-

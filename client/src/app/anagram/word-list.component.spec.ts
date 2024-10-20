@@ -44,7 +44,7 @@ describe('Word List', () => {
       wordList.serverFilteredWords().some((word: Word) => word.word === 'Mac')
     ).toBe(true);
   });
-  it('has four words in the group `team members`', () => {
+  it('has four words in the group `team member`', () => {
     expect(
       wordList.serverFilteredWords().filter((word: Word) => word.wordGroup === "team member").length
     ).toBe(4);
@@ -54,9 +54,6 @@ describe('Word List', () => {
       wordList.serverFilteredWords().filter((word: Word) => word.wordGroup === "teachers").length
     ).toBe(1);
   });
-  // it('call delete word', () => {
-  //   wordList.deleteWord("Mac_id");
-  // });
 });
 
 describe('misbehaving word list', () => {
@@ -110,6 +107,7 @@ describe('misbehaving word list', () => {
   });
 });
 
+// there is no delete word method implemented in the mock word service
 // describe('delete Word', () => {
 //   let wordList: WordListComponent;
 //   let fixture: ComponentFixture<WordListComponent>;
@@ -130,5 +128,13 @@ describe('misbehaving word list', () => {
 //     });
 //   }));
 
-
+//   it('calls delete word', () => {
+//     expect(
+//       wordList.serverFilteredWords().some((word: Word) => word._id === 'Nic_id')
+//     ).toBe(true);
+//     wordList.deleteWord("Nic_id");
+//     expect(
+//       wordList.serverFilteredWords().some((word: Word) => word._id === 'Nic_id')
+//     ).toBe(false);
+//     });
 // })

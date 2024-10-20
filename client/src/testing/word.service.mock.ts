@@ -44,4 +44,13 @@ export class MockWordService extends WordService {
   getWords(_filters: {word?: string; wordGroup?: string}): Observable<Word[]> {
     return of(MockWordService.testWords);
   }
+  // deleteWord(id: string): Observable<Word[]> {
+  //   let temp: Word[];
+  //   for(let i = 0; i < MockWordService.testWords.length; i++){
+  //     if (MockWordService.testWords[i]._id !== id) {
+  //       temp[i] = MockWordService.testWords[i];
+  //     }
+  //   }
+  //   return (temp);
+  // }
 }

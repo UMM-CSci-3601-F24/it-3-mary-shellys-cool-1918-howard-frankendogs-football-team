@@ -41,6 +41,7 @@ export class WordService {
       }
     }
     if(filters.sortOrder) {
+      // if sortOrder is true reverse the results
       filteredWords.reverse();
     }
     return filteredWords;

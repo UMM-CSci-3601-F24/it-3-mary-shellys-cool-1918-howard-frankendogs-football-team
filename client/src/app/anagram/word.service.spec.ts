@@ -1,11 +1,9 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-
 import { WordService } from './word.service';
 import { Word } from './word';
 import { HttpClient, HttpParams, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
-// import { MockWordService } from 'src/testing/word.service.mock';
 
 describe('WordService', () => {
   const testWords: Word[] = [
@@ -62,8 +60,10 @@ describe('WordService', () => {
       });
     }));
   });
+
   describe('When getWords() is called with parameters it forms proper HTTP request(Sever Filtering)', () => {
     // server filtering is contains and group as of 10/4/24
+    // All three of these tests just look to see if a call once and is made with the correct words in the url
     it('correctly calls api/anagram with  filter parameter contains', () => {
       const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testWords));
 
@@ -142,6 +142,8 @@ describe('WordService', () => {
     //   wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false});
     //   expect()
     // })
+
+    //
     it('returns a list of 5 words after calling sort function', () => {
       const filteredWords = wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false});
       expect(filteredWords.length).toBe(5);
@@ -169,24 +171,39 @@ describe('WordService', () => {
     }));
   })
 
+  describe('Deleting a word using deleteWord()', () => {
+    it('Talks to correct endpoint with correct call', waitForAsync(() => {
+      const targetWord: Word = testWords[1];
+      const targetId: string = targetWord._id;
 
-  // describe('Deleting a word using deleteWord()', () => {
-  //   it('Talks to correct endpoint with correct call', waitForAsync(() => {
-  //     const targetWord: Word = testWords[1];
-  //     const targetId: string = targetWord._id;
+      const mockedMethod = spyOn(httpClient, 'delete')
+        .and
+        .returnValue(of(targetWord));
 
-  //     const mockedMethod = spyOn(httpClient, 'delete')
-  //       .and
-  //       .returnValue(of(targetWord));
+      wordService.deleteWord(targetId).subscribe(() => {
+        expect(mockedMethod)
+          .withContext('one call')
+          .toHaveBeenCalledTimes(1);
+        expect(mockedMethod)
+          .withContext('talks to the correct endpoint')
+          .toHaveBeenCalledWith(`${wordService.wordUrl}/${targetId}`);
+      });
+    }))
+  })
 
-  //     wordService.deleteWord(targetId).subscribe(() => {
-  //       expect(mockedMethod)
-  //         .withContext('one call')
-  //         .toHaveBeenCalledTimes(1);
-  //       expect(mockedMethod)
-  //         .withContext('talks to the correct endpoint')
-  //         .toHaveBeenCalledWith(`${wordService.wordUrl}/${targetId}`);
-  //     });
-  //   }))
-  // })
+  describe('Deleting a wordGroup', () => {
+    it('talks to correct endpoint with correct param', waitForAsync(() => {
+      const targetGroup: string = testWords[1].wordGroup
+
+      const mockedMethod = spyOn(httpClient, 'delete')
+        .and
+        .returnValue(of(targetGroup));
+
+      wordService.deleteWordGroup(targetGroup).subscribe(() => {
+        expect(mockedMethod).withContext('one call').toHaveBeenCalledTimes(1);
+        expect(mockedMethod).withContext('talks to correct endpoint').toHaveBeenCalledWith(`${wordService.wordUrl}/${targetGroup}`);
+      });
+    }))
+  })
+
 });

@@ -14,22 +14,19 @@ import org.bson.Document;
 import org.bson.UuidRepresentation;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+
 import org.mongojack.JacksonMongoCollection;
 
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.DeleteResult;
-// import com.mongodb.client.result.InsertManyResult;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
-// import kotlin.collections.builders.ListBuilder;
 import umm3601.Controller;
-
-
 
 public class WordController implements Controller {
 
@@ -138,29 +135,27 @@ private Bson constructSortingOrder(Context ctx) {
         ctx.status(HttpStatus.OK);
   }
 
-    public void deleteListWords(Context ctx) {
-      String deleteWordGroup = ctx.pathParam("wordGroup");
-      DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup", deleteWordGroup));
+  public void deleteListWords(Context ctx) {
+    // ctx passes wordGroup as the name of the group not the ids of the elements in group
+    String deleteWordGroup = ctx.pathParam("wordGroup");
+    DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup", deleteWordGroup));
 
-      if (deleteResult.getDeletedCount() == 0) {
-          ctx.status(HttpStatus.NOT_FOUND);
-          throw new NotFoundResponse(
-              "Was unable to delete word group "
-              + deleteWordGroup
-              + "; perhaps illegal word group or no items found in the system?");
-      }
-      ctx.status(HttpStatus.OK);
+    if (deleteResult.getDeletedCount() == 0) {
+        ctx.status(HttpStatus.NOT_FOUND);
+        throw new NotFoundResponse(
+            "Was unable to delete word group "
+            + deleteWordGroup
+            + "; perhaps illegal word group or no items found in the system?");
+    }
+    ctx.status(HttpStatus.OK);
   }
 
 
-
-
   public void addRoutes(Javalin server) {
-    // server.get(API_WORD_BY_ID, this::getWord);
 
     server.get(API_WORDS, this::getWords);
 
-    server.delete(API_WORD_BY_ID, this::deleteWord); //used to be API_WORD_BY_ID
+    server.delete(API_WORD_BY_ID, this::deleteWord);
 
     server.post(API_WORDS, this::addNewWord);
 
