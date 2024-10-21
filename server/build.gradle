@@ -41,7 +41,7 @@ dependencies {
   implementation 'org.slf4j:slf4j-simple:2.0.16'
 
   // JUnit Jupiter API for testing.
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
 
   // JUnit Jupiter Engine for testing.
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.1'
