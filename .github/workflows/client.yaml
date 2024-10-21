@@ -1,0 +1,50 @@
+name: Client
+
+on: [push, pull_request]
+
+defaults:
+  run:
+    working-directory: ./client
+
+jobs:
+  ng-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Use Node.js 18
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'npm'
+        cache-dependency-path: ./client/package-lock.json
+
+    - name: Install dependencies (npm ci)
+      run: npm ci
+      env:
+        CYPRESS_INSTALL_BINARY: 0
+
+    - name: Test (npm run test)
+      run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+
+  ng-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Use Node.js 18
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'npm'
+        cache-dependency-path: ./client/package-lock.json
+
+    - name: Install dependencies (npm ci)
+      run: npm ci
+      env:
+        CYPRESS_INSTALL_BINARY: 0
+
+    - name: Lint (npm run lint)
+      run: npm run lint
