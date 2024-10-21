@@ -1,0 +1,37 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [autoFocus]="false">
+    <mat-toolbar>Client</mat-toolbar>
+    <mat-nav-list class="sidenav-list" role="navigation">
+
+      <!-- Side navigation links -->
+
+      <a mat-list-item routerLink="/" routerLinkActive="drawer-list-item-active"
+        #routerLinkActiveInstance="routerLinkActive" [routerLinkActiveOptions]="{exact: true}" (click)="drawer.close()">
+        <mat-icon matListItemIcon>home</mat-icon>
+        Home
+      </a>
+
+      <a mat-list-item routerLink="/grid" routerLinkActive="drawer-list-item-active" (click)="drawer.close()">
+        <mat-icon matListItemIcon>people</mat-icon>
+        Grid
+      </a>
+
+      <a mat-list-item routerLink="/cell" routerLinkActive="drawer-list-item-active" (click)="drawer.close()">
+        <mat-icon matListItemIcon>business</mat-icon>
+        Cell
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" onclick="blur()"
+        class="sidenav-button">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span class="app-title">{{title}}</span>
+    </mat-toolbar>
+    <div class="main-content mat-typography">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

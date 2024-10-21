@@ -1,0 +1,24 @@
+
+<div
+  class="cell"
+  [ngClass]="{
+    'bold-top': gridCell.edges.top,
+    'bold-right': gridCell.edges.right,
+    'bold-bottom': gridCell.edges.bottom,
+    'bold-left': gridCell.edges.left
+  }"
+>
+@if (gridCell.editable) {
+  <input matInput
+    [(ngModel)]="gridCell.value"
+    class="cell-input"
+    type="text"
+    maxlength="1"
+    (input)="onInput(gridCell.value)"
+    (keydown)="onKeyDown($event)"
+    placeholder="{{gridCell.value}}">
+}
+    @else {
+<div class="cell-content">{{ gridCell.value }}</div>
+}
+</div>

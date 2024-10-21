@@ -1,0 +1,33 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 256px;
+}
+
+.sidenav mat-toolbar {
+  background: inherit;
+}
+
+mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.app-title {
+  padding-left: 16px;
+}
+
+
+.main-content {
+  margin: auto;
+  padding: 24px;
+  @media (max-width: 599px) {
+    padding: 16px;
+  }
+
+  // adds padding to the main content container on larger screens (above 1280px wide)
+  max-width: 1280px;
+}

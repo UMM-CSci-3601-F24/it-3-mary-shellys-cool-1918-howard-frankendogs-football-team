@@ -1,0 +1,159 @@
+// Custom Theming for Angular Material
+@use '@angular/material' as mat;
+// For more information: https://material.angular.io/guide/theming
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// This is to be able to theme parts of the app dynamically depending on theme (right now: light or dark)
+// You can put styles in this mixin and the theme variables will refer to the actual theme being used (light or dark)
+@mixin app-theming($theme) {
+  $color-config: mat.m2-get-color-config($theme);
+
+  // Extract the palettes you need from the theme definition.
+  $primary: map-get($color-config, primary);
+  $accent: map-get($color-config, accent);
+  $warn: map-get($color-config, warn);
+
+  $background: map-get($color-config, background);
+  $foreground: map-get($color-config, foreground);
+
+  $is-dark: map-get($color-config, is-dark);
+
+  // Define any styles affected by the theme.
+
+  @if $is-dark {
+    .mat-toolbar.mat-primary {
+      background: mat.m2-get-color-from-palette($background, app-bar);
+      color: mat.m2-get-color-from-palette($foreground, text);
+    }
+  }
+  .drawer-list-item-active {
+    background-color: change-color(mat.m2-get-color-from-palette($primary), $alpha: 0.15) !important;
+    color: mat.m2-get-color-from-palette($primary) !important;
+    .mat-mdc-list-item-icon {
+      color: mat.m2-get-color-from-palette($primary) !important;
+    }
+  }
+
+  .sidenav-list {
+    .mat-mdc-list-item-icon {
+      color: mat.m2-get-color-from-palette($foreground, icon);
+      margin-right: 16px;
+    }
+  }
+}
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+
+$light-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500); // 500 is the base hue of a Material color
+
+// The 200 here makes the indigo color lighter
+// Material Design dark themes should use a desaturated versions of primary and accent colors
+// See: https://material.io/design/color/dark-theme.html
+$dark-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 200);
+
+$light-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200);
+$dark-accent: mat.m2-define-palette(mat.$m2-pink-palette, A100);
+
+// The warn palette is optional (defaults to red).
+$light-warn: mat.m2-define-palette(mat.$m2-red-palette); // Without a hue given, it defaults to 500
+$dark-warn: mat.m2-define-palette(mat.$m2-red-palette, 300);
+
+$typography-config: mat.m2-define-typography-config();
+
+// Create the theme object for a light theme
+// We include typography and density information here because it is the default theme
+$light-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $light-primary,
+    accent: $light-accent,
+    warn: $light-warn
+  ),
+  typography: $typography-config,
+  density: 0,
+));
+
+// Create the theme object for a dark theme
+// No typography and density needed because this theme will be on top of the default light theme
+$dark-theme: mat.m2-define-dark-theme((
+  color: (
+    primary: $dark-primary,
+    accent: $dark-accent,
+    warn: $dark-warn
+  ),
+));
+
+// Sets up the theming for built in material components with the light theme
+@include mat.all-component-themes($light-theme);
+
+// Sets up theming for our custom components with the light theme
+@include app-theming($light-theme);
+
+// Include basic typography classes
+// see https://material.angular.io/guide/typography#using-typography-styles-in-your-application
+@include mat.typography-hierarchy($typography-config);
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+// This media query detects if the user has dark-mode turned on on their OS or browser
+// If you don't want to apply dark theme automatically,
+// you can also make this a normal class and add it to body or html dynamically.
+@media (prefers-color-scheme: dark) {
+  // Sets up the theming for built in material components with the dark theme
+  @include mat.all-component-colors($dark-theme);
+  // Sets up theming for our custom components with the dark theme
+  @include app-theming($dark-theme);
+}
+
+// Use uppercase text on buttons
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button {
+  text-transform: uppercase;
+}
+
+/////////// Remove flex-layout and replace with CSS ////////////////////
+// https://github.com/angular/flex-layout/issues/1426 post by "anisabboud" 11-4-2022
+// Flex row/col + grid.
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.grid {
+  display: grid;
+}
+
+// Flex-wrap utils.
+.flex-wrap {
+  flex-wrap: wrap;
+}  // Mostly used with flex-row, when wrapping is desired.
+
+.flex-col-xs {
+  @media screen and (max-width: 599px) {
+    flex-direction: column;
+  }
+}  // Switch from flex-row to flex-col on mobile.
+
+// Gap
+.gap-8 { gap: 8px; }
+
+// Flex/grow/shrink properties https://developer.mozilla.org/en-US/docs/Web/CSS/flex.
+.flex-1 { flex: 1 }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-grow { flex-grow: 1; }  // Same as flex: 1 1 auto (grow, shrink, basis auto). For spacer, etc.
