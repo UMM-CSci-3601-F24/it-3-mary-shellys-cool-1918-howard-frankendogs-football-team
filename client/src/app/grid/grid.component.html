@@ -1,15 +1,18 @@
+<p>width</p>
 <input matInput
-  [(ngModel)]="n"
+  [(ngModel)]="h"
   type="number"
   (input)="onSizeInput()"
-  placeholder="{{n}}">
-  <input matInput
-  [(ngModel)]="m"
+  placeholder="{{h}}">
+  <p>hight</p>
+<input matInput
+  [(ngModel)]="w"
   type="number"
-  placeholder="{{m}}">
+  (input)="onSizeInput()"
+  placeholder="{{w}}">
 
-  <div [ngStyle]="{'height': (n * m) + 'px', 'width': (n * m) + 'px'}"  >
-    <mat-grid-list cols="{{n}}" rowHeight="1:1" gutterSize="0">
+  <div [ngStyle]="{'height': (h * s) + 'px', 'width': (h * s) + 'px'}"  >
+    <mat-grid-list cols="{{h}}" rowHeight="1:1" gutterSize="0">
       @for (row of grid; track row; let rowIndex = $index) {
         @for (cell of row; track cell; ; let colIndex = $index) {
           <mat-grid-tile Rowspan="1" Colspan="1" >
@@ -20,13 +23,17 @@
             (click)="onClick($event, colIndex, rowIndex)"
             [attr.data-col]="colIndex"
             [attr.data-row]="rowIndex"
-            [ngStyle]="{'height': m + 'px', 'width': m + 'px'}"
+            [ngStyle]="{'height': s + 'px', 'width': s + 'px'}"
             ></app-grid-cell>
           </mat-grid-tile>
         }
       }
     </mat-grid-list>
   </div>
+  <input matInput
+  [(ngModel)]="s"
+  type="number"
+  placeholder="{{s}}">
 
 <button mat-button (click)="cycleTypingDirection()">Cycle Typing Direction</button>
 <p>Current Typing Direction is {{typeDirection}}</p>

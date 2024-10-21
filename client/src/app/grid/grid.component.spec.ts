@@ -23,14 +23,14 @@ describe('GridCellComponent', () => {
   });
 
   it('should initialize grid correctly', () => {
-    expect(component.grid.length).toBe(component.n);
+    expect(component.grid.length).toBe(component.w);
     for (const row of component.grid) {
-      expect(row.length).toBe(component.n);
+      expect(row.length).toBe(component.w);
     }
   });
 
   it('should re-initialize grid on size input', () => {
-    component.n = 5;
+    component.w = 5;
     component.onSizeInput();
     expect(component.grid.length).toBe(5);
     for (const row of component.grid) {
