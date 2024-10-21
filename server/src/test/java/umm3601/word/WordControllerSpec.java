@@ -135,10 +135,10 @@ class WordControllerSpec {
     Javalin mockServer = Mockito.mock(Javalin.class);
     wordController.addRoutes(mockServer);
     /*
-     * This tests how many 'get', 'delete' and 'post' routes there are  
+     * This tests how many 'get', 'delete' and 'post' routes there are
      * Change the get count to: verify(mockServer, Mockito.atLeast(2)).get(any(), any());
      * when reinstate get words by group
-     */
+    */
     verify(mockServer, Mockito.atLeastOnce()).get(any(), any());
     verify(mockServer, Mockito.atLeastOnce()).post(any(), any());
     verify(mockServer, Mockito.atLeastOnce()).delete(any(), any());
