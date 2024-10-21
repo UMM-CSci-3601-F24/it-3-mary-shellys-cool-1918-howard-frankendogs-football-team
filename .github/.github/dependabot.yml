@@ -1,0 +1,46 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/client"
+  schedule:
+    interval: monthly
+    time: "12:00"
+    timezone: America/Chicago
+  open-pull-requests-limit: 5
+  ignore:
+    - dependency-name: '@types/node'
+      update-types:
+        - 'version-update:semver-major'
+        - 'version-update:semver-minor'
+- package-ecosystem: gradle
+  directory: "/server"
+  schedule:
+    interval: weekly
+    time: "12:00"
+    timezone: America/Chicago
+  open-pull-requests-limit: 20
+- package-ecosystem: docker
+  directory: "/server"
+  schedule:
+    interval: weekly
+    time: "12:00"
+    timezone: America/Chicago
+  open-pull-requests-limit: 20
+  ignore:
+  - dependency-name: openjdk
+    versions:
+    - "> 11.pre.jdk.pre.slim"
+- package-ecosystem: docker
+  directory: "/client"
+  schedule:
+    interval: weekly
+    time: "12:00"
+    timezone: America/Chicago
+  open-pull-requests-limit: 20
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "12:00"
+    timezone: America/Chicago
+  open-pull-requests-limit: 20

@@ -1,0 +1,35 @@
+version = 1
+
+test_patterns = [
+  "*.spec.ts",
+  "client/cypress/**",
+  "server/src/test/**"
+]
+
+[[analyzers]]
+name = "java"
+
+  [analyzers.meta]
+  runtime_version = "11"
+
+[[analyzers]]
+name = "shell"
+
+[[analyzers]]
+name = "javascript"
+
+  [analyzers.meta]
+  plugins = ["angular"]
+  dependency_file_paths = [
+    "client/"
+  ]
+
+[[analyzers]]
+name = "docker"
+enabled = true
+
+  [analyzers.meta]
+  dockerfile_paths = [
+    "client/Dockerfile",
+    "server/Dockerfile"
+  ]
