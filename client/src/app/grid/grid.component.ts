@@ -186,7 +186,7 @@ export class GridComponent {
    * @param row - The row index of the target cell.
    */
   moveFocus(col: number, row: number) {
-    if (col >= 0 && col < this.grid.length && row >= 0 && row < this.grid[col].length) {
+    if (col >= 0 && col < this.grid[row].length && row >= 0 && row < this.grid[col].length) {
       this.currentCol = col;
       this.currentRow = row;
 
