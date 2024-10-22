@@ -15,11 +15,14 @@
           <mat-grid-tile Rowspan="1" Colspan="1" >
             <app-grid-cell
             tabindex= "0"
-            [gridCell]= ""
+            [gridCell]= "grid[colIndex][rowIndex]"
             (keydown)= "onKeydown($event, currentCol, currentRow)"
             (click)="onClick($event, colIndex, rowIndex)"
-            [attr.data-col]="colIndex"
-            [attr.data-row]="rowIndex"
+            [attr.col]="colIndex"
+            [attr.row]="rowIndex"
+            [col]="colIndex"
+            [row]="rowIndex"
+            [grid]="grid"
             [ngStyle]="{'height': m + 'px', 'width': m + 'px'}"
             ></app-grid-cell>
           </mat-grid-tile>

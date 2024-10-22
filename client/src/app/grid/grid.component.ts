@@ -87,7 +87,7 @@ export class GridComponent {
    */
   onKeydown(event: KeyboardEvent, col: number, row: number) {
     const cell = this.grid[col][row];
-    const inputElement = this.elRef.nativeElement.querySelector(`app-grid-cell[data-col="${col}"][data-row="${row}"] input`);
+    const inputElement = this.elRef.nativeElement.querySelector(`app-grid-cell[col="${col}"][row="${row}"] input`);
 
     console.log('keydown', event.key, col, row);
 
@@ -175,7 +175,7 @@ export class GridComponent {
 
       console.log(col, row);
 
-      const cellInput = document.querySelector(`app-grid-cell[data-col="${col}"][data-row="${row}"] input`);
+      const cellInput = document.querySelector(`app-grid-cell[col="${col}"][row="${row}"] input`);
       console.log(cellInput);
 
       if (cellInput) {

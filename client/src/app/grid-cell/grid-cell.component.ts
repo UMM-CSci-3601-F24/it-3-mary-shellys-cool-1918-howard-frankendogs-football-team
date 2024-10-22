@@ -26,6 +26,10 @@ import { Edges } from './edges';
 export class GridCellComponent {
 
   @Input({ required: true }) gridCell: GridCell;
+  @Input({}) col: number;
+  @Input({}) row: number;
+  @Input({}) grid: GridCell[][];
+
 
   /**
    * Constructor for GridCellComponent.
@@ -85,15 +89,19 @@ export class GridCellComponent {
       switch (event.key) {
         case 'ArrowUp':
           this.gridCell.edges.top = !this.gridCell.edges.top;
+          this.grid[this.col][this.row - 1].edges.bottom = this.gridCell.edges.top;
           break;
         case 'ArrowRight':
           this.gridCell.edges.right = !this.gridCell.edges.right;
+          this.grid[this.col + 1][this.row].edges.left = this.gridCell.edges.right;
           break;
         case 'ArrowDown':
           this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
+          this.grid[this.col][this.row + 1].edges.top = this.gridCell.edges.bottom;
           break;
         case 'ArrowLeft':
           this.gridCell.edges.left = !this.gridCell.edges.left;
+          this.grid[this.col - 1][this.row].edges.right = this.gridCell.edges.left;
           break;
         default:
           break;
