@@ -7,6 +7,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { CommonModule } from '@angular/common';
 import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
+import { GridService } from './grid.service';
+// import { Grid } from './grid';
 
 @Component({
   selector: 'app-grid-component',
@@ -28,6 +30,7 @@ export class GridComponent {
   n: number = 10;
   m: number = 40;
 
+
   grid: GridCell[][] = [];
   currentRow: number = 0;
   currentCol: number = 0;
@@ -36,7 +39,7 @@ export class GridComponent {
   currentDirectionIndex: number = 0;
   private focusTimeout: ReturnType<typeof setTimeout>;
 
-  constructor(private renderer: Renderer2, public elRef: ElementRef) {
+  constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService) {
     this.initializeGrid();
   }
 
@@ -208,4 +211,9 @@ export class GridComponent {
     this.typeDirection = this.typingDirections[this.currentDirectionIndex];
     console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
+
+  // saveGrid() {
+  //   this.gridService.saveGrid(this.grid);
+  
+  // }
 }
