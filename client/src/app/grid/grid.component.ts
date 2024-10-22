@@ -87,7 +87,7 @@ export class GridComponent {
    */
   onKeydown(event: KeyboardEvent, col: number, row: number) {
     const cell = this.grid[col][row];
-    const inputElement = this.elRef.nativeElement.querySelector(`app-grid-cell[data-col="${col}"][data-row="${row}"] input`);
+    const inputElement = this.elRef.nativeElement.querySelector(`app-grid-cell[col="${col}"][row="${row}"] input`);
 
     console.log('keydown', event.key, col, row);
 
@@ -115,35 +115,50 @@ export class GridComponent {
               cell.value = '';
             }
             if (this.typeDirection === "right") {
-              this.moveFocus(col - 1, row)
+              if (cell.edges.left === false) {
+                this.moveFocus(col - 1, row)
+              }
             }
             if (this.typeDirection === "left") {
-              this.moveFocus(col + 1, row)
+              if (cell.edges.right === false) {
+                this.moveFocus(col + 1, row)
+              }
             }
             if (this.typeDirection === "up") {
-              this.moveFocus(col, row + 1)
+              if (cell.edges.bottom === false) {
+                this.moveFocus(col, row + 1)
+              }
             }
             if (this.typeDirection === "down") {
-              this.moveFocus(col, row - 1)
+              if (cell.edges.top === false) {
+                this.moveFocus(col, row - 1)
+               }
             }
             break;
           default:
             if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
-              console.log('old cell value = ', cell.value);
+
               cell.value = event.key;
-              console.log('new cell value = ', cell.value);
+
               if (this.typeDirection === "right") {
-                console.log('moving focus to ', col + 1, row);
-                this.moveFocus(col + 1, row)
+                if (cell.edges.right === false) {
+                  this.moveFocus(col + 1, row)
+                }
               }
               if (this.typeDirection === "left") {
-                this.moveFocus(col - 1, row)
+                if (cell.edges.left === false) {
+                  this.moveFocus(col - 1, row)
+                }
               }
               if (this.typeDirection === "up") {
-                this.moveFocus(col, row - 1)
+                if (cell.edges.top === false) {
+                 this.moveFocus(col, row - 1)
+                }
               }
               if (this.typeDirection === "down") {
-                this.moveFocus(col, row + 1)
+                if (cell.edges.bottom === false) {
+                  this.moveFocus(col, row + 1)
+                }
               }
             }
             break;
@@ -175,7 +190,7 @@ export class GridComponent {
 
       console.log(col, row);
 
-      const cellInput = document.querySelector(`app-grid-cell[data-col="${col}"][data-row="${row}"] input`);
+      const cellInput = document.querySelector(`app-grid-cell[col="${col}"][row="${row}"] input`);
       console.log(cellInput);
 
       if (cellInput) {
