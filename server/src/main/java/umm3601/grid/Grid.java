@@ -4,10 +4,10 @@ import org.mongojack.ObjectId;
 
 public class Grid {
   @ObjectId @Id
-  @SuppressWarnings({"memeberName"})
-  private String _id;
-  private String owner;
-  private GridCell[][] grid;
+  @SuppressWarnings({"memberName"})
+  public String _id;
+  String owner;
+  GridCell[][] grid;
 
   public String getId() {
     return this._id;

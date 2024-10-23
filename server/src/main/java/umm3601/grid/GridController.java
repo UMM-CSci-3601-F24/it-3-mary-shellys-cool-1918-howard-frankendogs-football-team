@@ -4,6 +4,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.bson.UuidRepresentation;
 import org.bson.types.ObjectId;
@@ -21,7 +22,8 @@ import umm3601.Controller;
 public class GridController implements Controller {
 
   private static final String API_GRID_BY_ID = "/api/grids/{}";
-  private static final String API_SAVE_GRID = "/api/save-grid";
+  private static final String API_SAVE_GRID = "/api/grid";
+  // private static final String API_SAVE_GRID = "/api/save-grid";
   private static final String API_GET_GRIDS = "/api/grids";
   private final JacksonMongoCollection<Grid> gridCollection;
 
@@ -34,9 +36,22 @@ public class GridController implements Controller {
   }
 
   public void saveGrid(Context ctx) {
+    // this returns an unrecognized property exception
     Grid grid = ctx.bodyAsClass(Grid.class);
     gridCollection.insert(grid);
+    ctx.json(Map.of("id", grid._id));
     ctx.status(HttpStatus.CREATED);
+
+    // this returns a 400 Bad request response with a deserialization error
+    // String body = ctx.body();
+    // Grid grid = ctx.bodyValidator(Grid.class)
+    //   .check(td -> td.owner != null, "Owner must be non-empty")
+    //   .check(td -> td.grid != null, "Error with grid, grid was : " + body)
+    //   .get();
+    // gridCollection.insertOne(grid);
+    // ctx.json(Map.of("id", grid._id));
+    // ctx.status(HttpStatus.CREATED);
+
   }
 
   // public void getGrid(Context ctx) {

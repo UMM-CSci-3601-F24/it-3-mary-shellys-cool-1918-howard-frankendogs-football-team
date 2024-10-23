@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { GridComponent } from './grid.component';
+import { GridService } from './grid.service';
+import { MockGridService } from 'src/testing/grid.service.mock';
 
 describe('GridCellComponent', () => {
   let component: GridComponent;
@@ -9,7 +11,8 @@ describe('GridCellComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [FormsModule, GridComponent]
+      imports: [FormsModule, GridComponent],
+      providers: [{provide: GridService, useValue: new MockGridService() }],
     })
     .compileComponents();
 
