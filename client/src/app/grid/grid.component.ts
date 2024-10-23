@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GridService } from './grid.service';
+import { Grid } from './grid';
 // import { Grid } from './grid';
 
 @Component({
@@ -29,9 +30,9 @@ export class GridComponent {
 
   n: number = 10;
   m: number = 40;
-
-
   grid: GridCell[][] = [];
+  savedGrids: Grid[];
+
   currentRow: number = 0;
   currentCol: number = 0;
   typeDirection: string = "right"; // Current direction
@@ -65,6 +66,27 @@ export class GridComponent {
           this.grid[row].push(new GridCell());
     }
    }
+  }
+
+  saveGrid() {
+    const gridData: Grid = {
+      _id: 'womp', // Again a placeholder
+      owner: 'currentUser', // Just a placeholder for now
+      grid: this.grid
+    };
+    this.gridService.saveGrid(gridData).subscribe(() => {
+      this.loadSavedGrids();
+    });
+  }
+
+  loadSavedGrids() {
+    this.gridService.getGrids().subscribe(grids => {
+      this.savedGrids = grids;
+    });
+  }
+
+  loadGrid(grid: Grid) {
+    this.grid = grid.grid;
   }
 
   /**
@@ -214,6 +236,5 @@ export class GridComponent {
 
   // saveGrid() {
   //   this.gridService.saveGrid(this.grid);
-  
   // }
 }

@@ -1,3 +1,19 @@
+
+
+
+<div>
+  <button (click)="saveGrid()">Save Grid</button>
+  <div>
+    <h3>Saved Grids</h3>
+    <ul>
+      <li *ngFor="let grid of savedGrids" (click)="loadGrid(grid)">
+        {{ grid._id }}
+      </li>
+    </ul>
+  </div>
+</div>
+<div>
+
 <input matInput
   [(ngModel)]="n"
   type="number"

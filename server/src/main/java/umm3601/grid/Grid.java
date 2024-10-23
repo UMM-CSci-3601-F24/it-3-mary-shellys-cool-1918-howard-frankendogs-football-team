@@ -5,7 +5,19 @@ import org.mongojack.ObjectId;
 public class Grid {
   @ObjectId @Id
   @SuppressWarnings({"memeberName"})
-  public String _id;
-  public String owner;
-  public Grid grid;
+  private String _id;
+  private String owner;
+  private GridCell[][] grid;
+
+  public String getId() {
+    return this._id;
+  }
+
+  public String getOwner() {
+    return this.owner;
+  }
+
+  public GridCell[][] getGrid() {
+    return this.grid;
+  }
 }
