@@ -3,7 +3,7 @@ package umm3601;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
-import umm3601.word.WordController;
+import umm3601.word.AnagramController;
 
 public class Main {
 
@@ -55,7 +55,7 @@ public class Main {
    */
   static Controller[] getControllers(MongoDatabase database) {
     Controller[] controllers = new Controller[] {
-      new WordController(database)
+      new AnagramController(database)
     };
     return controllers;
   }

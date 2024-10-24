@@ -19,6 +19,7 @@ import org.mongojack.JacksonMongoCollection;
 
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.search.SearchCollector;
 import com.mongodb.client.result.DeleteResult;
 
 import io.javalin.Javalin;
@@ -28,79 +29,88 @@ import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Controller;
 
-public class WordController implements Controller {
+public class AnagramController implements Controller {
 
-    private static final String API_WORDS = "/api/anagram";
-    private static final String API_WORD_BY_ID = "/api/anagram/{id}";
-    private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/{wordGroup}";
-    static final String WORD_KEY = "word";
-    static final String WORD_GROUP_KEY = "wordGroup";
-    static final String SORT_ORDER_KEY = "sortOrder";
+  private static final String API_WORDS = "/api/anagram";
+  private static final String API_WORD_BY_ID = "/api/anagram/{id}";
+  private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/{wordGroup}";
+  static final String WORD_KEY = "word";
+  static final String WORD_GROUP_KEY = "wordGroup";
+  static final String SORT_ORDER_KEY = "sortOrder";
 
-    private final JacksonMongoCollection<Word> wordCollection;
+  private final JacksonMongoCollection<Search> searchCollection;
+  private final JacksonMongoCollection<Word> wordCollection;
 
-    public WordController(MongoDatabase database) {
-        wordCollection = JacksonMongoCollection.builder().build(
-            database,
-            "words",
-            Word.class,
-            UuidRepresentation.STANDARD);
+  public AnagramController(MongoDatabase database) {
+    wordCollection = JacksonMongoCollection.builder().build(
+      database,
+      "words",
+      Word.class,
+      UuidRepresentation.STANDARD);
+    searchCollection = JacksonMongoCollection.builder().build(
+      database,
+      "searches",
+      Search.class,
+      UuidRepresentation.STANDARD);
+  }
+
+  public void getWord(Context ctx) {
+    String id = ctx.pathParam("id");
+    Word word;
+
+    try {
+      word = wordCollection.find(eq("_id", new ObjectId(id))).first();
+    } catch (IllegalArgumentException e) {
+      throw new BadRequestResponse("The requested word id wasn't a legal Mongo Object ID");
+    }
+    if (word == null) {
+      throw new NotFoundResponse("The requested word was not found");
+    } else {
+      ctx.json(word);
+      ctx.status(HttpStatus.OK);
+    }
+  }
+
+  public void getWords(Context ctx) {
+    Bson combinedFilter = constructFilter(ctx);
+    Bson sortingOrder = constructSortingOrder(ctx);
+
+    ArrayList<Word> matchingWords = wordCollection
+      .find(combinedFilter)
+      .sort(sortingOrder)
+      .into(new ArrayList<>());
+
+    ctx.json(matchingWords);
+    ctx.status(HttpStatus.OK);
+  }
+
+  private Bson constructFilter(Context ctx) {
+    List<Bson> filters = new ArrayList<>();
+
+    if (ctx.queryParamMap().containsKey(WORD_KEY)) {
+      Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
+      filters.add(regex(WORD_KEY, pattern));
     }
 
-    public void getWord(Context ctx) {
-        String id = ctx.pathParam("id");
-        Word word;
-
-        try {
-            word = wordCollection.find(eq("_id", new ObjectId(id))).first();
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestResponse("The requested word id wasn't a legal Mongo Object ID");
-        }
-        if (word == null) {
-            throw new NotFoundResponse("The requested word was not found");
-        } else {
-            ctx.json(word);
-            ctx.status(HttpStatus.OK);
-        }
+    if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
+      Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
+      filters.add(regex(WORD_GROUP_KEY, pattern));
     }
 
+    Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
 
-    public void getWords(Context ctx) {
-        Bson combinedFilter = constructFilter(ctx);
-        Bson sortingOrder = constructSortingOrder(ctx);
+    Search newSearch = new Search(combinedFilter);
+    searchCollection.insertOne(newSearch);
+    System.out.println("search added to db with params: " + combinedFilter.toString());
 
-        ArrayList<Word> matchingWords = wordCollection
-            .find(combinedFilter)
-            .sort(sortingOrder)
-            .into(new ArrayList<>());
-
-        ctx.json(matchingWords);
-        ctx.status(HttpStatus.OK);
-    }
-
-    private Bson constructFilter(Context ctx) {
-        List<Bson> filters = new ArrayList<>();
-
-        if (ctx.queryParamMap().containsKey(WORD_KEY)) {
-          Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
-          filters.add(regex(WORD_KEY, pattern));
-        }
-
-        if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
-          Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
-          filters.add(regex(WORD_GROUP_KEY, pattern));
-        }
-
-        Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
-
-        return combinedFilter;
-    }
+    return combinedFilter;
+  }
 
 private Bson constructSortingOrder(Context ctx) {
-    String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "alphabetical");
-    String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "false");
-    Bson sortingOrder = sortOrder.equals("desc") ?  Sorts.descending(sortBy) : Sorts.ascending(sortBy);
-    return sortingOrder;
+  String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "alphabetical");
+  String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "false");
+  Bson sortingOrder = sortOrder.equals("desc") ?  Sorts.descending(sortBy) : Sorts.ascending(sortBy);
+  return sortingOrder;
 }
 
 

@@ -51,8 +51,8 @@ import io.javalin.validation.Validator;
 
 
 @SuppressWarnings({ "MagicNumber" })
-class WordControllerSpec {
-  private WordController wordController;
+class AnagramControllerSpec {
+  private AnagramController wordController;
   private ObjectId wordId;
   private static MongoClient mongoClient;
   private static MongoDatabase db;
@@ -127,7 +127,7 @@ class WordControllerSpec {
       wordDocuments.insertMany(testWords);
       wordDocuments.insertOne(testWordId);
 
-      wordController = new WordController(db);
+      wordController = new AnagramController(db);
   }
 
   @Test
@@ -158,14 +158,14 @@ class WordControllerSpec {
     String targetWordGroup = "brainrot";
     Map<String, List<String>> queryParams = new HashMap<>();
 
-    queryParams.put(WordController.WORD_GROUP_KEY, Arrays.asList(new String[] {targetWordGroup}));
+    queryParams.put(AnagramController.WORD_GROUP_KEY, Arrays.asList(new String[] {targetWordGroup}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
-    when(ctx.queryParam(WordController.WORD_GROUP_KEY)).thenReturn(targetWordGroup);
+    when(ctx.queryParam(AnagramController.WORD_GROUP_KEY)).thenReturn(targetWordGroup);
 
     Validation validation = new Validation();
-    Validator<String> validator = validation.validator(WordController.WORD_GROUP_KEY, String.class, targetWordGroup);
+    Validator<String> validator = validation.validator(AnagramController.WORD_GROUP_KEY, String.class, targetWordGroup);
 
-    when(ctx.queryParamAsClass(WordController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
+    when(ctx.queryParamAsClass(AnagramController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
 
     wordController.getWords(ctx);
 
@@ -190,14 +190,14 @@ class WordControllerSpec {
 
         Map<String, List<String>> queryParams = new HashMap<>();
 
-        queryParams.put(WordController.WORD_KEY, Arrays.asList(new String[] {targetWord}));
+        queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {targetWord}));
         when(ctx.queryParamMap()).thenReturn(queryParams);
-        when(ctx.queryParam(WordController.WORD_KEY)).thenReturn(targetWord);
+        when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(targetWord);
 
         Validation validation = new Validation();
-        Validator<String> validator = validation.validator(WordController.WORD_KEY, String.class, targetWord);
+        Validator<String> validator = validation.validator(AnagramController.WORD_KEY, String.class, targetWord);
 
-        when(ctx.queryParamAsClass(WordController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
+        when(ctx.queryParamAsClass(AnagramController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
 
         wordController.getWords(ctx);
 
@@ -296,7 +296,7 @@ class WordControllerSpec {
         .find(eq("_id", new ObjectId(mapCaptor.getValue().get("id")))).first();
 
     assertNotEquals("", addedWord.get("_id"));
-    assertEquals(newWord.word, addedWord.get(WordController.WORD_KEY)); //("word"));
+    assertEquals(newWord.word, addedWord.get(AnagramController.WORD_KEY)); //("word"));
     assertEquals(newWord.wordGroup, addedWord.get("wordGroup")); //(WordController.WORD_GROUP_KEY));
   }
 
