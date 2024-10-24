@@ -10,7 +10,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,7 +54,7 @@ import io.javalin.validation.Validator;
 
 @SuppressWarnings({ "MagicNumber" })
 class AnagramControllerSpec {
-  private AnagramController wordController;
+  private AnagramController anagramController;
   private ObjectId wordId;
   private static MongoClient mongoClient;
   private static MongoDatabase db;
@@ -63,6 +65,9 @@ class AnagramControllerSpec {
 
   @Captor
   private ArgumentCaptor<ArrayList<Word>> wordArrayListCaptor;
+
+  @Captor
+  private ArgumentCaptor<ArrayList<Search>> searchArrayListCaptor;
 
   @Captor
   private ArgumentCaptor<Word> wordCaptor;
@@ -127,13 +132,19 @@ class AnagramControllerSpec {
       wordDocuments.insertMany(testWords);
       wordDocuments.insertOne(testWordId);
 
-      wordController = new AnagramController(db);
+    MongoCollection<Document> searchDocuments = db.getCollection("searches");
+    searchDocuments.drop();
+    List<Document> testSearches = new ArrayList<>();
+    testSearches.add(new Document().append("params", "contains: he"));
+    searchDocuments.insertMany(testSearches);
+
+    anagramController = new AnagramController(db);
   }
 
   @Test
   public void canBuildController() throws IOException {
     Javalin mockServer = Mockito.mock(Javalin.class);
-    wordController.addRoutes(mockServer);
+    anagramController.addRoutes(mockServer);
     /*
      * This tests how many 'get', 'delete' and 'post' routes there are
      * Change the get count to: verify(mockServer, Mockito.atLeast(2)).get(any(), any());
@@ -147,7 +158,7 @@ class AnagramControllerSpec {
   @Test
   void canGetAllWords() throws IOException {
     when(ctx.queryParamMap()).thenReturn(Collections.emptyMap());
-    wordController.getWords(ctx);
+    anagramController.getWords(ctx);
     verify(ctx).json(wordArrayListCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
     assertEquals(db.getCollection("words").countDocuments(), wordArrayListCaptor.getValue().size());
@@ -167,7 +178,7 @@ class AnagramControllerSpec {
 
     when(ctx.queryParamAsClass(AnagramController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
 
-    wordController.getWords(ctx);
+    anagramController.getWords(ctx);
 
     verify(ctx).json(wordArrayListCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
@@ -185,31 +196,71 @@ class AnagramControllerSpec {
   }
 
   @Test
-    void canGetWord() throws IOException {
-        String targetWord = "playstation";
+  void canGetWord() throws IOException {
+    String targetWord = "playstation";
 
-        Map<String, List<String>> queryParams = new HashMap<>();
+    Map<String, List<String>> queryParams = new HashMap<>();
 
-        queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {targetWord}));
-        when(ctx.queryParamMap()).thenReturn(queryParams);
-        when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(targetWord);
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {targetWord}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(targetWord);
 
-        Validation validation = new Validation();
-        Validator<String> validator = validation.validator(AnagramController.WORD_KEY, String.class, targetWord);
+    Validation validation = new Validation();
+    Validator<String> validator = validation.validator(AnagramController.WORD_KEY, String.class, targetWord);
 
-        when(ctx.queryParamAsClass(AnagramController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
+    when(ctx.queryParamAsClass(AnagramController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
 
-        wordController.getWords(ctx);
+    anagramController.getWords(ctx);
 
-        verify(ctx).json(wordArrayListCaptor.capture());
-        verify(ctx).status(HttpStatus.OK);
+    verify(ctx).json(wordArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
 
-        assertEquals(1, wordArrayListCaptor.getValue().size());
+    assertEquals(1, wordArrayListCaptor.getValue().size());
 
-        for (Word word : wordArrayListCaptor.getValue()) {
-            assertTrue(word.word.contains("playstation"));
-        }
+    for (Word word : wordArrayListCaptor.getValue()) {
+        assertTrue(word.word.contains("playstation"));
     }
+  }
+
+  // @Test
+  // void getWordWithParamsSavesSearches() throws IOException {
+  //   // makes search that will be passed
+  //   Map<String, List<String>> queryParams = new HashMap<>();
+  //   queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
+  //   when(ctx.queryParamMap()).thenReturn(queryParams);
+  //   when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
+  //   // calls getWords() which calls constructFilter()
+  //   anagramController.getWords(ctx);
+  //   anagramController.getSearches(ctx);
+  //   // Capture the search sent to db and check status
+  //   // I dont think this is the right way to
+  //   verify(ctx).json(searchArrayListCaptor.capture());
+  //   verify(ctx).status(HttpStatus.OK);
+  //   // one search should have been sent to db
+  //   assertEquals(1, searchArrayListCaptor.getValue().size());
+  //   // search should have proper content/params
+  //   for (Search search : searchArrayListCaptor.getValue()) {
+  //       assertTrue(search.params.toString().contains("he"));
+  //   }
+  // }
+
+  @Test
+  void constructFiltersReturnsMessage() throws IOException {
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setErr(new PrintStream(outContent));
+    // makes search that will be passed
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
+    // calls getWords() which calls constructFilter()
+    anagramController.getWords(ctx);
+
+    // checks that construct filters gave out right message "search added with db params..."
+    assert(outContent.toString()).contains("search added to db");
+  }
+
+
 
     // @Test
     // public void canGetString() {
@@ -245,7 +296,7 @@ class AnagramControllerSpec {
     String id = wordId.toHexString();
     when(ctx.pathParam("id")).thenReturn(id);
 
-    wordController.getWord(ctx);
+    anagramController.getWord(ctx);
 
     verify(ctx).json(wordCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
@@ -258,7 +309,7 @@ class AnagramControllerSpec {
     when(ctx.pathParam("id")).thenReturn("bad");
 
     Throwable exception = assertThrows(BadRequestResponse.class, () -> {
-      wordController.getWord(ctx);
+      anagramController.getWord(ctx);
     });
 
     assertEquals("The requested word id wasn't a legal Mongo Object ID", exception.getMessage());
@@ -270,7 +321,7 @@ class AnagramControllerSpec {
     when(ctx.pathParam("id")).thenReturn(id);
 
     Throwable exception = assertThrows(NotFoundResponse.class, () -> {
-      wordController.getWord(ctx);
+      anagramController.getWord(ctx);
     });
 
     assertEquals("The requested word was not found", exception.getMessage());
@@ -288,7 +339,7 @@ class AnagramControllerSpec {
       .thenReturn(new BodyValidator<Word>(newWordJson, Word.class,
                     () -> javalinJackson.fromJsonString(newWordJson, Word.class)));
 
-    wordController.addNewWord(ctx);
+    anagramController.addNewWord(ctx);
     verify(ctx).json(mapCaptor.capture());
 
     verify(ctx).status(HttpStatus.CREATED);
@@ -314,7 +365,7 @@ class AnagramControllerSpec {
         () -> javalinJackson.fromJsonString(newWordJson, Word.class)));
 
     ValidationException exception = assertThrows(ValidationException.class, () -> {
-      wordController.addNewWord(ctx);
+      anagramController.addNewWord(ctx);
     });
 
     String exceptionMessage = exception.getErrors().get("REQUEST_BODY").get(0).toString();
@@ -337,7 +388,7 @@ class AnagramControllerSpec {
             () -> javalinJackson.fromJsonString(newWordJson, Word.class)));
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-          wordController.addNewWord(ctx);
+          anagramController.addNewWord(ctx);
         });
 
         String exceptionMessage = exception.getErrors().get("REQUEST_BODY").get(0).toString();
@@ -395,7 +446,7 @@ class AnagramControllerSpec {
     assertEquals(1, db.getCollection("words")
       .countDocuments(eq("_id", new ObjectId(testID))));
 
-    wordController.deleteWord(ctx);
+    anagramController.deleteWord(ctx);
 
     verify(ctx).status(HttpStatus.OK);
 
@@ -408,13 +459,13 @@ class AnagramControllerSpec {
     String testID = wordId.toHexString();
     when(ctx.pathParam("id")).thenReturn(testID);
 
-    wordController.deleteWord(ctx);
+    anagramController.deleteWord(ctx);
 
     assertEquals(0, db.getCollection("words")
       .countDocuments(eq("_id", new ObjectId(testID))));
 
     assertThrows(NotFoundResponse.class, () -> {
-      wordController.deleteWord(ctx);
+      anagramController.deleteWord(ctx);
     });
 
     verify(ctx).status(HttpStatus.NOT_FOUND);
@@ -465,7 +516,7 @@ class AnagramControllerSpec {
       assertEquals(2, db.getCollection("words")
         .countDocuments(eq("wordGroup", testWordGroup)));
       when(ctx.pathParam("wordGroup")).thenReturn(testWordGroup);
-      wordController.deleteListWords(ctx);
+      anagramController.deleteListWords(ctx);
       verify(ctx).status(HttpStatus.OK);
       assertEquals(0, db.getCollection("words")
         .countDocuments(eq("wordGroup", testWordGroup)));

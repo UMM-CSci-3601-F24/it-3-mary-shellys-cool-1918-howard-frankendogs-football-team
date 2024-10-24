@@ -3,6 +3,7 @@ import { Word } from './word';
 import { environment } from 'src/environments/environment';
 import { map, Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Search } from './search';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,7 @@ export class WordService {
       params: httpParams,
     });
   }
+
   sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean}): Word[] {
     const filteredWords = words;
     //let filteredWords = words;
@@ -45,6 +47,10 @@ export class WordService {
       filteredWords.reverse();
     }
     return filteredWords;
+  }
+
+  getSearchHistory(): Observable<Search[]> {
+    return this.httpClient.get<Search[]>(this.wordUrl + "/history")
   }
 
   addWord(newWord: Partial<Word>): Observable<string> {

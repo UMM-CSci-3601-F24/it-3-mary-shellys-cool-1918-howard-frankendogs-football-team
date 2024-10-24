@@ -18,6 +18,7 @@ import { MatNavList } from '@angular/material/list';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { Search } from './search';
 
 @Component({
   selector: 'app-word-list-component',
@@ -96,6 +97,32 @@ export class WordListComponent {
       sortOrder: this.sortOrder(),
     });
   });
+
+  serverSearchHistory =
+  toSignal(
+    combineLatest().pipe(
+      switchMap(() =>
+        this.wordService.getSearchHistory()
+      ),
+      catchError((err) => {
+        if (err.error instanceof ErrorEvent) {
+          this.errMsg.set(
+            `Problem in the client – Error: ${err.error.message}`
+          );
+        } else {
+          this.errMsg.set(
+            `Problem contacting the server – Error Code: ${err.status}\nMessage: ${err.message}`
+          );
+        }
+        this.snackBar.open(this.errMsg(), 'OK', { duration: 6000 });
+        return of<Search[]>([]);
+      }),
+      tap(() => {
+
+      })
+    )
+  );
+
 
   /**
    * calls deleteWord and returns a snackbar

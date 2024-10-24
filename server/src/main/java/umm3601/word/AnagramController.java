@@ -34,6 +34,7 @@ public class AnagramController implements Controller {
   private static final String API_WORDS = "/api/anagram";
   private static final String API_WORD_BY_ID = "/api/anagram/{id}";
   private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/{wordGroup}";
+  private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history";
   static final String WORD_KEY = "word";
   static final String WORD_GROUP_KEY = "wordGroup";
   static final String SORT_ORDER_KEY = "sortOrder";
@@ -101,18 +102,23 @@ public class AnagramController implements Controller {
 
     Search newSearch = new Search(combinedFilter);
     searchCollection.insertOne(newSearch);
-    System.out.println("search added to db with params: " + combinedFilter.toString());
+    System.err.println("search added to db with params: " + combinedFilter.toString());
 
     return combinedFilter;
   }
 
-private Bson constructSortingOrder(Context ctx) {
-  String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "alphabetical");
-  String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "false");
-  Bson sortingOrder = sortOrder.equals("desc") ?  Sorts.descending(sortBy) : Sorts.ascending(sortBy);
-  return sortingOrder;
-}
+  public void getSearches(Context ctx) {
+    ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
+    ctx.json(searches);
+    ctx.status(HttpStatus.OK);
+  }
 
+  private Bson constructSortingOrder(Context ctx) {
+    String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "alphabetical");
+    String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "false");
+    Bson sortingOrder = sortOrder.equals("desc") ?  Sorts.descending(sortBy) : Sorts.ascending(sortBy);
+    return sortingOrder;
+  }
 
   public void addNewWord(Context ctx) {
 
@@ -164,6 +170,8 @@ private Bson constructSortingOrder(Context ctx) {
   public void addRoutes(Javalin server) {
 
     server.get(API_WORDS, this::getWords);
+
+    server.get(API_WORDS_SEARCH_HISTORY, this::getSearches);
 
     server.delete(API_WORD_BY_ID, this::deleteWord);
 
