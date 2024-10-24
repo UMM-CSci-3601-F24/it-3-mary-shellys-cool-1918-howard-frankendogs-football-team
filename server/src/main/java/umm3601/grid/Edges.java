@@ -1,9 +1,9 @@
 package umm3601.grid;
 
 public class Edges {
-    boolean top;
-    boolean bottom;
-    boolean right;
-    boolean left;
+    public boolean top;
+    public boolean bottom;
+    public boolean right;
+    public boolean left;
 }
 

@@ -6,8 +6,8 @@ public class Grid {
   @ObjectId @Id
   @SuppressWarnings({"memberName"})
   public String _id;
-  String owner;
-  GridCell[][] grid;
+  public String owner;
+  public GridCell[][] grid;
 
   public String getId() {
     return this._id;

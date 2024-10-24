@@ -69,9 +69,8 @@ export class GridComponent {
   }
 
   saveGrid() {
-    const gridData: Grid = {
-      _id: 'womp', // Again a placeholder
-      owner: 'currentUser', // Just a placeholder for now
+    const gridData: Partial<Grid> = {
+      owner: 'currentUser', // Again a placeholder
       grid: this.grid
     };
     this.gridService.saveGrid(gridData).subscribe(() => {

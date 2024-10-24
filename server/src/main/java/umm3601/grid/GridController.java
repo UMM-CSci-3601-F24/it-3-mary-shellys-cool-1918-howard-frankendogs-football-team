@@ -10,6 +10,7 @@ import org.bson.UuidRepresentation;
 import org.bson.types.ObjectId;
 import org.mongojack.JacksonMongoCollection;
 
+import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import com.mongodb.client.MongoDatabase;
 
 import io.javalin.Javalin;
@@ -37,20 +38,20 @@ public class GridController implements Controller {
 
   public void saveGrid(Context ctx) {
     // this returns an unrecognized property exception
-    Grid grid = ctx.bodyAsClass(Grid.class);
-    gridCollection.insert(grid);
-    ctx.json(Map.of("id", grid._id));
-    ctx.status(HttpStatus.CREATED);
-
-    // this returns a 400 Bad request response with a deserialization error
-    // String body = ctx.body();
-    // Grid grid = ctx.bodyValidator(Grid.class)
-    //   .check(td -> td.owner != null, "Owner must be non-empty")
-    //   .check(td -> td.grid != null, "Error with grid, grid was : " + body)
-    //   .get();
-    // gridCollection.insertOne(grid);
+    // Grid grid = ctx.bodyAsClass(Grid.class);
+    // gridCollection.insert(grid);
     // ctx.json(Map.of("id", grid._id));
     // ctx.status(HttpStatus.CREATED);
+
+    // this returns a 400 Bad request response with a deserialization error
+    String body = ctx.body();
+    Grid grid = ctx.bodyValidator(Grid.class)
+      // .check(td -> td.owner != null, "Owner must be non-empty")
+      // .check(td -> td.grid != null, "Error with grid, grid was : " + body)
+      .getOrThrow(m -> new RuntimeJsonMappingException("Failed to parse body as grid: " + body));
+    gridCollection.insertOne(grid);
+    ctx.json(Map.of("id", grid._id));
+    ctx.status(HttpStatus.CREATED);
 
   }
 
