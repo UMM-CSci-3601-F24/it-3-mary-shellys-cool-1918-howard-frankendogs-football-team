@@ -87,20 +87,22 @@ public class AnagramController implements Controller {
 
   private Bson constructFilter(Context ctx) {
     List<Bson> filters = new ArrayList<>();
+    Search newSearch = new Search();
 
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(WORD_KEY, pattern));
+      newSearch.setContains(ctx.queryParam(WORD_KEY));
     }
 
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(WORD_GROUP_KEY, pattern));
+      newSearch.setWordgroup(ctx.queryParam(WORD_GROUP_KEY));
     }
 
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
 
-    Search newSearch = new Search(combinedFilter);
     searchCollection.insertOne(newSearch);
     System.err.println("search added to db with params: " + combinedFilter.toString());
 

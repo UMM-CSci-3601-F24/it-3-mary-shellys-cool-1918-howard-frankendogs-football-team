@@ -7,10 +7,13 @@ import org.mongojack.ObjectId;
 public class Search {
   @ObjectId @Id
   public String _id;
-  public Bson params; // I don't think this will be a String, more like HashMap
+  public String contains;
+  public String wordGroup;// I don't think this will be a String, more like HashMap
 
-
-  public Search(Bson params){
-    this.params = params;
+  public void setContains(String contains) {
+    this.contains = contains;
+  }
+  public void setWordgroup(String wordGroup) {
+    this.wordGroup = wordGroup;
   }
 }
