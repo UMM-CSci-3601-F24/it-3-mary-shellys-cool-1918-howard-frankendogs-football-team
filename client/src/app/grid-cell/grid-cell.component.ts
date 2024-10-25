@@ -30,6 +30,9 @@ export class GridCellComponent {
   @Input({}) row: number;
   @Input({}) grid: GridCell[][];
 
+  backgroundColor: string = "black";
+
+
 
   /**
    * Constructor for GridCellComponent.
@@ -79,8 +82,9 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
+
    /**
-   * Handles keydown events to toggle the bold state of the grid cell edges.
+   * Handles keydown egridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
    * @param event - The keyboard event.
    */
   onKeyDown(event: KeyboardEvent) {
