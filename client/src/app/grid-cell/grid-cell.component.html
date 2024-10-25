@@ -5,16 +5,16 @@
     'bold-top': gridCell.edges.top,
     'bold-right': gridCell.edges.right,
     'bold-bottom': gridCell.edges.bottom,
-    'bold-left': gridCell.edges.left|gridCell.edges.bottom
+    'bold-left': gridCell.edges.left
   }"
 >
 @if (gridCell.editable) {
   <input matInput
     [(ngModel)]="gridCell.value"
-    
+
     [ngClass] = "{
       'cell-input': true,
-      'blacked-out': gridCell.edges.left|gridCell.edges.bottom|gridCell.edges.top|gridCell.edges.right,
+      'blacked-out': gridCell.edges.left && gridCell.edges.bottom && gridCell.edges.top && gridCell.edges.right,
     }"
     type="text"
     maxlength="1"

@@ -82,6 +82,26 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
+  onCtrlClick(keyEvent: KeyboardEvent, clickEvent: MouseEvent) {
+    if (keyEvent.ctrlKey && clickEvent) {
+          this.gridCell.edges.top = !this.gridCell.edges.top;
+          if (this.grid) {
+            this.grid[this.col][this.row - 1].edges.bottom = this.gridCell.edges.top;
+          }
+          this.gridCell.edges.right = !this.gridCell.edges.right;
+          if (this.grid) {
+            this.grid[this.col + 1][this.row].edges.left = this.gridCell.edges.right;
+          }
+          this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
+          if (this.grid) {
+            this.grid[this.col][this.row + 1].edges.top = this.gridCell.edges.bottom;
+          }
+          this.gridCell.edges.left = !this.gridCell.edges.left;
+          if (this.grid) {
+            this.grid[this.col - 1][this.row].edges.right = this.gridCell.edges.left;
+          }
+    }
+  }
 
    /**
    * Handles keydown egridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
