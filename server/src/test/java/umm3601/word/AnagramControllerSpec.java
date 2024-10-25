@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -135,7 +136,7 @@ class AnagramControllerSpec {
     MongoCollection<Document> searchDocuments = db.getCollection("searches");
     searchDocuments.drop();
     List<Document> testSearches = new ArrayList<>();
-    testSearches.add(new Document().append("params", "contains: he"));
+    testSearches.add(new Document().append("contains", "he"));
     searchDocuments.insertMany(testSearches);
 
     anagramController = new AnagramController(db);
@@ -222,27 +223,26 @@ class AnagramControllerSpec {
     }
   }
 
-  // @Test
-  // void getWordWithParamsSavesSearches() throws IOException {
-  //   // makes search that will be passed
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-  //   when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
-  //   // calls getWords() which calls constructFilter()
-  //   anagramController.getWords(ctx);
-  //   anagramController.getSearches(ctx);
-  //   // Capture the search sent to db and check status
-  //   // I dont think this is the right way to
-  //   verify(ctx).json(searchArrayListCaptor.capture());
-  //   verify(ctx).status(HttpStatus.OK);
-  //   // one search should have been sent to db
-  //   assertEquals(1, searchArrayListCaptor.getValue().size());
-  //   // search should have proper content/params
-  //   for (Search search : searchArrayListCaptor.getValue()) {
-  //       assertTrue(search.params.toString().contains("he"));
-  //   }
-  // }
+  @Test
+  void getWordWithParamsSavesSearches() throws IOException {
+    // makes search that will be passed
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
+    // calls getWords() which calls constructFilter()
+    anagramController.getWords(ctx);
+    // Capture the search sent to db and check status
+    // I don't think this is the right way to
+    verify(ctx,times(2)).json(searchArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    // one search should have been sent to db
+    assertEquals(2, searchArrayListCaptor.getValue().size());
+    // search should have proper content/params
+    for (Search search : searchArrayListCaptor.getValue()) {
+        assertTrue(search.contains.toString().contains("he"));
+    }
+  }
 
   @Test
   void constructFiltersReturnsMessage() throws IOException {
@@ -255,14 +255,11 @@ class AnagramControllerSpec {
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
     // calls getWords() which calls constructFilter()
     anagramController.getWords(ctx);
-
     // checks that construct filters gave out right message "search added with db params..."
     assert(outContent.toString()).contains("search added to db");
   }
 
-
-
-    // @Test
+  // @Test
     // public void canGetString() {
 
     //     String targetWord = "skibbidy";

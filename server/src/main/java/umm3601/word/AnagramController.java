@@ -80,8 +80,9 @@ public class AnagramController implements Controller {
       .find(combinedFilter)
       .sort(sortingOrder)
       .into(new ArrayList<>());
-
     ctx.json(matchingWords);
+    ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
+    ctx.json(searches);
     ctx.status(HttpStatus.OK);
   }
 
@@ -98,7 +99,7 @@ public class AnagramController implements Controller {
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(WORD_GROUP_KEY, pattern));
-      newSearch.setWordgroup(ctx.queryParam(WORD_GROUP_KEY));
+      newSearch.setWordGroup(ctx.queryParam(WORD_GROUP_KEY));
     }
 
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);

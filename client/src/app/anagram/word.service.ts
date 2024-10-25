@@ -11,8 +11,8 @@ import { Search } from './search';
 export class WordService {
   readonly wordUrl: string = `${environment.apiUrl}anagram`;
 
-  private readonly groupKey = 'wordGroup';//'group';
-  private readonly containsKey = 'word';//'contains';
+  private readonly groupKey = 'wordGroup';
+  private readonly containsKey = 'word';
 
 
   constructor(private httpClient: HttpClient) { }

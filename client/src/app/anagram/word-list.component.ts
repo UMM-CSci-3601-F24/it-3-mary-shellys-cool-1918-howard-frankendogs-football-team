@@ -123,6 +123,10 @@ export class WordListComponent {
     )
   );
 
+  searchHistory = computed(() => {
+    const searches = this.serverSearchHistory()
+    return searches;
+  })
 
   /**
    * calls deleteWord and returns a snackbar

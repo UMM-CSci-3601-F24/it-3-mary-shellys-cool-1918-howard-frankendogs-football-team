@@ -93,8 +93,13 @@
       <mat-card>
         <mat-card-content>
           <mat-list>
-            @for(search of serverSearchHistory(); track search._id) {
-              <span matListItemLine class="anagram-search-history-parameters">Parameters: "{{search.params}}"</span>
+            @for(search of searchHistory().slice(0,100); track search._id) {
+              @if(search.contains !== null){
+                <span matListItemLine class="anagram-search-history-contains">Contains: "{{search.contains}}"</span>
+              }
+              @if(search.wordGroup !== null){
+                <span matListItemLine class="anagram-search-history-wordGroup">From word group: "{{search.wordGroup}}"</span>
+              }
             }
           </mat-list>
         </mat-card-content>
