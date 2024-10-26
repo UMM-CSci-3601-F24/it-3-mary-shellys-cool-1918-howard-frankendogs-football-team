@@ -82,29 +82,56 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
-  onCtrlClick(keyEvent: KeyboardEvent, clickEvent: MouseEvent) {
-    if (keyEvent.ctrlKey && clickEvent) {
-          this.gridCell.edges.top = !this.gridCell.edges.top;
-          if (this.grid) {
-            this.grid[this.col][this.row - 1].edges.bottom = this.gridCell.edges.top;
+  /**
+   * Blacks out a cell and its edges with ctrl, undoes this with alt
+   * @param event - checks the key clicked
+   */
+  onKeyClick(event: MouseEvent) { // blacks out cell and edges
+    if (event.ctrlKey) {
+      this.gridCell.blackedOut = true;
+      this.gridCell.edges.top = true;
+        if (this.grid) {
+          this.grid[this.col][this.row - 1].edges.bottom = true;
           }
-          this.gridCell.edges.right = !this.gridCell.edges.right;
-          if (this.grid) {
-            this.grid[this.col + 1][this.row].edges.left = this.gridCell.edges.right;
+      this.gridCell.edges.right = true;
+        if (this.grid) {
+          this.grid[this.col + 1][this.row].edges.left = true;
           }
-          this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
-          if (this.grid) {
-            this.grid[this.col][this.row + 1].edges.top = this.gridCell.edges.bottom;
+      this.gridCell.edges.bottom = true;
+        if (this.grid) {
+          this.grid[this.col][this.row + 1].edges.top = true;
           }
-          this.gridCell.edges.left = !this.gridCell.edges.left;
-          if (this.grid) {
-            this.grid[this.col - 1][this.row].edges.right = this.gridCell.edges.left;
+      this.gridCell.edges.left = true;
+        if (this.grid) {
+          this.grid[this.col - 1][this.row].edges.right = true;
           }
+        }
+    if (event.altKey) { // Undoes a blackout, also undoes edges :p
+      if (this.gridCell.blackedOut === true) {
+      this.gridCell.blackedOut = false;
+      this.gridCell.edges.top = false;
+        if (this.grid) {
+          this.grid[this.col][this.row - 1].edges.bottom = false;
+          }
+      this.gridCell.edges.right = false;
+        if (this.grid) {
+          this.grid[this.col + 1][this.row].edges.left = false;
+          }
+      this.gridCell.edges.bottom = false;
+        if (this.grid) {
+          this.grid[this.col][this.row + 1].edges.top = false;
+          }
+      this.gridCell.edges.left = false;
+        if (this.grid) {
+          this.grid[this.col - 1][this.row].edges.right = false;
+          }
+        }
+      }
     }
-  }
+
 
    /**
-   * Handles keydown egridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
+   * Handles keydown gridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
    * @param event - The keyboard event.
    */
   onKeyDown(event: KeyboardEvent) {

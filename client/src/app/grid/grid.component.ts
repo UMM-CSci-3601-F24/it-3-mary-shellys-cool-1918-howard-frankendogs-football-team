@@ -188,10 +188,10 @@ export class GridComponent {
       this.currentCol = col;
       this.currentRow = row;
 
-      console.log(col, row);
+      // console.log(col, row);
 
       const cellInput = document.querySelector(`app-grid-cell[col="${col}"][row="${row}"] input`);
-      console.log(cellInput);
+      // console.log(cellInput);
 
       if (cellInput) {
         setTimeout(() => (cellInput as HTMLElement).focus());
