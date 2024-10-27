@@ -88,6 +88,7 @@ export class GridCellComponent {
    */
   onKeyClick(event: MouseEvent) { // blacks out cell and edges
     if (event.ctrlKey) {
+      if(this.gridCell.blackedOut === false) {
       this.gridCell.blackedOut = true;
       this.gridCell.edges.top = true;
         if (this.grid) {
@@ -106,8 +107,7 @@ export class GridCellComponent {
           this.grid[this.col - 1][this.row].edges.right = true;
           }
         }
-    if (event.altKey) { // Undoes a blackout, also undoes edges :p
-      if (this.gridCell.blackedOut === true) {
+    else {  // Undoes a blackout, also undoes edges :p
       this.gridCell.blackedOut = false;
       this.gridCell.edges.top = false;
         if (this.grid) {
@@ -137,6 +137,9 @@ export class GridCellComponent {
   onKeyDown(event: KeyboardEvent) {
     if (this.gridCell.editable && event.ctrlKey) {
       event.preventDefault();
+      if (this.gridCell.blackedOut === true) {
+        this.gridCell.blackedOut = false;
+      }
       switch (event.key) {
         case 'ArrowUp':
           this.gridCell.edges.top = !this.gridCell.edges.top;

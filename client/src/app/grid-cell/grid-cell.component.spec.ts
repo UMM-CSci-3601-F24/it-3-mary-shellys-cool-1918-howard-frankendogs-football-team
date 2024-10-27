@@ -34,6 +34,25 @@ describe('GridCellComponent', () => {
     expect(cell.gridCell.edges.left).toBeFalse();
   });
 
+  it('should blackout a cell with bolded edges', () => {
+    const cell = new GridCellComponent();
+
+    expect(cell.gridCell.blackedOut).toBeFalse();
+
+    const edges = { top: true, right: true, bottom: true, left: true };
+    cell.setEdges(edges);
+
+    expect(cell.gridCell.edges.top).toBeTrue();
+    expect(cell.gridCell.edges.right).toBeTrue();
+    expect(cell.gridCell.edges.bottom).toBeTrue();
+    expect(cell.gridCell.edges.left).toBeTrue();
+    expect(cell.gridCell.blackedOut).toBeTrue();
+  });
+
+  it('Cell can be blacked out', () => {
+
+  })
+
   it('should allow input into the cell', () => {
     const fixture = TestBed.createComponent(GridCellComponent);
     const component = fixture.componentInstance;
