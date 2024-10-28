@@ -119,20 +119,17 @@ export class GridCellComponent {
    */
   onClick(event: MouseEvent) { // blacks out cell and edges
     if (event.ctrlKey) {
-      // if (this.gridCell.edges["top"] && this.gridCell.edges["right"] && this.gridCell.edges["bottom"] && this.gridCell.edges["left"]) {
-      //   for (const edge in this.gridCell.edges) {
-      //       this.boldEdge(edge);
-      //   }
-      // }
-      for (const edge in this.gridCell.edges) {
-        if (this.gridCell.edges[edge] === false) {
-          this.toggleEdge(edge);
+      if (this.gridCell.edges["top"] && this.gridCell.edges["right"] && this.gridCell.edges["bottom"] && this.gridCell.edges["left"]) {
+        for (const edge in this.gridCell.edges) {
+            this.toggleEdge(edge);
         }
-      }
-      // this.boldEdge('top');
-      // this.boldEdge('right');
-      // this.boldEdge('bottom');
-      // this.boldEdge('left');
+      } else {
+        for (const edge in this.gridCell.edges) {
+          if (this.gridCell.edges[edge] === false) {
+            this.toggleEdge(edge);
+          }
+        }
+       }
       }
     }
 
