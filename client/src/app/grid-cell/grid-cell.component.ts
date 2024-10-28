@@ -82,52 +82,60 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
+  toggleEdge(edge: string) {
+    switch (edge) {
+      case 'top':
+        this.gridCell.edges.top = !this.gridCell.edges.top;
+        if (this.grid && this.grid[this.col][this.row - 1]) {
+          this.grid[this.col][this.row - 1].edges.bottom = this.gridCell.edges.top;
+        }
+        break;
+      case 'right':
+        this.gridCell.edges.right = !this.gridCell.edges.right;
+        if (this.grid && this.grid[this.col + 1]) {
+          this.grid[this.col + 1][this.row].edges.left = this.gridCell.edges.right;
+        }
+        break;
+      case 'bottom':
+        this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
+        if (this.grid && this.grid[this.col][this.row + 1]) {
+          this.grid[this.col][this.row + 1].edges.top = this.gridCell.edges.bottom;
+        }
+        break;
+      case 'left':
+        this.gridCell.edges.left = !this.gridCell.edges.left;
+        if (this.grid && this.grid[this.col - 1]) {
+          this.grid[this.col - 1][this.row].edges.right = this.gridCell.edges.left;
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
   /**
    * Blacks out a cell and its edges with ctrl, undoes this with alt
    * @param event - checks the key clicked
    */
-  onKeyClick(event: MouseEvent) { // blacks out cell and edges
+  onClick(event: MouseEvent) { // blacks out cell and edges
     if (event.ctrlKey) {
-      if(this.gridCell.blackedOut === false) {
-      this.gridCell.blackedOut = true;
-      this.gridCell.edges.top = true;
-        if (this.grid) {
-          this.grid[this.col][this.row - 1].edges.bottom = true;
-          }
-      this.gridCell.edges.right = true;
-        if (this.grid) {
-          this.grid[this.col + 1][this.row].edges.left = true;
-          }
-      this.gridCell.edges.bottom = true;
-        if (this.grid) {
-          this.grid[this.col][this.row + 1].edges.top = true;
-          }
-      this.gridCell.edges.left = true;
-        if (this.grid) {
-          this.grid[this.col - 1][this.row].edges.right = true;
-          }
-        }
-    else {  // Undoes a blackout, also undoes edges :p
-      this.gridCell.blackedOut = false;
-      this.gridCell.edges.top = false;
-        if (this.grid) {
-          this.grid[this.col][this.row - 1].edges.bottom = false;
-          }
-      this.gridCell.edges.right = false;
-        if (this.grid) {
-          this.grid[this.col + 1][this.row].edges.left = false;
-          }
-      this.gridCell.edges.bottom = false;
-        if (this.grid) {
-          this.grid[this.col][this.row + 1].edges.top = false;
-          }
-      this.gridCell.edges.left = false;
-        if (this.grid) {
-          this.grid[this.col - 1][this.row].edges.right = false;
-          }
+      // if (this.gridCell.edges["top"] && this.gridCell.edges["right"] && this.gridCell.edges["bottom"] && this.gridCell.edges["left"]) {
+      //   for (const edge in this.gridCell.edges) {
+      //       this.boldEdge(edge);
+      //   }
+      // }
+      for (const edge in this.gridCell.edges) {
+        if (this.gridCell.edges[edge] === false) {
+          this.toggleEdge(edge);
         }
       }
+      // this.boldEdge('top');
+      // this.boldEdge('right');
+      // this.boldEdge('bottom');
+      // this.boldEdge('left');
+      }
     }
+
 
 
    /**
@@ -137,33 +145,18 @@ export class GridCellComponent {
   onKeyDown(event: KeyboardEvent) {
     if (this.gridCell.editable && event.ctrlKey) {
       event.preventDefault();
-      if (this.gridCell.blackedOut === true) {
-        this.gridCell.blackedOut = false;
-      }
       switch (event.key) {
         case 'ArrowUp':
-          this.gridCell.edges.top = !this.gridCell.edges.top;
-          if (this.grid) {
-            this.grid[this.col][this.row - 1].edges.bottom = this.gridCell.edges.top;
-          }
+          this.toggleEdge('top');
           break;
         case 'ArrowRight':
-          this.gridCell.edges.right = !this.gridCell.edges.right;
-          if (this.grid) {
-            this.grid[this.col + 1][this.row].edges.left = this.gridCell.edges.right;
-          }
+          this.toggleEdge('right');
           break;
         case 'ArrowDown':
-          this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
-          if (this.grid) {
-            this.grid[this.col][this.row + 1].edges.top = this.gridCell.edges.bottom;
-          }
+          this.toggleEdge('bottom');
           break;
         case 'ArrowLeft':
-          this.gridCell.edges.left = !this.gridCell.edges.left;
-          if (this.grid) {
-            this.grid[this.col - 1][this.row].edges.right = this.gridCell.edges.left;
-          }
+          this.toggleEdge('left');
           break;
         default:
           break;

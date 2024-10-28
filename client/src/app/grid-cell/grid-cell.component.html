@@ -14,13 +14,12 @@
     [ngClass] = "{
       'cell-input': true,
       'blacked-out': gridCell.edges.left && gridCell.edges.bottom && gridCell.edges.top && gridCell.edges.right
-      || gridCell.blackedOut,
     }"
     type="text"
     maxlength="1"
     (input)="onInput(gridCell.value)"
     (keydown)="onKeyDown($event)"
-    (click)="onKeyClick($event)"
+    (click)="onClick($event)"
     placeholder="{{gridCell.value}}">
 }
     @else {
