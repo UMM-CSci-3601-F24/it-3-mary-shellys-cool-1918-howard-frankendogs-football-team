@@ -50,7 +50,7 @@
 </div>
 <br>
 <div class="flex-row">
-  @if(serverFilteredWords()) {
+  @if(serverFilteredContext()) {
     <div class="flex-1">
       <mat-card>
         <mat-card-content>
@@ -88,12 +88,12 @@
   }
 </div>
 <div class="flex-row">
-  @if(serverSearchHistory()){
+  @if(serverFilteredContext()){
     <div class="flex-1">
       <mat-card>
         <mat-card-content>
           <mat-list>
-            @for(search of searchHistory().slice(0,100); track search._id) {
+            @for(search of searchHistory().reverse().slice(0,100); track search._id) {
               @if(search.contains !== null){
                 <span matListItemLine class="anagram-search-history-contains">Contains: "{{search.contains}}"</span>
               }

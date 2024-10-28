@@ -71,6 +71,9 @@ class AnagramControllerSpec {
   private ArgumentCaptor<ArrayList<Search>> searchArrayListCaptor;
 
   @Captor
+  private ArgumentCaptor<SearchContext> searchContextCaptor;
+
+  @Captor
   private ArgumentCaptor<Word> wordCaptor;
 
   @Captor
@@ -160,9 +163,9 @@ class AnagramControllerSpec {
   void canGetAllWords() throws IOException {
     when(ctx.queryParamMap()).thenReturn(Collections.emptyMap());
     anagramController.getWords(ctx);
-    verify(ctx).json(wordArrayListCaptor.capture());
+    verify(ctx).json(searchContextCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
-    assertEquals(db.getCollection("words").countDocuments(), wordArrayListCaptor.getValue().size());
+    assertEquals(db.getCollection("words").countDocuments(), searchContextCaptor.getValue().words.size());
   }
 
   @Test
@@ -213,7 +216,7 @@ class AnagramControllerSpec {
 
     anagramController.getWords(ctx);
 
-    verify(ctx).json(wordArrayListCaptor.capture());
+    verify(ctx).json(searchContextCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
 
     assertEquals(1, wordArrayListCaptor.getValue().size());

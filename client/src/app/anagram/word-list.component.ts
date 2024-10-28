@@ -9,7 +9,6 @@ import { WordService } from './word.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, combineLatest, of, switchMap, tap } from 'rxjs';
-import { Word } from './word';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,6 +18,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { Search } from './search';
+import { SearchContext } from './searchContext';
 
 @Component({
   selector: 'app-word-list-component',
@@ -60,7 +60,7 @@ export class WordListComponent {
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
 
-  serverFilteredWords =
+  serverFilteredContext =
     toSignal(
       combineLatest([this.contains$, this.group$]).pipe(
         switchMap(([word, wordGroup]) =>
@@ -80,7 +80,7 @@ export class WordListComponent {
             );
           }
           this.snackBar.open(this.errMsg(), 'OK', { duration: 6000 });
-          return of<Word[]>([]);
+          return of<SearchContext>();
         }),
         tap(() => {
 
@@ -91,7 +91,7 @@ export class WordListComponent {
   filteredWords = computed(() => {
     // takes list of words returned by server
     // then sends them through the client side sortWords)
-    const serverFilteredWords = this.serverFilteredWords();
+    const serverFilteredWords = this.serverFilteredContext().words;
     return this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
@@ -102,7 +102,7 @@ export class WordListComponent {
   toSignal(
     combineLatest().pipe(
       switchMap(() =>
-        this.wordService.getSearchHistory()
+        this.wordService.getSearchHistory() //acts as return stmt
       ),
       catchError((err) => {
         if (err.error instanceof ErrorEvent) {
@@ -124,7 +124,7 @@ export class WordListComponent {
   );
 
   searchHistory = computed(() => {
-    const searches = this.serverSearchHistory()
+    const searches = this.serverFilteredContext().searches;
     return searches;
   })
 

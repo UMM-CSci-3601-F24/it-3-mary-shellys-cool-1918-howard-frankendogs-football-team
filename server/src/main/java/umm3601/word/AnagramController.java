@@ -76,37 +76,42 @@ public class AnagramController implements Controller {
     Bson combinedFilter = constructFilter(ctx);
     Bson sortingOrder = constructSortingOrder(ctx);
 
+    // take words and searches from db and put into array lists
     ArrayList<Word> matchingWords = wordCollection
       .find(combinedFilter)
       .sort(sortingOrder)
       .into(new ArrayList<>());
-    ctx.json(matchingWords);
     ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
-    ctx.json(searches);
+    // turn array lists into SearchContext and return
+    SearchContext results = new SearchContext();
+    results.searchContext(matchingWords, searches);
+    ctx.json(results);
     ctx.status(HttpStatus.OK);
   }
 
   private Bson constructFilter(Context ctx) {
+    // logs data to be logged
     List<Bson> filters = new ArrayList<>();
     Search newSearch = new Search();
-
+    // if searching for contains will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(WORD_KEY, pattern));
       newSearch.setContains(ctx.queryParam(WORD_KEY));
     }
-
+    // if searching by word group will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(WORD_GROUP_KEY, pattern));
       newSearch.setWordGroup(ctx.queryParam(WORD_GROUP_KEY));
     }
-
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
-
-    searchCollection.insertOne(newSearch);
-    System.err.println("search added to db with params: " + combinedFilter.toString());
-
+    // log into database
+    if(ctx.queryParam(WORD_KEY) != null || ctx.queryParam(WORD_GROUP_KEY) != null) {
+      searchCollection.insertOne(newSearch);
+      System.err.println("search added to db with params: " + combinedFilter.toString());
+    }
+    // return filter to be applied to db in getWords()
     return combinedFilter;
   }
 

@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { map, Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Search } from './search';
+import { SearchContext } from './searchContext';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class WordService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getWords(filters?: {word?: string; wordGroup?: string}): Observable<Word[]> {
+  getWords(filters?: {word?: string; wordGroup?: string}): Observable<SearchContext> {
 
     let httpParams: HttpParams = new HttpParams();
     if(filters) {
@@ -28,7 +29,7 @@ export class WordService {
         httpParams = httpParams.set(this.groupKey, filters.wordGroup);
       }
     }
-    return this.httpClient.get<Word[]>(this.wordUrl, {
+    return this.httpClient.get<SearchContext>(this.wordUrl, {
       params: httpParams,
     });
   }
