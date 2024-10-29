@@ -8,6 +8,7 @@ public class Grid {
   public String _id;
   public String owner;
   public GridCell[][] grid;
+  public String id; // Load bearing coconut
 
   public String getId() {
     return this._id;

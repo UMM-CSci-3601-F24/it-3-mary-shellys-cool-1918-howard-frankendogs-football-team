@@ -1,8 +1,7 @@
 import { GridCell } from "../grid-cell/grid-cell";
 
 export interface Grid {
-
-    _id: string,
-    owner: string,
+    _id: String,
+    owner: String,
     grid: GridCell[][]
 }
