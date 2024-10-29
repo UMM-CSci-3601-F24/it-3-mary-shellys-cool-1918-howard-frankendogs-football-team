@@ -90,7 +90,7 @@ public class AnagramController implements Controller {
   }
 
   private Bson constructFilter(Context ctx) {
-    // logs data to be logged
+    // names data to be logged
     List<Bson> filters = new ArrayList<>();
     Search newSearch = new Search();
     // if searching for contains will enter this loop
@@ -116,11 +116,12 @@ public class AnagramController implements Controller {
     return combinedFilter;
   }
 
-  public void getSearches(Context ctx) {
-    ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
-    ctx.json(searches);
-    ctx.status(HttpStatus.OK);
-  }
+  //used for debugging setting up db, might be used again for debugging limiting saved searches
+  // public void getSearches(Context ctx) {
+  //   ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
+  //   ctx.json(searches);
+  //   ctx.status(HttpStatus.OK);
+  // }
 
   private Bson constructSortingOrder(Context ctx) {
     String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "alphabetical");
@@ -133,12 +134,10 @@ public class AnagramController implements Controller {
 
     String body = ctx.body();
     Word newWord = ctx.bodyValidator(Word.class)
-        .check(td -> td.word != null && td.word.length() > 0,
-            "New words must be non-empty; New words was " + body)
-        .check(td -> td.wordGroup != null && td.wordGroup.length() > 0,
-            "Word Group must be non-empty; Group was " + body)
-        // .check(td -> td.body != null && td.body.length() > 0,
-        // "Todo must have a non-empty body; body was " + body)
+        .check(nw -> nw.word != null && nw.word.length() > 0,
+            "New words must be non-empty and not null; body was " + body)
+        .check(nw -> nw.wordGroup != null && nw.wordGroup.length() > 0,
+            "Word group must be non-empty and not null; body was " + body)
         .get();
 
     wordCollection.insertOne(newWord);
@@ -180,7 +179,7 @@ public class AnagramController implements Controller {
 
     server.get(API_WORDS, this::getWords);
 
-    server.get(API_WORDS_SEARCH_HISTORY, this::getSearches);
+    // server.get(API_WORDS_SEARCH_HISTORY, this::getSearches);
 
     server.delete(API_WORD_BY_ID, this::deleteWord);
 
