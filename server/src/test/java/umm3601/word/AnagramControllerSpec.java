@@ -3,11 +3,9 @@ package umm3601.word;
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-// import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,7 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-// import java.util.stream.Collectors;
 import java.util.stream.Collectors;
 
 import org.bson.Document;
@@ -194,8 +191,8 @@ class AnagramControllerSpec {
       assertEquals(targetWordGroup, word.wordGroup);
     }
 
-    List<String> words = searchContextCaptor.getValue().words.stream().map(word -> word.word)
-        .collect(Collectors.toList());
+    List<String> words = searchContextCaptor.getValue().words.stream()
+      .map(word -> word.word).collect(Collectors.toList());
     assertTrue(words.contains("skibbidy"));
     assertTrue(words.contains("sigma"));
     assertTrue(words.contains("cooked"));
@@ -296,9 +293,8 @@ class AnagramControllerSpec {
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
     // calls getWords() which calls constructFilter()
     anagramController.getWords(ctx);
-    // checks that construct filters gave out right message "search added with db
-    // params..."
-    assert (outContent.toString()).contains("search added to db");
+    // checks that construct filters gave out right message "search added with db params..."
+    assertTrue(outContent.toString().contains("search added to db"));
   }
 
   @Test

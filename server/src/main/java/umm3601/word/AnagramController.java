@@ -19,7 +19,6 @@ import org.mongojack.JacksonMongoCollection;
 
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
-import com.mongodb.client.model.search.SearchCollector;
 import com.mongodb.client.result.DeleteResult;
 
 import io.javalin.Javalin;
@@ -83,8 +82,7 @@ public class AnagramController implements Controller {
         .into(new ArrayList<>());
     ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
     // turn array lists into SearchContext and return
-    SearchContext results = new SearchContext();
-    results.searchContext(matchingWords, searches);
+    SearchContext results = new SearchContext(matchingWords, searches);
     ctx.json(results);
     ctx.status(HttpStatus.OK);
   }
