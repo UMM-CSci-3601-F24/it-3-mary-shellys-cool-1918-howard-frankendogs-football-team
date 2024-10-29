@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
+import { Search } from "src/app/anagram/search";
+import { SearchContext } from "src/app/anagram/searchContext";
 import { Word } from "src/app/anagram/word";
 import { WordService } from "src/app/anagram/word.service";
 import { AppComponent } from "src/app/app.component";
@@ -35,14 +37,27 @@ export class MockWordService extends WordService {
       wordGroup: "teachers",
     },
   ];
+  static testSearches: Search[] = [
+    {
+      _id: "",
+      contains: "",
+      wordGroup: ""
+    },
+    {
+      _id: "",
+      contains: "",
+      wordGroup: ""
+    }
+  ]
 
   constructor() {
     super(null);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getWords(_filters: {word?: string; wordGroup?: string}): Observable<Word[]> {
-    return of(MockWordService.testWords);
+  getWords(_filters: {word?: string; wordGroup?: string}): Observable<SearchContext> {
+    const searchContext: SearchContext = { words: MockWordService.testWords, searches: MockWordService.testSearches };
+    return of(searchContext);
   }
   // deleteWord(id: string): Observable<Word[]> {
   //   let temp: Word[];

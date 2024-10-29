@@ -36,22 +36,28 @@ describe('Word List', () => {
   it('should create', () => {
     expect(wordList).toBeTruthy();
   });
+  it("should create context", () => {
+    expect(wordList.serverFilteredContext()).toBeTruthy();
+  })
   it('contains all the words', () => {
-    expect(wordList.serverFilteredWords().length).toBe(5);
+    expect(wordList.filteredWords().length).toBe(5);
+  })
+  it('contains all the searches', () => {
+    expect(wordList.searchHistory().length).toBe(2);
   })
   it("contains a word 'Mac'", () => {
     expect(
-      wordList.serverFilteredWords().some((word: Word) => word.word === 'Mac')
+      wordList.filteredWords().some((word: Word) => word.word === 'Mac')
     ).toBe(true);
   });
   it('has four words in the group `team member`', () => {
     expect(
-      wordList.serverFilteredWords().filter((word: Word) => word.wordGroup === "team member").length
+      wordList.filteredWords().filter((word: Word) => word.wordGroup === "team member").length
     ).toBe(4);
   });
   it('has one word in the group `teachers`', () => {
     expect(
-      wordList.serverFilteredWords().filter((word: Word) => word.wordGroup === "teachers").length
+      wordList.filteredWords().filter((word: Word) => word.wordGroup === "teachers").length
     ).toBe(1);
   });
 });
@@ -60,11 +66,9 @@ describe('misbehaving word list', () => {
   let wordList: WordListComponent;
   let fixture: ComponentFixture<WordListComponent>;
   let originalTimeout;
-
   let wordServiceStub: {
     getWords: () => Observable<Word[]>;
   };
-
   beforeEach(() => {
     wordServiceStub = {
       getWords: () =>
@@ -77,7 +81,6 @@ describe('misbehaving word list', () => {
       providers: [{provide: WordService, useValue: wordServiceStub}],
     });
   });
-
   beforeEach(waitForAsync(() => {
     TestBed.compileComponents().then(() => {
       fixture = TestBed.createComponent(WordListComponent);
@@ -85,7 +88,6 @@ describe('misbehaving word list', () => {
       fixture.detectChanges();
     });
   }));
-
   // these two functions are a workaround to build more time
   //into this test so it does not auto fail when another test fails
   beforeEach(function() {
@@ -95,12 +97,11 @@ describe('misbehaving word list', () => {
   afterEach(function() {
       jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
   });
-
   it('generates an error if we don`t set up a WordListService', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-    expect(wordList.serverFilteredWords())
+    expect(wordList.serverFilteredContext())
       .withContext('service cant give values of non-existent list')
-      .toEqual([]);
+      .toEqual(undefined);
     expect(wordList.errMsg())
       .withContext('the error message will be')
       .toContain('Problem contacting the server – Error Code:');

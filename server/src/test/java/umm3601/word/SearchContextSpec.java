@@ -17,7 +17,7 @@ public class SearchContextSpec {
   private Search search2;
   private ArrayList<Search> searchArray = new ArrayList<Search>(Arrays.asList(search1,search2));
 
-  private SearchContext searchContext;
+  private SearchContext searchContext = new SearchContext(null, null);
 
   @BeforeEach
   void setupEach() {
@@ -26,7 +26,6 @@ public class SearchContextSpec {
 
     search1 = new Search();
     search2 = new Search();
-    searchContext = new SearchContext();
   }
 
   @Test
