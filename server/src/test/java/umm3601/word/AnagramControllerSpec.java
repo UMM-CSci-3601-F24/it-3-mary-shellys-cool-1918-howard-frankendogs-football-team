@@ -55,6 +55,7 @@ import io.javalin.validation.Validator;
 
 @SuppressWarnings({ "MagicNumber" })
 class AnagramControllerSpec {
+  private static final String SEARCH_COLLECTION = "searches";
   private AnagramController anagramController;
   private ObjectId wordId;
   private static MongoClient mongoClient;
@@ -136,7 +137,7 @@ class AnagramControllerSpec {
       wordDocuments.insertMany(testWords);
       wordDocuments.insertOne(testWordId);
 
-    MongoCollection<Document> searchDocuments = db.getCollection("searches");
+    MongoCollection<Document> searchDocuments = db.getCollection(SEARCH_COLLECTION);
     searchDocuments.drop();
     List<Document> testSearches = new ArrayList<>();
     testSearches.add(new Document().append("contains", "he"));
@@ -227,7 +228,9 @@ class AnagramControllerSpec {
   }
 
   @Test
-  void getWordWithParamsSavesSearches() throws IOException {
+  void getWordSavesSearch() throws IOException {
+    //checks initial size
+    long dbSize = db.getCollection(SEARCH_COLLECTION).countDocuments();
     // makes search that will be passed
     Map<String, List<String>> queryParams = new HashMap<>();
     queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
@@ -235,12 +238,50 @@ class AnagramControllerSpec {
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
     // calls getWords() which calls constructFilter()
     anagramController.getWords(ctx);
+    // checks that only one document was added
+    assertEquals(db.getCollection(SEARCH_COLLECTION).countDocuments(), dbSize + 1);
     // Capture the search sent to db and check status
-    // I don't think this is the right way to
     verify(ctx).json(searchContextCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
-    // one search should have been sent to db
-    assertTrue(searchContextCaptor.getValue().searches.size() > 0);
+    // check that document added had the right params
+    assertEquals(searchContextCaptor.getValue().searches.get((int) dbSize).contains, "ha");
+  }
+
+  @Test
+  void getWordDoesNotSaveEmptySearch() throws IOException {
+    //checks initial size
+    long dbSize = db.getCollection(SEARCH_COLLECTION).countDocuments();
+    // makes search that will be passed
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {""}));
+    queryParams.put(AnagramController.WORD_GROUP_KEY, Arrays.asList(new String[] {""}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("");
+    when(ctx.queryParam(AnagramController.WORD_GROUP_KEY)).thenReturn("");
+    // calls getWords() which calls constructFilter()
+    anagramController.getWords(ctx);
+    // checks that only one document was added
+    assertEquals(db.getCollection(SEARCH_COLLECTION).countDocuments(), dbSize);
+    // Capture the search sent to db and check status
+    verify(ctx).json(searchContextCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    }
+
+  @Test
+  void getWordDoesNotSaveNullSearch() throws IOException {
+    //checks initial size
+    long dbSize = db.getCollection(SEARCH_COLLECTION).countDocuments();
+    // makes search that will be passed
+    Map<String, List<String>> queryParams = new HashMap<>();
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(null);
+    // calls getWords() which calls constructFilter()
+    anagramController.getWords(ctx);
+    // checks that no document was added
+    assertEquals(db.getCollection(SEARCH_COLLECTION).countDocuments(), dbSize);
+    // Capture the search sent to db and check status
+    verify(ctx).json(searchContextCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
   }
 
   @Test

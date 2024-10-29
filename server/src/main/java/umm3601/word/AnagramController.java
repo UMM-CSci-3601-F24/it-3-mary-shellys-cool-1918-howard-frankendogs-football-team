@@ -44,15 +44,15 @@ public class AnagramController implements Controller {
 
   public AnagramController(MongoDatabase database) {
     wordCollection = JacksonMongoCollection.builder().build(
-      database,
-      "words",
-      Word.class,
-      UuidRepresentation.STANDARD);
+        database,
+        "words",
+        Word.class,
+        UuidRepresentation.STANDARD);
     searchCollection = JacksonMongoCollection.builder().build(
-      database,
-      "searches",
-      Search.class,
-      UuidRepresentation.STANDARD);
+        database,
+        "searches",
+        Search.class,
+        UuidRepresentation.STANDARD);
   }
 
   public void getWord(Context ctx) {
@@ -78,9 +78,9 @@ public class AnagramController implements Controller {
 
     // take words and searches from db and put into array lists
     ArrayList<Word> matchingWords = wordCollection
-      .find(combinedFilter)
-      .sort(sortingOrder)
-      .into(new ArrayList<>());
+        .find(combinedFilter)
+        .sort(sortingOrder)
+        .into(new ArrayList<>());
     ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
     // turn array lists into SearchContext and return
     SearchContext results = new SearchContext();
@@ -107,7 +107,8 @@ public class AnagramController implements Controller {
     }
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
     // log into database
-    if(ctx.queryParam(WORD_KEY) != null || ctx.queryParam(WORD_GROUP_KEY) != null) {
+    if ((ctx.queryParam(WORD_KEY) != null && ctx.queryParam(WORD_KEY) != "")
+        || (ctx.queryParam(WORD_GROUP_KEY) != null && ctx.queryParam(WORD_GROUP_KEY) != "")) {
       searchCollection.insertOne(newSearch);
       System.err.println("search added to db with params: " + combinedFilter.toString());
     }
@@ -124,7 +125,7 @@ public class AnagramController implements Controller {
   private Bson constructSortingOrder(Context ctx) {
     String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "alphabetical");
     String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "false");
-    Bson sortingOrder = sortOrder.equals("desc") ?  Sorts.descending(sortBy) : Sorts.ascending(sortBy);
+    Bson sortingOrder = sortOrder.equals("desc") ? Sorts.descending(sortBy) : Sorts.ascending(sortBy);
     return sortingOrder;
   }
 
@@ -132,13 +133,13 @@ public class AnagramController implements Controller {
 
     String body = ctx.body();
     Word newWord = ctx.bodyValidator(Word.class)
-    .check(td -> td.word != null && td.word.length() > 0,
-        "New words must be non-empty; New words was " + body)
-    .check(td -> td.wordGroup != null && td.wordGroup.length() > 0,
-        "Word Group must be non-empty; Group was " + body)
-    // .check(td -> td.body != null && td.body.length() > 0,
-    //     "Todo must have a non-empty body; body was " + body)
-    .get();
+        .check(td -> td.word != null && td.word.length() > 0,
+            "New words must be non-empty; New words was " + body)
+        .check(td -> td.wordGroup != null && td.wordGroup.length() > 0,
+            "Word Group must be non-empty; Group was " + body)
+        // .check(td -> td.body != null && td.body.length() > 0,
+        // "Todo must have a non-empty body; body was " + body)
+        .get();
 
     wordCollection.insertOne(newWord);
     ctx.json(Map.of("id", newWord._id));
@@ -150,30 +151,30 @@ public class AnagramController implements Controller {
     DeleteResult deleteResult = wordCollection.deleteOne(eq("_id", new ObjectId(id)));
 
     if (deleteResult.getDeletedCount() != 1) {
-        ctx.status(HttpStatus.NOT_FOUND);
-        throw new NotFoundResponse(
-            "Was unable to delete ID "
-            + id
-            + "; perhaps illegal ID or an ID for item not in the system?");
-        }
-        ctx.status(HttpStatus.OK);
-  }
-
-  public void deleteListWords(Context ctx) {
-    // ctx passes wordGroup as the name of the group not the ids of the elements in group
-    String deleteWordGroup = ctx.pathParam("wordGroup");
-    DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup", deleteWordGroup));
-
-    if (deleteResult.getDeletedCount() == 0) {
-        ctx.status(HttpStatus.NOT_FOUND);
-        throw new NotFoundResponse(
-            "Was unable to delete word group "
-            + deleteWordGroup
-            + "; perhaps illegal word group or no items found in the system?");
+      ctx.status(HttpStatus.NOT_FOUND);
+      throw new NotFoundResponse(
+          "Was unable to delete ID "
+              + id
+              + "; perhaps illegal ID or an ID for item not in the system?");
     }
     ctx.status(HttpStatus.OK);
   }
 
+  public void deleteListWords(Context ctx) {
+    // ctx passes wordGroup as the name of the group not the ids of the elements in
+    // group
+    String deleteWordGroup = ctx.pathParam("wordGroup");
+    DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup", deleteWordGroup));
+
+    if (deleteResult.getDeletedCount() == 0) {
+      ctx.status(HttpStatus.NOT_FOUND);
+      throw new NotFoundResponse(
+          "Was unable to delete word group "
+              + deleteWordGroup
+              + "; perhaps illegal word group or no items found in the system?");
+    }
+    ctx.status(HttpStatus.OK);
+  }
 
   public void addRoutes(Javalin server) {
 
@@ -190,7 +191,3 @@ public class AnagramController implements Controller {
     server.delete(API_WORDS_BY_WORDGROUP, this::deleteListWords);
   }
 }
-
-
-
-
