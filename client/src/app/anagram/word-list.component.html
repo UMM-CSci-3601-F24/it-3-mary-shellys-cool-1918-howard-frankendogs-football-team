@@ -1,0 +1,89 @@
+<div class="flex-row">
+  <div class="flex-1">
+    <mat-card class="search-card">
+      <mat-card-header>
+        <mat-card-title class="word-list-title">Anagram Generator</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Filtering is done in Mongo/server side -->
+        <div class="flex-row gap-8 flex-wrap">
+          <mat-form-field class="input-field">
+            <mat-label>Contains</mat-label>
+            <input matInput data-test="wordContainsInput" placeholder="Filter by contents" [(ngModel)]="contains">
+          </mat-form-field>
+          <mat-form-field class="input-field">
+            <mat-label>Word Group</mat-label>
+            <input matInput data-test="wordGroupInput" placeholder="Filter by wordGroup" [(ngModel)]="group">
+          </mat-form-field>
+        </div>
+        <!-- Sorting is done on the client -->
+        <mat-form-field class="input-field">
+          <mat-label>Sort</mat-label>
+          <mat-select [(ngModel)]="sortType" data-test="sortTypeSelect">
+            <mat-option value=null>--</mat-option>
+            <mat-option value="alphabetical">Alphabetical</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div>
+          <!-- This is going to be kept here till we get the toggle confirmed working
+          <label for="sortOrder">Sort Order</label>
+          <mat-radio-group aria-label="Sort Order" [(ngModel)]="sortOrder" data-test="sortOrderRadio">
+            <mat-radio-button value="increasing">Increasing</mat-radio-button>
+            <mat-radio-button value="decreasing">Decreasing</mat-radio-button>
+          </mat-radio-group> -->
+          <p>
+            <mat-slide-toggle class="sortOrder" [(ngModel)]="sortOrder" data-test="sortOrderToggle" aria-label="Change sort order">
+              Change Sort Order
+            </mat-slide-toggle>
+          </p>
+        </div>
+        <button mat-fab class="add-word-fab" matTooltip="Add New Word Group" matTooltipPosition="right" routerLink="/anagram/new" data-test="addWordButton">
+          <mat-icon class="md-24" aria-label="Add Word List">add</mat-icon>
+        </button>
+        <button mat-fab class="delete-wordGroup-fab" matTooltip="Delete Word Group" matTooltipPosition="right"
+          (click)="deleteWordGroup(group.toString())" routerLink="/anagram" data-test="deleteWordGroupButton">
+          <mat-icon class="md-24" aria-label="Add Word List">delete</mat-icon>
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<br>
+<div class="flex-row">
+  @if(serverFilteredWords()) {
+    <div class="flex-1">
+      <mat-card>
+        <mat-card-content>
+          <mat-list class="anagram-nav-list">
+            @for (word of filteredWords().slice(0,100); track word._id) {
+              <div class="flex-row gap-8 flex-wrap anagram-list-item">
+                <span matListItemTitle class="anagram-list-word">{{word.word}}</span>
+                <!-- the word group is set to hidden through the scss file, keep this here for testing -->
+                <span matListItemLine class="anagram-list-wordGroup">{{word.wordGroup}}</span>
+                <button mat-mini-fab class="delete-word-fab" matToolTips="Delete Word" matTooltipPosition="right"
+                  (click)="deleteWord(word._id)" routerLink="/anagram" data-test="deleteWordButton">
+                  <mat-icon aria-label="Delete Word">delete</mat-icon>
+                </button>
+                <br>
+              </div>
+            }
+            <!-- this stops the webpage from bugging out, but it should ideally also be limited in the server -->
+            @if(filteredWords().length > 100) {
+              <p>Showing first 100 words, Please increase search parameters</p>
+            }
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  } @else {
+    <div class="flex-1" class="anagram-error">
+      <mat-error>
+        There was a problem loading the words.
+        Possibly the server is down or perhaps there are network issues.
+      </mat-error>
+      <mat-error>
+        Please wait a bit and try again or start the server.
+      </mat-error>
+    </div>
+  }
+</div>

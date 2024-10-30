@@ -1,0 +1,51 @@
+<div class="flex-row">
+  <div class="flex-1">
+    <form [formGroup]="addWordForm" (ngSubmit)="submitForm();">
+      <mat-card class="add-word-card">
+        <mat-card-header>
+          <mat-card-title class="add-word-title">New Word Group</mat-card-title>
+        </mat-card-header>
+      <mat-card-content>
+        <div class="flex-col">
+          <mat-form-field>
+            <mat-label>Word Group Name</mat-label>
+            <input matInput formControlName="wordGroup" required>
+            @if(formControlHasError('wordGroup')) {
+              <mat-error data-test="wordGroupError">
+                {{getErrorMessage('wordGroup')}}
+              </mat-error>
+            }
+          </mat-form-field>
+          <!-- <p>Please Enter all words you wish to add to this word group in the box bellow
+            <br> Please format them as such:
+          </p> -->
+          <p>
+            At this time we can only take one word at a time
+          </p>
+          <mat-form-field>
+            <mat-label>New Words</mat-label>
+            <input matInput formControlName="word" required>
+            @if (formControlHasError('word')) {
+              <mat-error data-test="wordError">
+                {{getErrorMessage('word')}}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button
+          mat-button
+          type="button"
+          color="primary"
+          [disabled]="!addWordForm.valid"
+          type="submit"
+          data-test="confirmAddWordButton"
+          >
+          ADD WORD GROUP
+        </button>
+      </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+</div>
