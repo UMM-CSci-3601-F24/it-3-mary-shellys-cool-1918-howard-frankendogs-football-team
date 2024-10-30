@@ -1,24 +1,24 @@
 <p>Hight</p>
 <input matInput
-  [(ngModel)]="h"
+  [(ngModel)]="rowHight"
   type="number"
   (input)="onSizeInput()"
-  placeholder="{{h}}">
+  placeholder="{{rowHight}}">
 <p>Width</p>
 <input matInput
-  [(ngModel)]="w"
+  [(ngModel)]="colWidth"
   type="number"
   (input)="onSizeInput()"
-  placeholder="{{w}}">
+  placeholder="{{colWidth}}">
 
-  <div [ngStyle]="{'height': (h * s) + 'px', 'width': (w * s) + 'px'}"  >
-    <mat-grid-list cols="{{w}}" rowHeight="1:1" gutterSize="0">
+  <div [ngStyle]="{'height': (rowHight * s) + 'px', 'width': (colWidth * s) + 'px'}"  >
+    <mat-grid-list cols="{{colWidth}}" rowHeight="1:1" gutterSize="0">
       @for (row of grid; track row; let rowIndex = $index) {
         @for (cell of row; track cell; ; let colIndex = $index) {
-          <mat-grid-tile Rowspan="1" Colspan="1" >
+          <mat-grid-tile Rowspan="1" Colspan="1">
             <app-grid-cell
             tabindex= "0"
-            [gridCell]= "grid[colIndex][rowIndex]"
+            [gridCell]= "grid[rowIndex][colIndex]"
             (keydown)= "onKeydown($event, currentCol, currentRow)"
             (click)="onClick($event, colIndex, rowIndex)"
             [attr.col]="colIndex"

@@ -25,8 +25,8 @@ import { GridCellComponent } from '../grid-cell/grid-cell.component';
 })
 export class GridComponent {
 
-  w: number = 10;
-  h: number = 10;
+  colWidth: number = 10;
+  rowHight: number = 10;
   s: number = 40;
 
   grid: GridCell[][] = [];
@@ -47,8 +47,8 @@ export class GridComponent {
    * Reinitializes the grid based on the new size.
    */
   onSizeInput() {
-    console.log(this.w);
-    console.log(this.h);
+    console.log(this.colWidth);
+    console.log(this.rowHight);
     this.initializeGrid();
   }
 
@@ -58,9 +58,9 @@ export class GridComponent {
    */
   initializeGrid() {
     this.grid=[];
-      for(let row=0; row<this.w; ++row) {
+      for(let row=0; row<this.rowHight; ++row) {
         this.grid.push([]);
-        for(let col=0; col<this.h; ++col) {
+        for(let col=0; col<this.colWidth; ++col) {
           this.grid[row].push(new GridCell());
     }
    }
