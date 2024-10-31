@@ -171,7 +171,7 @@ class AnagramControllerSpec {
     String targetWordGroup = "brainrot";
     Map<String, List<String>> queryParams = new HashMap<>();
 
-    queryParams.put(AnagramController.WORD_GROUP_KEY, Arrays.asList(new String[] { targetWordGroup }));
+    queryParams.put(AnagramController.WORD_GROUP_KEY, Arrays.asList(new String[] {targetWordGroup}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.WORD_GROUP_KEY)).thenReturn(targetWordGroup);
 
@@ -192,7 +192,7 @@ class AnagramControllerSpec {
     }
 
     List<String> words = searchContextCaptor.getValue().words.stream()
-      .map(word -> word.word).collect(Collectors.toList());
+        .map(word -> word.word).collect(Collectors.toList());
     assertTrue(words.contains("skibbidy"));
     assertTrue(words.contains("sigma"));
     assertTrue(words.contains("cooked"));
@@ -204,7 +204,7 @@ class AnagramControllerSpec {
 
     Map<String, List<String>> queryParams = new HashMap<>();
 
-    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] { targetWord }));
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {targetWord}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(targetWord);
 
@@ -231,7 +231,7 @@ class AnagramControllerSpec {
     long dbSize = db.getCollection(SEARCH_COLLECTION).countDocuments();
     // makes search that will be passed
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] { "ha" }));
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
     // calls getWords() which calls constructFilter()
@@ -251,8 +251,8 @@ class AnagramControllerSpec {
     long dbSize = db.getCollection(SEARCH_COLLECTION).countDocuments();
     // makes search that will be passed
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] { "" }));
-    queryParams.put(AnagramController.WORD_GROUP_KEY, Arrays.asList(new String[] { "" }));
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {""}));
+    queryParams.put(AnagramController.WORD_GROUP_KEY, Arrays.asList(new String[] {""}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("");
     when(ctx.queryParam(AnagramController.WORD_GROUP_KEY)).thenReturn("");
@@ -288,12 +288,13 @@ class AnagramControllerSpec {
     System.setErr(new PrintStream(outContent));
     // makes search that will be passed
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] { "ha" }));
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
     // calls getWords() which calls constructFilter()
     anagramController.getWords(ctx);
-    // checks that construct filters gave out right message "search added with db params..."
+    // checks that construct filters gave out right message "search added with db
+    // params..."
     assertTrue(outContent.toString().contains("search added to db"));
   }
 
@@ -411,10 +412,11 @@ class AnagramControllerSpec {
         """;
 
     when(ctx.body()).thenReturn(newWordJson);
-    // when addNew words asks for validator, it will return the body validator constructed below
+    // when addNew words asks for validator, it will return the body validator
+    // constructed below
     when(ctx.bodyValidator(Word.class))
         .then(value -> new BodyValidator<Word>(newWordJson, Word.class,
-                  // converts newWordJson into type of Word
+            // converts newWordJson into type of Word
             () -> javalinJackson.fromJsonString(newWordJson, Word.class)));
 
     // Captures error thrown when addNewWord is called
@@ -437,10 +439,11 @@ class AnagramControllerSpec {
         """;
 
     when(ctx.body()).thenReturn(newWordJson);
-    // when addNew words asks for validator, it will return the body validator constructed below
+    // when addNew words asks for validator, it will return the body validator
+    // constructed below
     when(ctx.bodyValidator(Word.class))
         .then(value -> new BodyValidator<Word>(newWordJson, Word.class,
-                  // converts newWordJson into type of Word
+            // converts newWordJson into type of Word
             () -> javalinJackson.fromJsonString(newWordJson, Word.class)));
 
     // Captures error thrown when addNewWord is called

@@ -15,7 +15,7 @@ public class SearchContextSpec {
 
   private Search search1;
   private Search search2;
-  private ArrayList<Search> searchArray = new ArrayList<Search>(Arrays.asList(search1,search2));
+  private ArrayList<Search> searchArray = new ArrayList<Search>(Arrays.asList(search1, search2));
 
   private SearchContext searchContext = new SearchContext(null, null);
 
@@ -31,11 +31,12 @@ public class SearchContextSpec {
   @Test
   void setWordWorks() {
     searchContext.setWords(wordArray);
-    assertEquals(searchContext.words, wordArray);;
+    assertEquals(searchContext.words, wordArray);
   }
+
   @Test
   void setSearchesWorks() {
     searchContext.setSearches(searchArray);
-    assertEquals(searchContext.searches, searchArray);;
+    assertEquals(searchContext.searches, searchArray);
   }
 }
