@@ -14,7 +14,7 @@ import { Search } from './search';
 const COMMON_IMPORTS: unknown[] = [
   RouterTestingModule,
   BrowserAnimationsModule,
-]
+];
 
 describe('Word List', () => {
   let wordList: WordListComponent;
@@ -23,7 +23,7 @@ describe('Word List', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [COMMON_IMPORTS, WordListComponent],
-      providers: [{provide: WordService, useValue: new MockWordService() }],
+      providers: [{ provide: WordService, useValue: new MockWordService() }],
     });
   });
 
@@ -38,15 +38,15 @@ describe('Word List', () => {
   it('should create', () => {
     expect(wordList).toBeTruthy();
   });
-  it("should create context", () => {
+  it('should create context', () => {
     expect(wordList.serverFilteredContext()).toBeTruthy();
-  })
+  });
   it('contains all the words', () => {
     expect(wordList.filteredWords().length).toBe(5);
-  })
+  });
   it('contains all the searches', () => {
     expect(wordList.searchHistory().length).toBe(3);
-  })
+  });
   //specific tests for words
   it("contains a word 'Mac'", () => {
     expect(
@@ -55,30 +55,43 @@ describe('Word List', () => {
   });
   it('has four words in the group `team member`', () => {
     expect(
-      wordList.filteredWords().filter((word: Word) => word.wordGroup === "team member").length
+      wordList
+        .filteredWords()
+        .filter((word: Word) => word.wordGroup === 'team member').length
     ).toBe(4);
   });
   it('has one word in the group `teachers`', () => {
     expect(
-      wordList.filteredWords().filter((word: Word) => word.wordGroup === "teachers").length
+      wordList
+        .filteredWords()
+        .filter((word: Word) => word.wordGroup === 'teachers').length
     ).toBe(1);
   });
   //specific tests for searches
   it('has two searches with `contains`', () => {
     expect(
-      wordList.searchHistory().filter((search: Search) => search.contains !== null ).length
+      wordList
+        .searchHistory()
+        .filter((search: Search) => search.contains !== null).length
     ).toBe(2);
-  })
+  });
   it('has two searches with `wordGroup`', () => {
     expect(
-      wordList.searchHistory().filter((search: Search) => search.wordGroup !== null ).length
+      wordList
+        .searchHistory()
+        .filter((search: Search) => search.wordGroup !== null).length
     ).toBe(2);
-  })
+  });
   it('has one search that looked for contents and word group', () => {
     expect(
-      wordList.searchHistory().filter((search: Search) => search.wordGroup !== null && search.contains !== null).length
+      wordList
+        .searchHistory()
+        .filter(
+          (search: Search) =>
+            search.wordGroup !== null && search.contains !== null
+        ).length
     ).toBe(1);
-  })
+  });
 });
 
 describe('misbehaving word list', () => {
@@ -97,7 +110,7 @@ describe('misbehaving word list', () => {
     };
     TestBed.configureTestingModule({
       imports: [WordListComponent, COMMON_IMPORTS],
-      providers: [{provide: WordService, useValue: wordServiceStub}],
+      providers: [{ provide: WordService, useValue: wordServiceStub }],
     });
   });
   beforeEach(waitForAsync(() => {
@@ -109,12 +122,12 @@ describe('misbehaving word list', () => {
   }));
   // these two functions are a workaround to build more time
   //into this test so it does not auto fail when another test fails
-  beforeEach(function() {
-      originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-      jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+  beforeEach(function () {
+    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
   });
-  afterEach(function() {
-      jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+  afterEach(function () {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
   });
   it('generates an error if we don`t set up a WordListService', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
@@ -131,12 +144,16 @@ describe('misbehaving word list', () => {
 // describe('delete Word', () => {
 //   let wordList: WordListComponent;
 //   let fixture: ComponentFixture<WordListComponent>;
-
+//   const mockSnackbarMock = jasmine.createSpyObj(['open']);
+//   mockSnackbarMock.open();
 
 //   beforeEach(() => {
 //     TestBed.configureTestingModule({
 //       imports: [COMMON_IMPORTS, WordListComponent],
-//       providers: [{provide: WordService, useValue: new MockWordService() }],
+//       providers: [
+//         { provide: WordService, useValue: new MockWordService() },
+//         { provide: MatSnackBar, useValue: mockSnackbarMock },
+//       ],
 //     });
 //   });
 
@@ -150,11 +167,14 @@ describe('misbehaving word list', () => {
 
 //   it('calls delete word', () => {
 //     expect(
-//       wordList.serverFilteredWords().some((word: Word) => word._id === 'Nic_id')
-//     ).toBe(true);
-//     wordList.deleteWord("Nic_id");
-//     expect(
-//       wordList.serverFilteredWords().some((word: Word) => word._id === 'Nic_id')
-//     ).toBe(false);
-//     });
-// })
+//       wordList.filteredWords().filter((word: Word) => word._id === 'Nic_id')
+//         .length
+//     ).toBe(1);
+//     wordList.deleteWord('Nic_id');
+//     expect(mockSnackbarMock.open).toHaveBeenCalledWith(
+//       `We deleted a word!`,
+//       'OK',
+//       { duration: 6000 }
+//     );
+//   });
+// });

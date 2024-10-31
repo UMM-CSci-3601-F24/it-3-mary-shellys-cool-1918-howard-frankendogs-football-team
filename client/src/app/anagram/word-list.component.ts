@@ -129,4 +129,10 @@ export class WordListComponent {
       this.snackBar.open(`We deleted a word group!`, 'OK', {duration: 6000});
     })
   }
+
+  max(arg0: number,arg1: number): number {
+    if (arg0 >= arg1){
+      return arg0;
+    } else {return arg1}
+  }
 }
