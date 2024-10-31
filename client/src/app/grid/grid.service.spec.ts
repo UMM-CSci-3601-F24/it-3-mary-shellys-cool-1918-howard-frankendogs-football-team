@@ -11,6 +11,34 @@ describe('GridService', () => {
   let gridService: GridService;
   let httpClient: HttpClient;
   let httpTestingController : HttpTestingController;
+  const testGrid: Grid = {
+    _id:"hehe",
+    owner:"haha",
+    grid: [
+      [{
+        editable: true,
+        value: "w",
+        edges: {top: false, right: false, bottom: false, left: false}
+        },
+        {
+        editable: true,
+        value: "x",
+        edges: {top: false, right: false, bottom: false, left: false}
+        },
+      ],
+      [{
+        editable: true,
+        value: "y",
+        edges: {top: false, right: false, bottom: false, left: false}
+        },
+        {
+        editable: true,
+        value: "z",
+        edges: {top: false, right: false, bottom: false, left: false}
+        },
+      ]
+    ]
+}
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -32,38 +60,26 @@ describe('GridService', () => {
 
   describe('When saveGrid is called', () => {
     it("calls /grids with `post` command", waitForAsync(() => {
-      const grid: Grid = {
-          _id:"hehe",
-          owner:"haha",
-          grid: [
-            [{
-              editable: true,
-              value: "w",
-              edges: {top: false, right: false, bottom: false, left: false}
-              },
-              {
-              editable: true,
-              value: "x",
-              edges: {top: false, right: false, bottom: false, left: false}
-              },
-            ],
-            [{
-              editable: true,
-              value: "y",
-              edges: {top: false, right: false, bottom: false, left: false}
-              },
-              {
-              editable: true,
-              value: "z",
-              edges: {top: false, right: false, bottom: false, left: false}
-              },
-            ]
-          ]
-      }
       const mockedMethod = spyOn(httpClient, "post").and.returnValue(of("hehe"));
-      gridService.saveGrid(grid).subscribe(() => {
+      gridService.saveGrid(testGrid).subscribe(() => {
         expect(mockedMethod).withContext('one call').toHaveBeenCalledTimes(1);
-        expect(mockedMethod).withContext('talks to correct endpoint').toHaveBeenCalledWith("/api/grids", grid)
+        expect(mockedMethod).withContext('talks to correct endpoint').toHaveBeenCalledWith("/api/grids", testGrid)
+      })
+    }));
+  });
+  describe('getting grids', () => {
+    it('getGrids() makes correct call', waitForAsync(() => {
+      const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testGrid));
+      gridService.getGrids().subscribe(() => {
+        expect(mockedMethod).withContext('one call').toHaveBeenCalledTimes(1);
+        expect(mockedMethod).withContext("talks to correct endpoint").toHaveBeenCalledWith("/api/grids");
+      })
+    }));
+    it('getGridById() makes right call', waitForAsync(() => {
+      const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testGrid));
+      gridService.getGridById("hehe").subscribe(() => {
+        expect(mockedMethod).withContext('one call').toHaveBeenCalledTimes(1);
+        expect(mockedMethod).withContext("talks to correct endpoint").toHaveBeenCalledWith("/api/grids/hehe");
       })
     }));
   });
