@@ -14,7 +14,7 @@
   <div [ngStyle]="{'height': (rowHight * s) + 'px', 'width': (colWidth * s) + 'px'}"  >
     <mat-grid-list cols="{{colWidth}}" rowHeight="1:1" gutterSize="0">
       @for (row of grid; track row; let rowIndex = $index) {
-        @for (cell of row; track cell; ; let colIndex = $index) {
+        @for (cell of row; track cell; let colIndex = $index) {
           <mat-grid-tile Rowspan="1" Colspan="1">
             <app-grid-cell
             tabindex= "0"
