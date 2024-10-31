@@ -1,13 +1,12 @@
 <div>
-  <!-- Save Grid button -->
   <button data-test="saveGridButton" (click)="saveGrid()">Save Grid</button>
   <div>
     <h3>Saved Grids</h3>
-    <ul>
-      <li *ngFor="let grid of savedGrids" (click)="loadGrid(grid)">
-        {{ grid._id }}
-      </li>
-    </ul>
+    @for (grid of this.savedGrids; track grid._id) {
+      <div>
+        <button (click)="loadGrid(grid)" routerLink="/grid/{{grid._id}}" >{{ grid.owner }}</button>
+      </div>
+    }
   </div>
 </div>
 <div>
