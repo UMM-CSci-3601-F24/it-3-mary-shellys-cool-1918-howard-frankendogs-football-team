@@ -96,12 +96,12 @@ public class WordController implements Controller {
         return combinedFilter;
     }
 
-private Bson constructSortingOrder(Context ctx) {
-    String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "alphabetical");
-    String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "false");
-    Bson sortingOrder = sortOrder.equals("desc") ?  Sorts.descending(sortBy) : Sorts.ascending(sortBy);
-    return sortingOrder;
-}
+    private Bson constructSortingOrder(Context ctx) {
+        String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "word");
+        String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "false");
+        Bson sortingOrder = sortOrder.equals("desc") ?  Sorts.descending(sortBy) : Sorts.ascending(sortBy);
+        return sortingOrder;
+    }
 
 
   public void addNewWord(Context ctx) {
