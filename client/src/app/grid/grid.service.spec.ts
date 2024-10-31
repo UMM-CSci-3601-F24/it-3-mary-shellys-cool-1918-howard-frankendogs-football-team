@@ -63,7 +63,7 @@ describe('GridService', () => {
       const mockedMethod = spyOn(httpClient, "post").and.returnValue(of("hehe"));
       gridService.saveGrid(grid).subscribe(() => {
         expect(mockedMethod).withContext('one call').toHaveBeenCalledTimes(1);
-        expect(mockedMethod).withContext('talks to correct endpoint').toHaveBeenCalledWith(gridService.gridUrl, grid)
+        expect(mockedMethod).withContext('talks to correct endpoint').toHaveBeenCalledWith("/api/grids", grid)
       })
     }));
   });

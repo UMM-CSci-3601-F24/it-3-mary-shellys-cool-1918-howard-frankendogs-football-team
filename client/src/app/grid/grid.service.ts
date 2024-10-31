@@ -9,8 +9,6 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class GridService {
-  // readonly gridUrl: string =`${environment.apiUrl}grid`;
-
   constructor(private httpClient: HttpClient) { }
 
   saveGrid(gridData: Partial<Grid>): Observable<string> {

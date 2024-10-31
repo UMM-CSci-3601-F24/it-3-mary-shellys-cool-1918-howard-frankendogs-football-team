@@ -1,8 +1,9 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { GridComponent } from './grid.component';
 import { GridService } from './grid.service';
 import { MockGridService } from 'src/testing/grid.service.mock';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('GridCellComponent', () => {
   let component: GridComponent;
@@ -11,15 +12,18 @@ describe('GridCellComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [FormsModule, GridComponent],
-      providers: [{provide: GridService, useValue: new MockGridService() }],
+      imports: [FormsModule, GridComponent, RouterTestingModule],
+      providers: [{ provide: GridService, useValue: new MockGridService() }],
     })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(GridComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+      .compileComponents();
   });
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(GridComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  }))
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -176,4 +180,15 @@ describe('GridCellComponent', () => {
     tick(100);
     expect(cell.value).toBe('');
   }));
+
+  it('saveGrid() should call grid service and load grids', () => {
+    // const partial: Partial<Grid> = {
+    //   owner: "test McGee",
+    //   grid: {
+    //     {
+
+    //     }
+    //   }
+    // }
+  })
 });
