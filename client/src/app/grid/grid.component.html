@@ -21,10 +21,10 @@
             [gridCell]= "grid[rowIndex][colIndex]"
             (keydown)= "onKeydown($event, currentCol, currentRow)"
             (click)="onClick($event, colIndex, rowIndex)"
-            [attr.col]="colIndex"
             [attr.row]="rowIndex"
-            [col]="colIndex"
+            [attr.col]="colIndex"
             [row]="rowIndex"
+            [col]="colIndex"
             [grid]="grid"
             [ngStyle]="{'height': s + 'px', 'width': s + 'px'}"
             ></app-grid-cell>

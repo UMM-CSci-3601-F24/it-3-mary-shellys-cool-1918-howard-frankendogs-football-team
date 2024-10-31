@@ -25,8 +25,8 @@ import { GridCellComponent } from '../grid-cell/grid-cell.component';
 })
 export class GridComponent {
 
-  colWidth: number = 10;
   rowHight: number = 10;
+  colWidth: number = 10;
   s: number = 40;
 
   grid: GridCell[][] = [];
@@ -88,7 +88,7 @@ export class GridComponent {
    * @param row - The row index of the focused cell.
    */
   onKeydown(event: KeyboardEvent, col: number, row: number) {
-    const cell = this.grid[col][row];
+    const cell = this.grid[row][col];
     const inputElement = this.elRef.nativeElement.querySelector(`app-grid-cell[col="${col}"][row="${row}"] input`);
 
     console.log('keydown', event.key, col, row);

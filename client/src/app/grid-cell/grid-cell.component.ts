@@ -87,25 +87,25 @@ export class GridCellComponent {
       case 'top':
         this.gridCell.edges.top = !this.gridCell.edges.top;
         if (this.grid && this.grid[this.col][this.row - 1]) {
-          this.grid[this.col][this.row - 1].edges.bottom = this.gridCell.edges.top;
+          this.grid[this.row - 1][this.col].edges.bottom = this.gridCell.edges.top;
         }
         break;
       case 'right':
         this.gridCell.edges.right = !this.gridCell.edges.right;
         if (this.grid && this.grid[this.col + 1]) {
-          this.grid[this.col + 1][this.row].edges.left = this.gridCell.edges.right;
+          this.grid[this.row][this.col + 1].edges.left = this.gridCell.edges.right;
         }
         break;
       case 'bottom':
         this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
         if (this.grid && this.grid[this.col][this.row + 1]) {
-          this.grid[this.col][this.row + 1].edges.top = this.gridCell.edges.bottom;
+          this.grid[this.row + 1][this.col].edges.top = this.gridCell.edges.bottom;
         }
         break;
       case 'left':
         this.gridCell.edges.left = !this.gridCell.edges.left;
         if (this.grid && this.grid[this.col - 1]) {
-          this.grid[this.col - 1][this.row].edges.right = this.gridCell.edges.left;
+          this.grid[this.row][this.col - 1].edges.right = this.gridCell.edges.left;
         }
         break;
       default:
