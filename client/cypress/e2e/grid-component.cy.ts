@@ -1,4 +1,5 @@
 
+
 describe('Grid Tests', () => {
   beforeEach(() => {
     cy.visit('localhost:4200/grid');
@@ -11,6 +12,7 @@ describe('Grid Tests', () => {
   });
 
   it('should black-out the cell with all edges bolded', () => {
-    cy.get('app-grid-cell').first().click().type('{ctrl}{rightarrow}{downarrow}{uparrow}{leftarrow}');
+    cy.get('#mat-input-2').type('{ctrl}{rightarrow}{downarrow}{uparrow}{leftarrow}');
+    cy.get('#mat-input-2').should('have.css', 'background-color').and('eq', 'rgb(0, 0, 0)');
   });
 });
