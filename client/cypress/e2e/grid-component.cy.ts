@@ -17,8 +17,8 @@ describe('Grid Component', () => {
   });
 
   it('should black-out the cell with all edges bolded', () => {
-    cy.get('#mat-input-2').type('{ctrl}{rightarrow}{downarrow}{uparrow}{leftarrow}');
-    cy.get('#mat-input-2').should('have.css', 'background-color').and('eq', 'rgb(0, 0, 0)');
+    cy.get('#mat-input-3').type('{ctrl}{rightarrow}{downarrow}{uparrow}{leftarrow}');
+    cy.get('#mat-input-3').should('have.css', 'background-color').and('eq', 'rgb(0, 0, 0)');
   });
 
 });
