@@ -40,13 +40,18 @@ export class MockWordService extends WordService {
   static testSearches: Search[] = [
     {
       _id: "",
-      contains: "",
-      wordGroup: ""
+      contains: null,
+      wordGroup: "Laugh"
     },
     {
       _id: "",
-      contains: "",
-      wordGroup: ""
+      contains: "Haha",
+      wordGroup: "Laugh"
+    },
+    {
+      _id: "",
+      contains: "hehe",
+      wordGroup: null
     }
   ]
 

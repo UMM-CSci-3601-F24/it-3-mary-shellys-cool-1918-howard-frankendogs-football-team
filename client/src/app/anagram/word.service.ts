@@ -3,7 +3,6 @@ import { Word } from './word';
 import { environment } from 'src/environments/environment';
 import { map, Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Search } from './search';
 import { SearchContext } from './searchContext';
 
 @Injectable({
@@ -48,10 +47,6 @@ export class WordService {
       filteredWords.reverse();
     }
     return filteredWords;
-  }
-
-  getSearchHistory(): Observable<Search[]> {
-    return this.httpClient.get<Search[]>(this.wordUrl + "/history")
   }
 
   addWord(newWord: Partial<Word>): Observable<string> {

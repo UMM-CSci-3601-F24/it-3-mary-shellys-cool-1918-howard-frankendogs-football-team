@@ -8,6 +8,8 @@ import { Word } from './word';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Search } from './search';
+// import { MatSnackBar } from '@angular/material/snack-bar';
 
 const COMMON_IMPORTS: unknown[] = [
   RouterTestingModule,
@@ -32,7 +34,7 @@ describe('Word List', () => {
       fixture.detectChanges();
     });
   }));
-
+  // general tests
   it('should create', () => {
     expect(wordList).toBeTruthy();
   });
@@ -43,8 +45,9 @@ describe('Word List', () => {
     expect(wordList.filteredWords().length).toBe(5);
   })
   it('contains all the searches', () => {
-    expect(wordList.searchHistory().length).toBe(2);
+    expect(wordList.searchHistory().length).toBe(3);
   })
+  //specific tests for words
   it("contains a word 'Mac'", () => {
     expect(
       wordList.filteredWords().some((word: Word) => word.word === 'Mac')
@@ -60,6 +63,22 @@ describe('Word List', () => {
       wordList.filteredWords().filter((word: Word) => word.wordGroup === "teachers").length
     ).toBe(1);
   });
+  //specific tests for searches
+  it('has two searches with `contains`', () => {
+    expect(
+      wordList.searchHistory().filter((search: Search) => search.contains !== null ).length
+    ).toBe(2);
+  })
+  it('has two searches with `wordGroup`', () => {
+    expect(
+      wordList.searchHistory().filter((search: Search) => search.wordGroup !== null ).length
+    ).toBe(2);
+  })
+  it('has one search that looked for contents and word group', () => {
+    expect(
+      wordList.searchHistory().filter((search: Search) => search.wordGroup !== null && search.contains !== null).length
+    ).toBe(1);
+  })
 });
 
 describe('misbehaving word list', () => {

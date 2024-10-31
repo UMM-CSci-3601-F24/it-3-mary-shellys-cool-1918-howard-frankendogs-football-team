@@ -17,7 +17,6 @@ import { MatNavList } from '@angular/material/list';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { Search } from './search';
 import { SearchContext } from './searchContext';
 
 @Component({
@@ -98,31 +97,9 @@ export class WordListComponent {
     });
   });
 
-  serverSearchHistory =
-  toSignal(
-    combineLatest().pipe(
-      switchMap(() =>
-        this.wordService.getSearchHistory() //acts as return stmt
-      ),
-      catchError((err) => {
-        if (err.error instanceof ErrorEvent) {
-          this.errMsg.set(
-            `Problem in the client – Error: ${err.error.message}`
-          );
-        } else {
-          this.errMsg.set(
-            `Problem contacting the server – Error Code: ${err.status}\nMessage: ${err.message}`
-          );
-        }
-        this.snackBar.open(this.errMsg(), 'OK', { duration: 6000 });
-        return of<Search[]>([]);
-      }),
-      tap(() => {
-
-      })
-    )
-  );
-
+  /**
+   * returns list of searches given by server
+   */
   searchHistory = computed(() => {
     const searches = this.serverFilteredContext().searches;
     return searches;
