@@ -173,6 +173,7 @@ public class AnagramController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
+  @Override
   public void addRoutes(Javalin server) {
 
     server.get(API_WORDS, this::getWords);
