@@ -21,10 +21,11 @@ describe('Anagram Solver', () => {
   });
 
   it('should type something into the contains filter and check that elements returned are correct', () => {
-    cy.get('[data-test=wordContainsInput]').type('ca');
+    cy.get('[data-test=wordContainsInput]').type('can');
     page.getAnagramListItems().each( e => {
       cy.wrap(e).find('.anagram-list-word').should('include.text', 'a');
       cy.wrap(e).find('.anagram-list-word').should('include.text', 'c');
+      cy.wrap(e).find('.anagram-list-word').should('include.text', 'n');
     });
   });
 
@@ -33,6 +34,13 @@ describe('Anagram Solver', () => {
     page.getAnagramListItems().each( e => {
       cy.wrap(e).find('.anagram-list-wordGroup').contains('10000 Common Words', {matchCase: false});
     });
+  });
+
+  it('should make a search and show search in search history', () => {
+    cy.get('[data-test=wordGroupInput]').type('2005');
+    cy.get('[data-test=wordContainsInput]').type('year');
+    cy.get('.anagram-search-history-contains').first().should('include.text', 'year');
+    cy.get('.anagram-search-history-wordGroup').first().should('include.text', '2005');
   });
 
   // sorting not implemented yet

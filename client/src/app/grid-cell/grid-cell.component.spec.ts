@@ -75,6 +75,7 @@ describe('GridCellComponent', () => {
     fixture.detectChanges();
 
     const cellElement: HTMLElement = fixture.nativeElement.querySelector('.cell');
+    const cellEditableElement: HTMLElement = fixture.nativeElement.querySelector('.cell-input');
     expect(component.gridCell.edges.top).toBeTrue();
     expect(component.gridCell.edges.left).toBeTrue();
     expect(component.gridCell.edges.right).toBeTrue();
@@ -83,6 +84,7 @@ describe('GridCellComponent', () => {
     expect(cellElement.classList).toContain('bold-right');
     expect(cellElement.classList).toContain('bold-bottom');
     expect(cellElement.classList).toContain('bold-left');
+    expect(cellEditableElement.classList).toContain('blacked-out');
   });
 
   it('should un-bold after ctrl click', () => {
@@ -104,6 +106,8 @@ describe('GridCellComponent', () => {
     fixture.detectChanges();
 
     const cellElement: HTMLElement = fixture.nativeElement.querySelector('.cell');
+    const cellEditableElement: HTMLElement = fixture.nativeElement.querySelector('.cell-input');
+
     expect(component.gridCell.edges.top).toBeFalse();
     expect(component.gridCell.edges.left).toBeFalse();
     expect(component.gridCell.edges.right).toBeFalse();
@@ -112,6 +116,7 @@ describe('GridCellComponent', () => {
     expect(cellElement.classList).not.toContain('bold-right');
     expect(cellElement.classList).not.toContain('bold-bottom');
     expect(cellElement.classList).not.toContain('bold-left');
+    expect(cellEditableElement.classList).not.toContain('blacked-out');
   });
 
   it('should disallow input into the cell', () => {
