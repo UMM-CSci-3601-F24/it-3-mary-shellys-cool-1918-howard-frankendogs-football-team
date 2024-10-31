@@ -9,7 +9,6 @@ import { WordService } from './word.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, combineLatest, of, switchMap, tap } from 'rxjs';
-import { Word } from './word';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +17,7 @@ import { MatNavList } from '@angular/material/list';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { SearchContext } from './searchContext';
 
 @Component({
   selector: 'app-word-list-component',
@@ -59,7 +59,7 @@ export class WordListComponent {
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
 
-  serverFilteredWords =
+  serverFilteredContext =
     toSignal(
       combineLatest([this.contains$, this.group$]).pipe(
         switchMap(([word, wordGroup]) =>
@@ -79,7 +79,7 @@ export class WordListComponent {
             );
           }
           this.snackBar.open(this.errMsg(), 'OK', { duration: 6000 });
-          return of<Word[]>([]);
+          return of<SearchContext>();
         }),
         tap(() => {
 
@@ -90,12 +90,20 @@ export class WordListComponent {
   filteredWords = computed(() => {
     // takes list of words returned by server
     // then sends them through the client side sortWords)
-    const serverFilteredWords = this.serverFilteredWords();
+    const serverFilteredWords = this.serverFilteredContext().words;
     return this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
     });
   });
+
+  /**
+   * returns list of searches given by server
+   */
+  searchHistory = computed(() => {
+    const searches = this.serverFilteredContext().searches;
+    return searches;
+  })
 
   /**
    * calls deleteWord and returns a snackbar
@@ -120,5 +128,11 @@ export class WordListComponent {
     this.wordService.deleteWordGroup(group).subscribe(() => {
       this.snackBar.open(`We deleted a word group!`, 'OK', {duration: 6000});
     })
+  }
+
+  max(arg0: number,arg1: number): number {
+    if (arg0 >= arg1){
+      return arg0;
+    } else {return arg1}
   }
 }
