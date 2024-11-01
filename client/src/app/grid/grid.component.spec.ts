@@ -23,18 +23,29 @@ describe('GridCellComponent', () => {
   });
 
   it('should initialize grid correctly', () => {
-    expect(component.grid.length).toBe(component.n);
+    expect(component.grid.length).toBe(component.colWidth);
     for (const row of component.grid) {
-      expect(row.length).toBe(component.n);
+      expect(row.length).toBe(component.colWidth);
     }
   });
 
-  it('should re-initialize grid on size input', () => {
-    component.n = 5;
+  it('should re-initialize even grid on size input', () => {
+    component.rowHight = 5;
+    component.colWidth = 5;
     component.onSizeInput();
     expect(component.grid.length).toBe(5);
     for (const row of component.grid) {
       expect(row.length).toBe(5);
+    }
+  });
+
+  it('should re-initialize odd grid on size input', () => {
+    component.rowHight = 5;
+    component.colWidth = 6;
+    component.onSizeInput();
+    expect(component.grid.length).toBe(5);
+    for (const row of component.grid) {
+      expect(row.length).toBe(6);
     }
   });
 
