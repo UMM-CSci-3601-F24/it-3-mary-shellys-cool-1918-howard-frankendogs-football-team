@@ -37,6 +37,7 @@
             [row]="rowIndex"
             [grid]="grid"
             [ngStyle]="{'height': m + 'px', 'width': m + 'px'}"
+            (gridChange)="onGridChange()"
             ></app-grid-cell>
           </mat-grid-tile>
         }

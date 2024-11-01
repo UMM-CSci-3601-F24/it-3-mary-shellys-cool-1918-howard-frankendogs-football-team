@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,6 +29,8 @@ export class GridCellComponent {
   @Input({}) col: number;
   @Input({}) row: number;
   @Input({}) grid: GridCell[][];
+  @Output() gridChange = new EventEmitter<void>();
+
 
 
   /**
@@ -48,6 +50,7 @@ export class GridCellComponent {
   onInput(value: string) {
     if (this.validateInput(value)) {
       this.gridCell.value = value;
+      this.gridChange.emit();
     } else {
       this.gridCell.value = '';
     }

@@ -14,6 +14,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { WebSocketService } from '../web-socket-service';
 // import { Grid } from './grid';
 
 @Component({
@@ -48,7 +49,7 @@ export class GridComponent {
   private focusTimeout: ReturnType<typeof setTimeout>;
   private route = inject(ActivatedRoute);
 
-  constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService) {
+  constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService, private webSocketService: WebSocketService) {
     this.initializeGrid();
   }
 
@@ -93,6 +94,15 @@ export class GridComponent {
 
   loadGrid(grid: Grid) {
     this.grid = grid.grid;
+  }
+
+  onGridChange() {
+    const message = {
+      type: 'GRID_UPDATE',
+      grid: this.grid,
+    };
+    console.log(message);
+    this.webSocketService.sendMessage(message);
   }
 
 
