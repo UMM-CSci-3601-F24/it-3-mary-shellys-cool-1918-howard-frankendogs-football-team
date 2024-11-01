@@ -4,10 +4,15 @@ import { GridComponent } from './grid.component';
 import { GridService } from './grid.service';
 import { MockGridService } from 'src/testing/grid.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Grid } from './grid';
+import { GridCell } from '../grid-cell/grid-cell';
+import { of } from 'rxjs';
+import { By } from '@angular/platform-browser';
 
 describe('GridCellComponent', () => {
   let component: GridComponent;
   let fixture: ComponentFixture<GridComponent>;
+  let gridService: MockGridService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -22,6 +27,8 @@ describe('GridCellComponent', () => {
       fixture = TestBed.createComponent(GridComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
+
+      gridService = TestBed.inject(GridService);
     })
   }))
 
@@ -192,14 +199,38 @@ describe('GridCellComponent', () => {
     expect(cell.value).toBe('');
   }));
 
-  it('saveGrid() should call grid service and load grids', () => {
-    // const partial: Partial<Grid> = {
-    //   owner: "test McGee",
-    //   grid: {
-    //     {
+  it('saveGrid() should call grid service and load grids', fakeAsync(() => {
+    const partialGrid: Partial<Grid> = {
+      owner: 'currentUser',
+      grid: component.grid
+    };
 
-    //     }
-    //   }
-    // }
-  })
+    const saveGridSpy = spyOn(gridService, 'saveGrid').and.returnValue(of('newGridId'));
+    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids');
+
+    component.saveGrid();
+    tick();
+
+    expect(saveGridSpy).toHaveBeenCalledWith(partialGrid);
+    expect(loadSavedGridsSpy).toHaveBeenCalled();
+
+    component.loadSavedGrids();
+    expect(loadSavedGridsSpy).toHaveBeenCalled();
+  }));
+
+  it('should call saveGrid and loadSavedGrids when save button is clicked', fakeAsync(() => {
+    const saveButton = fixture.debugElement.query(By.css('.save-button'));
+    const saveGridSpy = spyOn(component, 'saveGrid').and.callThrough();
+    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids').and.callThrough();
+
+    saveButton.triggerEventHandler('click', null);
+    tick();
+
+    expect(saveGridSpy).toHaveBeenCalled();
+    expect(loadSavedGridsSpy).toHaveBeenCalled();
+
+  }));
 });
+
+
+
