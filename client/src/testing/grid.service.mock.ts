@@ -1,44 +1,26 @@
-import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
-import { AppComponent } from "src/app/app.component";
-import { Grid } from "src/app/grid/grid";
-import { GridService } from "src/app/grid/grid.service";
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { Grid } from 'src/app/grid/grid';
+import { GridService } from 'src/app/grid/grid.service';
+import { AppComponent } from 'src/app/app.component';
 
 @Injectable({
   providedIn: AppComponent
 })
 export class MockGridService extends GridService {
-
-
-  static testGrids: Grid[] = [ //this is really just one grid I dont have time for that
+  static testGrids: Grid[] = [
     {
-      _id: "peepee",
-      owner: "poopoo",
+      _id: 'testGridId',
+      owner: 'testOwner',
       grid: [
         [
-          {
-            editable: true,
-            value: "1",
-            edges: {top: false, right: false, bottom: false, left: false}
-          },
-          {
-            editable: true,
-            value: "2",
-            edges: {top: false, right: false, bottom: false, left: false}
-          }
+          { editable: true, value: '1', edges: { top: false, right: false, bottom: false, left: false } },
+          { editable: true, value: '2', edges: { top: false, right: false, bottom: false, left: false } }
         ],
         [
-          {
-            editable: true,
-            value: "3",
-            edges: {top: false, right: false, bottom: false, left: false}
-          },
-          {
-            editable: true,
-            value: "4",
-            edges: {top: false, right: false, bottom: false, left: false}
-          }
-        ],
+          { editable: true, value: '3', edges: { top: false, right: false, bottom: false, left: false } },
+          { editable: true, value: '4', edges: { top: false, right: false, bottom: false, left: false } }
+        ]
       ]
     }
   ];
@@ -48,7 +30,11 @@ export class MockGridService extends GridService {
   }
 
   getGrids(): Observable<Grid[]> {
-      return of(MockGridService.testGrids);
+    return of(MockGridService.testGrids);
+  }
+
+  saveGrid(gridData: Partial<Grid>): Observable<string> {
+    return of('newGridId');
   }
 
 }
