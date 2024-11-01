@@ -34,9 +34,10 @@ import { MatButtonModule } from '@angular/material/button';
   ],
 })
 export class GridComponent {
-
-  n: number = 10;
-  m: number = 40;
+  
+  rowHight: number = 10;
+  colWidth: number = 10;
+  s: number = 40; //pixel size of gridCell?
   grid: GridCell[][] = [];
   savedGrids: Grid[];
 
@@ -57,7 +58,8 @@ export class GridComponent {
    * Reinitializes the grid based on the new size.
    */
   onSizeInput() {
-    console.log(this.n);
+    console.log(this.colWidth);
+    console.log(this.rowHight);
     this.initializeGrid();
   }
 
@@ -67,9 +69,9 @@ export class GridComponent {
    */
   initializeGrid() {
     this.grid=[];
-      for(let row=0; row<this.n; ++row) {
+      for(let row=0; row<this.rowHight; ++row) {
         this.grid.push([]);
-        for(let col=0; col<this.n; ++col) {
+        for(let col=0; col<this.colWidth; ++col) {
           this.grid[row].push(new GridCell());
     }
    }
@@ -145,7 +147,7 @@ export class GridComponent {
    * @param row - The row index of the focused cell.
    */
   onKeydown(event: KeyboardEvent, col: number, row: number) {
-    const cell = this.grid[col][row];
+    const cell = this.grid[row][col];
     const inputElement = this.elRef.nativeElement.querySelector(`app-grid-cell[col="${col}"][row="${row}"] input`);
 
     console.log('keydown', event.key, col, row);
@@ -243,7 +245,7 @@ export class GridComponent {
    * @param row - The row index of the target cell.
    */
   moveFocus(col: number, row: number) {
-    if (col >= 0 && col < this.grid.length && row >= 0 && row < this.grid[col].length) {
+    if (this.grid[row] != undefined && col >= 0 && col < this.grid[row].length && row >= 0 && row < this.grid.length) {
       this.currentCol = col;
       this.currentRow = row;
 
@@ -257,6 +259,7 @@ export class GridComponent {
       }
     }
   }
+
 
   /**
    * Cycles through the typing directions.
