@@ -5,7 +5,6 @@ import { GridService } from './grid.service';
 import { MockGridService } from 'src/testing/grid.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Grid } from './grid';
-import { GridCell } from '../grid-cell/grid-cell';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 
