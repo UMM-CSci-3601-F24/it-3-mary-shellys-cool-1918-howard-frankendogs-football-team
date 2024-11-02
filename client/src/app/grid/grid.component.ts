@@ -51,6 +51,7 @@ export class GridComponent {
 
   constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService) {
     this.initializeGrid();
+    this.loadSavedGrids();
   }
 
   /**
