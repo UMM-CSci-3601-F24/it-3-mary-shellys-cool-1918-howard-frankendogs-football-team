@@ -5,13 +5,13 @@ import { WebSocketSubject } from 'rxjs/webSocket';
   providedIn: 'root',
 })
 export class WebSocketService {
-  private socket$: WebSocketSubject<any>;
+  private socket$: WebSocketSubject<unknown>;
 
   constructor() {
     this.socket$ = new WebSocketSubject('ws://localhost:8080');
   }
 
-  sendMessage(message: any) {
+  sendMessage(message: unknown) {
     this.socket$.next(message);
   }
 

@@ -14,7 +14,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { WebSocketService } from '../web-socket-service';
+import { WebSocketService } from '../web-socket.service';
 // import { Grid } from './grid';
 
 @Component({
