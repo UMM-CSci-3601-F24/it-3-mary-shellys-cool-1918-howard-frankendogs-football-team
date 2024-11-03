@@ -3,6 +3,7 @@ import { Word } from './word';
 import { environment } from 'src/environments/environment';
 import { map, Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { SearchContext } from './searchContext';
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +11,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 export class WordService {
   readonly wordUrl: string = `${environment.apiUrl}anagram`;
 
-  private readonly groupKey = 'wordGroup';//'group';
-  private readonly containsKey = 'word';//'contains';
+  private readonly groupKey = 'wordGroup';
+  private readonly containsKey = 'word';
 
 
   constructor(private httpClient: HttpClient) { }
 
-  getWords(filters?: {word?: string; wordGroup?: string}): Observable<Word[]> {
+  getWords(filters?: {word?: string; wordGroup?: string}): Observable<SearchContext> {
 
     let httpParams: HttpParams = new HttpParams();
     if(filters) {
@@ -27,10 +28,11 @@ export class WordService {
         httpParams = httpParams.set(this.groupKey, filters.wordGroup);
       }
     }
-    return this.httpClient.get<Word[]>(this.wordUrl, {
+    return this.httpClient.get<SearchContext>(this.wordUrl, {
       params: httpParams,
     });
   }
+
   sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean}): Word[] {
     const filteredWords = words;
     //let filteredWords = words;

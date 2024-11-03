@@ -50,11 +50,11 @@
 </div>
 <br>
 <div class="flex-row">
-  @if(serverFilteredWords()) {
+  @if(serverFilteredContext()) {
     <div class="flex-1">
       <mat-card>
         <mat-card-content>
-          <mat-list class="anagram-nav-list">
+          <mat-list class="anagram-nav-list-words">
             @for (word of filteredWords().slice(0,100); track word._id) {
               <div class="flex-row gap-8 flex-wrap anagram-list-item">
                 <span matListItemTitle class="anagram-list-word">{{word.word}}</span>
@@ -85,5 +85,32 @@
         Please wait a bit and try again or start the server.
       </mat-error>
     </div>
+  }
+</div>
+<div class="flex-row">
+  @if(serverFilteredContext()){
+    <div class="flex-1">
+      <mat-card>
+        <mat-card-content>
+          <mat-list class="anagram-nav-list-history">
+            @if(searchHistory().length === 0){
+              <p>No Saved Searches</p>
+            }
+            @for(search of searchHistory().slice(max(searchHistory().length - 100, 0),searchHistory().length).reverse(); track search._id) {
+              <div class="anagram-list-item">
+                @if(search.contains !== null){
+                  <span matListItemLine class="anagram-search-history-contains">Contains: "{{search.contains}}"</span>
+                }
+                @if(search.wordGroup !== null){
+                  <span matListItemLine class="anagram-search-history-wordGroup">From word group: "{{search.wordGroup}}"</span>
+                }
+              </div>
+            }
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  } @else {
+    <p>Something went wrong with getting your search history, Apologies!</p>
   }
 </div>

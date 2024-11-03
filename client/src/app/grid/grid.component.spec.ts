@@ -5,7 +5,6 @@ import { GridService } from './grid.service';
 import { MockGridService } from 'src/testing/grid.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Grid } from './grid';
-import { GridCell } from '../grid-cell/grid-cell';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 
@@ -37,18 +36,29 @@ describe('GridCellComponent', () => {
   });
 
   it('should initialize grid correctly', () => {
-    expect(component.grid.length).toBe(component.n);
+    expect(component.grid.length).toBe(component.gridWidth);
     for (const row of component.grid) {
-      expect(row.length).toBe(component.n);
+      expect(row.length).toBe(component.gridWidth);
     }
   });
 
-  it('should re-initialize grid on size input', () => {
-    component.n = 5;
+  it('should re-initialize even grid on size input', () => {
+    component.gridHeight = 5;
+    component.gridWidth = 5;
     component.onSizeInput();
     expect(component.grid.length).toBe(5);
     for (const row of component.grid) {
       expect(row.length).toBe(5);
+    }
+  });
+
+  it('should re-initialize odd grid on size input', () => {
+    component.gridHeight = 5;
+    component.gridWidth = 6;
+    component.onSizeInput();
+    expect(component.grid.length).toBe(5);
+    for (const row of component.grid) {
+      expect(row.length).toBe(6);
     }
   });
 

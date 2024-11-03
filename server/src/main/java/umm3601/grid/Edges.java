@@ -1,5 +1,6 @@
 package umm3601.grid;
 
+@SuppressWarnings({"VisibilityModifier"})
 public class Edges {
     public boolean top;
     public boolean bottom;

@@ -33,6 +33,7 @@ export class MockGridService extends GridService {
     return of(MockGridService.testGrids);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   saveGrid(gridData: Partial<Grid>): Observable<string> {
     return of('newGridId');
   }

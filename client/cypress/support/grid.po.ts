@@ -6,6 +6,6 @@ export class GridPage {
   }
 
   saveGrid() {
-    return cy.get("[data-test=saveGrid]").click();
+    return cy.get("[data-test=saveGridButton]").click();
   }
 }
