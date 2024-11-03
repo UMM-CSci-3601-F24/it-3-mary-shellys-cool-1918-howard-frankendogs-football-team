@@ -36,15 +36,15 @@ describe('GridCellComponent', () => {
   });
 
   it('should initialize grid correctly', () => {
-    expect(component.grid.length).toBe(component.colWidth);
+    expect(component.grid.length).toBe(component.gridWidth);
     for (const row of component.grid) {
-      expect(row.length).toBe(component.colWidth);
+      expect(row.length).toBe(component.gridWidth);
     }
   });
 
   it('should re-initialize even grid on size input', () => {
-    component.rowHight = 5;
-    component.colWidth = 5;
+    component.gridHeight = 5;
+    component.gridWidth = 5;
     component.onSizeInput();
     expect(component.grid.length).toBe(5);
     for (const row of component.grid) {
@@ -53,8 +53,8 @@ describe('GridCellComponent', () => {
   });
 
   it('should re-initialize odd grid on size input', () => {
-    component.rowHight = 5;
-    component.colWidth = 6;
+    component.gridHeight = 5;
+    component.gridWidth = 6;
     component.onSizeInput();
     expect(component.grid.length).toBe(5);
     for (const row of component.grid) {

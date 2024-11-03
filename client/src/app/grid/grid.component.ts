@@ -34,10 +34,10 @@ import { MatButtonModule } from '@angular/material/button';
   ],
 })
 export class GridComponent {
-  
-  rowHight: number = 10;
-  colWidth: number = 10;
-  s: number = 40; //pixel size of gridCell?
+
+  gridHeight: number = 10;
+  gridWidth: number = 10;
+  cellSize: number = 40; //pixel size of gridCell?
   grid: GridCell[][] = [];
   savedGrids: Grid[];
 
@@ -59,8 +59,8 @@ export class GridComponent {
    * Reinitializes the grid based on the new size.
    */
   onSizeInput() {
-    console.log(this.colWidth);
-    console.log(this.rowHight);
+    console.log(this.gridWidth);
+    console.log(this.gridHeight);
     this.initializeGrid();
   }
 
@@ -70,9 +70,9 @@ export class GridComponent {
    */
   initializeGrid() {
     this.grid=[];
-      for(let row=0; row<this.rowHight; ++row) {
+      for(let row=0; row<this.gridHeight; ++row) {
         this.grid.push([]);
-        for(let col=0; col<this.colWidth; ++col) {
+        for(let col=0; col<this.gridWidth; ++col) {
           this.grid[row].push(new GridCell());
     }
    }
@@ -96,6 +96,9 @@ export class GridComponent {
 
   loadGrid(grid: Grid) {
     this.grid = grid.grid;
+    this.gridHeight = this.grid.length;
+    this.gridWidth = this.grid[0].length;
+
   }
 
 
