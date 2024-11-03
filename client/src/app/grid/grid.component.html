@@ -1,3 +1,16 @@
+<div>
+  <button class = "save-button" data-test="saveGridButton" (click)="saveGrid()">Save Grid</button>
+  <div>
+    <h3>Saved Grids</h3>
+    @for (grid of this.savedGrids; track grid._id) {
+      <div>
+        <button (click)="loadGrid(grid)" routerLink="/grid/{{grid._id}}" >{{ grid.owner }}</button>
+      </div>
+    }
+  </div>
+</div>
+<div>
+
 <p>Hight</p>
 <input matInput
   [(ngModel)]="rowHight"

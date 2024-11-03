@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ElementRef, inject, Renderer2, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,6 +7,14 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { CommonModule } from '@angular/common';
 import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
+import { GridService } from './grid.service';
+import { Grid } from './grid';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { catchError, map, of, switchMap } from 'rxjs';
+import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+// import { Grid } from './grid';
 
 @Component({
   selector: 'app-grid-component',
@@ -21,26 +29,30 @@ import { GridCellComponent } from '../grid-cell/grid-cell.component';
     CommonModule,
     GridCellComponent,
     MatGridListModule,
+    RouterLink,
+    MatButtonModule,
   ],
 })
 export class GridComponent {
-
+  
   rowHight: number = 10;
   colWidth: number = 10;
-  s: number = 40;
-
+  s: number = 40; //pixel size of gridCell?
   grid: GridCell[][] = [];
+  savedGrids: Grid[];
+
   currentRow: number = 0;
   currentCol: number = 0;
   typeDirection: string = "right"; // Current direction
   typingDirections: string[] = ["right", "left", "up", "down"]; // Possible Directions
   currentDirectionIndex: number = 0;
   private focusTimeout: ReturnType<typeof setTimeout>;
+  private route = inject(ActivatedRoute);
 
-  constructor(private renderer: Renderer2, public elRef: ElementRef) {
+  constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService) {
     this.initializeGrid();
+    this.loadSavedGrids();
   }
-
 
   /**
    * Handles the input size change event.
@@ -65,6 +77,54 @@ export class GridComponent {
     }
    }
   }
+
+  saveGrid() {
+    const gridData: Partial<Grid> = {
+      owner: 'currentUser', // Again a placeholder
+      grid: this.grid
+    };
+    this.gridService.saveGrid(gridData).subscribe(() => {
+      this.loadSavedGrids();
+    });
+  }
+
+  loadSavedGrids() {
+    this.gridService.getGrids().subscribe(grids => {
+      this.savedGrids = grids;
+    });
+  }
+
+  loadGrid(grid: Grid) {
+    this.grid = grid.grid;
+  }
+
+
+  activeGrid = toSignal(
+    this.route.paramMap.pipe(
+      // Map the paramMap into the id
+      map((paramMap: ParamMap) => paramMap.get('id')),
+      // Maps the `id` string into the Observable<User>,
+      // which will emit zero or one values depending on whether there is a
+      // `User` with that ID.
+      switchMap((id: string) => this.gridService.getGridById(id)),
+      catchError((_err) => {
+        this.error.set({
+          help: 'There was a problem loading the user – try again.',
+          httpResponse: _err.message,
+          message: _err.error?.title,
+        });
+        return of();
+      })
+      /*
+       * You can uncomment the line that starts with `finalize` below to use that console message
+       * as a way of verifying that this subscription is completing.
+       * We removed it since we were not doing anything interesting on completion
+       * and didn't want to clutter the console log
+       */
+      // finalize(() => console.log('We got a new user, and we are done!'))
+    )
+  );
+  error = signal({ help: '', httpResponse: '', message: '' });
 
   /**
    * Handles the click event on a grid cell.
@@ -211,4 +271,8 @@ export class GridComponent {
     this.typeDirection = this.typingDirections[this.currentDirectionIndex];
     console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
+
+  // saveGrid() {
+  //   this.gridService.saveGrid(this.grid);
+  // }
 }
