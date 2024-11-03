@@ -11,21 +11,21 @@
 </div>
 <div>
 
-<p>Hight</p>
+<p>Height</p>
 <input matInput
-  [(ngModel)]="rowHight"
+  [(ngModel)]="gridHeight"
   type="number"
   (input)="onSizeInput()"
-  placeholder="{{rowHight}}">
+  placeholder="{{gridHeight}}">
 <p>Width</p>
 <input matInput
-  [(ngModel)]="colWidth"
+  [(ngModel)]="gridWidth"
   type="number"
   (input)="onSizeInput()"
-  placeholder="{{colWidth}}">
+  placeholder="{{gridWidth}}">
 
-  <div [ngStyle]="{'height': (rowHight * s) + 'px', 'width': (colWidth * s) + 'px'}"  >
-    <mat-grid-list cols="{{colWidth}}" rowHeight="1:1" gutterSize="0">
+  <div [ngStyle]="{'height': (gridHeight * cellSize) + 'px', 'width': (gridWidth * cellSize) + 'px'}"  >
+    <mat-grid-list cols="{{gridWidth}}" gridHeight="1:1" gutterSize="0">
       @for (row of grid; track row; let rowIndex = $index) {
         @for (cell of row; track cell; let colIndex = $index) {
           <mat-grid-tile Rowspan="1" Colspan="1">
@@ -39,7 +39,7 @@
             [row]="rowIndex"
             [col]="colIndex"
             [grid]="grid"
-            [ngStyle]="{'height': s + 'px', 'width': s + 'px'}"
+            [ngStyle]="{'height': cellSize + 'px', 'width': cellSize + 'px'}"
             ></app-grid-cell>
           </mat-grid-tile>
         }
@@ -47,9 +47,9 @@
     </mat-grid-list>
   </div>
   <input matInput
-  [(ngModel)]="s"
+  [(ngModel)]="cellSize"
   type="number"
-  placeholder="{{s}}">
+  placeholder="{{cellSize}}">
 
 <button mat-button (click)="cycleTypingDirection()">Cycle Typing Direction</button>
 <p>Current Typing Direction is {{typeDirection}}</p>
