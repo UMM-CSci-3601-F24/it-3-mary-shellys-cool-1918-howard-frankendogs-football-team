@@ -57,11 +57,22 @@ export class GridComponent {
   private focusTimeout: ReturnType<typeof setTimeout>;
   private route = inject(ActivatedRoute);
 
-  static capturedMessage
-
   constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService, private webSocketService: WebSocketService) {
     this.initializeGrid();
     this.loadSavedGrids();
+    this.webSocketService.getMessage().subscribe((message: unknown) => {
+      const msg = message as { type: string, grid: GridCell[][] };
+      if (msg.type === 'GRID_UPDATE') {
+        this.applyGridUpdate(msg.grid);
+        this.applyGridUpdate((message as { grid: GridCell[][] }).grid);
+      }
+    });
+  }
+
+  private applyGridUpdate(grid: GridCell[][]) {
+    this.gridPackage.grid = grid;
+    this.gridHeight = grid.length;
+    this.gridWidth = grid[0].length;
   }
 
   /**
@@ -122,13 +133,6 @@ export class GridComponent {
     };
     console.log(message);
     this.webSocketService.sendMessage(message);
-  }
-
-  static captureMessage(message: unknown): void {
-    console.log('Handling message:', message);
-    // this.grid = (message as { grid: GridCell[][] }).grid;
-    this.capturedMessage = message;
-    throw new Error('Method not implemented.');
   }
 
 

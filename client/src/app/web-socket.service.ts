@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { WebSocketSubject } from 'rxjs/webSocket';
-import { GridComponent } from './grid/grid.component';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebSocketService {
   private socket$: WebSocketSubject<unknown>;
+  private messageSubject = new Subject<unknown>();
 
   constructor() {
     this.socket$ = new WebSocketSubject('ws://localhost:4567/websocket');
     this.socket$.subscribe(
-      // (message) => console.log('Received message from server:', message),
       (message) => this.handleMessage(message),
-
       (err) => console.error('WebSocket error:', err),
       () => console.log('WebSocket connection closed')
     );
@@ -24,12 +23,12 @@ export class WebSocketService {
     this.socket$.next(message);
   }
 
-  // getMessage() {
-  //   console.log('Getting messages from server');
-  //   return this.socket$.asObservable();
-  // }
+  getMessage() {
+    return this.messageSubject.asObservable();
+  }
 
-  handleMessage(message: unknown) {
-    GridComponent.captureMessage(message);
+  private handleMessage(message: unknown) {
+    console.log('Received message from server:', message);
+    this.messageSubject.next(message);
   }
 }
