@@ -2,7 +2,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GridService } from './grid.service';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { Grid } from './grid';
+import { GridPackage } from './gridPackage';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
@@ -11,7 +11,7 @@ describe('GridService', () => {
   let gridService: GridService;
   let httpClient: HttpClient;
   let httpTestingController : HttpTestingController;
-  const testGrid: Grid = {
+  const testGrid: GridPackage = {
     _id:"hehe",
     owner:"haha",
     grid: [
