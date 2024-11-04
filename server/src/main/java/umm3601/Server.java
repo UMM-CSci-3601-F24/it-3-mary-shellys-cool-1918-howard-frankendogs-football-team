@@ -71,7 +71,7 @@ public class Server {
         });
 
         System.out.println("Configuring WebSocket endpoint...");
-        server.ws("/websocket", ws -> {
+        server.ws("/api/websocket", ws -> {
             System.out.println("WebSocket endpoint created");
             ws.onConnect(ctx -> {
                 connectedClients.add(ctx);

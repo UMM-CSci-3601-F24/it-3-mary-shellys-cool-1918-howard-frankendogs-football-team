@@ -40,7 +40,11 @@ public class GridController implements Controller {
         .getOrThrow(m -> new RuntimeJsonMappingException("Failed to parse body as grid: " + body));
     System.err.println(grid._id);
     // System.err.println(grid.toString());
-    gridCollection.insertOne(grid);
+    if (grid._id != null) {
+      gridCollection.replaceOneById(grid._id, grid);
+    } else {
+      gridCollection.insertOne(grid);
+    }
     // ctx.json(Map.of("id", grid._id));
     System.err.println(grid._id);
 
