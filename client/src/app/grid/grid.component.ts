@@ -61,8 +61,8 @@ export class GridComponent {
     this.initializeGrid();
     this.loadSavedGrids();
     this.webSocketService.getMessage().subscribe((message: unknown) => {
-      const msg = message as { type: string, grid: GridCell[][] };
-      if (msg.type === 'GRID_UPDATE') {
+      const msg = message as { type: string, grid: GridCell[][], id: string};
+      if (msg.type === 'GRID_UPDATE' && this.gridPackage._id == (message as { id: string }).id) {
         this.applyGridUpdate(msg.grid);
         this.applyGridUpdate((message as { grid: GridCell[][] }).grid);
       }
@@ -128,7 +128,8 @@ export class GridComponent {
     const message = {
       type: 'GRID_UPDATE',
       grid: this.gridPackage.grid,
-      owner: this.gridPackage.owner
+      owner: this.gridPackage.owner,
+      id: this.gridPackage._id
 
     };
     console.log(message);
