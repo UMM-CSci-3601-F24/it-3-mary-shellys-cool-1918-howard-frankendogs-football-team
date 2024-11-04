@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Renderer2, signal } from '@angular/core';
+import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,9 +9,9 @@ import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GridService } from './grid.service';
 import { GridPackage } from './gridPackage';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { catchError, map, of, switchMap } from 'rxjs';
+// import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+// import { catchError, map, of, switchMap } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
@@ -62,9 +62,9 @@ export class GridComponent {
     this.loadSavedGrids();
     this.webSocketService.getMessage().subscribe((message: unknown) => {
       const msg = message as { type: string, grid: GridCell[][], id: string};
-      if (msg.type === 'GRID_UPDATE' && this.activeGrid()._id == (message as { id: string }).id) {
+      if (msg.type === 'GRID_UPDATE' && this.gridPackage._id == (message as { id: string }).id) {
         this.applyGridUpdate(msg.grid);
-        this.applyGridUpdate((message as { grid: GridCell[][] }).grid);
+        // this.applyGridUpdate((message as { grid: GridCell[][] }).grid);
       }
     });
   }
@@ -126,32 +126,16 @@ export class GridComponent {
     });
   }
 
-  activeGrid = toSignal(
-    this.route.paramMap.pipe(
-      // Map the paramMap into the id
-      map((paramMap: ParamMap) => paramMap.get('id')),
-      switchMap((id: string) => this.gridService.getGridById(id)),
-      catchError((_err) => {
-        this.error.set({
-          help: 'There was a problem loading the grid – try again.',
-          httpResponse: _err.message,
-          message: _err.error?.title,
-        });
-        return of<GridPackage>();
-      })
-    )
-  );
+  loadGrid(id: string) {
+    this.gridService.getGridById(id).subscribe(
+      (activeGrid) => {
+        console.log(activeGrid._id);
 
-  error = signal({ help: '', httpResponse: '', message: '' });
-
-  loadGrid() {
-    const activeGrid = this.activeGrid();
-    console.log(activeGrid._id);
-
-    this.gridPackage._id = activeGrid._id;
-    this.gridPackage.owner = activeGrid.owner;
-    this.applyGridUpdate(activeGrid.grid);
-
+        this.gridPackage._id = activeGrid._id;
+        this.gridPackage.owner = activeGrid.owner;
+        this.applyGridUpdate(activeGrid.grid);
+      },
+    );
   }
 
   onGridChange() {
