@@ -1,9 +1,9 @@
 package umm3601.grid;
 
-import static com.mongodb.client.model.Filters.eq;
+// import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+// import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
-import org.bson.types.ObjectId;
+// import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +37,7 @@ import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import io.javalin.validation.BodyValidator;
+// import io.javalin.validation.BodyValidator;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.json.JavalinJackson;
 
@@ -125,7 +125,7 @@ public class GridControllerSpec {
 
     verify(ctx).json(gridCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
-    assertEquals(gridId, gridCaptor.getValue()._id.toString());
+    assertEquals(gridId, gridCaptor.getValue()._id);
   }
 
   @Test
