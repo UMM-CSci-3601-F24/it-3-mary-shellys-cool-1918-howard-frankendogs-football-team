@@ -4,7 +4,7 @@ import { GridComponent } from './grid.component';
 import { GridService } from './grid.service';
 import { MockGridService } from 'src/testing/grid.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Grid } from './grid';
+import { GridPackage } from './gridPackage';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 
@@ -36,8 +36,8 @@ describe('GridCellComponent', () => {
   });
 
   it('should initialize grid correctly', () => {
-    expect(component.grid.length).toBe(component.gridWidth);
-    for (const row of component.grid) {
+    expect(component.gridPackage.grid.length).toBe(component.gridWidth);
+    for (const row of component.gridPackage.grid) {
       expect(row.length).toBe(component.gridWidth);
     }
   });
@@ -46,8 +46,8 @@ describe('GridCellComponent', () => {
     component.gridHeight = 5;
     component.gridWidth = 5;
     component.onSizeInput();
-    expect(component.grid.length).toBe(5);
-    for (const row of component.grid) {
+    expect(component.gridPackage.grid.length).toBe(5);
+    for (const row of component.gridPackage.grid) {
       expect(row.length).toBe(5);
     }
   });
@@ -56,8 +56,8 @@ describe('GridCellComponent', () => {
     component.gridHeight = 5;
     component.gridWidth = 6;
     component.onSizeInput();
-    expect(component.grid.length).toBe(5);
-    for (const row of component.grid) {
+    expect(component.gridPackage.grid.length).toBe(5);
+    for (const row of component.gridPackage.grid) {
       expect(row.length).toBe(6);
     }
   });
@@ -120,7 +120,7 @@ describe('GridCellComponent', () => {
 
   it('should handle keydown events correctly', fakeAsync(() => {
     const moveFocusSpy = spyOn(component, 'moveFocus');
-    const cell = component.grid[1][1];
+    const cell = component.gridPackage.grid[1][1];
     const inputElement = document.createElement('input');
     spyOn(component.elRef.nativeElement, 'querySelector').and.returnValue(inputElement);
 
@@ -167,7 +167,7 @@ describe('GridCellComponent', () => {
 
   it('should handle backspace correctly', fakeAsync(() => {
     const moveFocusSpy = spyOn(component, 'moveFocus');
-    const cell = component.grid[1][1];
+    const cell = component.gridPackage.grid[1][1];
     const inputElement = document.createElement('input');
     spyOn(component.elRef.nativeElement, 'querySelector').and.returnValue(inputElement);
 
@@ -199,9 +199,9 @@ describe('GridCellComponent', () => {
   }));
 
   it('saveGrid() should call grid service and load grids', fakeAsync(() => {
-    const partialGrid: Partial<Grid> = {
+    const partialGrid: Partial<GridPackage> = {
       owner: 'currentUser',
-      grid: component.grid
+      grid: component.gridPackage.grid
     };
 
     const saveGridSpy = spyOn(gridService, 'saveGrid').and.returnValue(of('newGridId'));
