@@ -27,7 +27,7 @@ export class WebSocketService {
     return this.messageSubject.asObservable();
   }
 
-  private handleMessage(message: unknown) {
+  handleMessage(message: unknown) {
     console.log('Received message from server:', message);
     this.messageSubject.next(message);
   }
