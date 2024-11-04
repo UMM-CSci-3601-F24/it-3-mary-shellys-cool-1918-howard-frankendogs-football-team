@@ -26,20 +26,21 @@
 
   <div [ngStyle]="{'height': (gridHeight * cellSize) + 'px', 'width': (gridWidth * cellSize) + 'px'}"  >
     <mat-grid-list cols="{{gridWidth}}" gridHeight="1:1" gutterSize="0">
-      @for (row of grid; track row; let rowIndex = $index) {
+      @for (row of gridPackage.grid; track row; let rowIndex = $index) {
         @for (cell of row; track cell; let colIndex = $index) {
           <mat-grid-tile Rowspan="1" Colspan="1">
             <app-grid-cell
             tabindex= "0"
-            [gridCell]= "grid[rowIndex][colIndex]"
+            [gridCell]= "gridPackage.grid[rowIndex][colIndex]"
             (keydown)= "onKeydown($event, currentCol, currentRow)"
             (click)="onClick($event, colIndex, rowIndex)"
             [attr.row]="rowIndex"
             [attr.col]="colIndex"
             [row]="rowIndex"
             [col]="colIndex"
-            [grid]="grid"
+            [grid]="gridPackage.grid"
             [ngStyle]="{'height': cellSize + 'px', 'width': cellSize + 'px'}"
+            (gridChange)="onGridChange()"
             ></app-grid-cell>
           </mat-grid-tile>
         }

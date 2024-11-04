@@ -8,12 +8,13 @@ import { CommonModule } from '@angular/common';
 import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GridService } from './grid.service';
-import { Grid } from './grid';
+import { GridPackage } from './gridPackage';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { WebSocketService } from '../web-socket.service';
 // import { Grid } from './grid';
 
 @Component({
@@ -37,21 +38,41 @@ export class GridComponent {
 
   gridHeight: number = 10;
   gridWidth: number = 10;
-  cellSize: number = 40; //pixel size of gridCell?
-  grid: GridCell[][] = [];
-  savedGrids: Grid[];
+  cellSize: number = 40;
+
+  gridPackage: GridPackage = {
+    grid: [],
+    _id: '',
+    owner: 'currentUser'
+  }
+
+  savedGrids: GridPackage[];
 
   currentRow: number = 0;
   currentCol: number = 0;
   typeDirection: string = "right"; // Current direction
   typingDirections: string[] = ["right", "left", "up", "down"]; // Possible Directions
   currentDirectionIndex: number = 0;
+
   private focusTimeout: ReturnType<typeof setTimeout>;
   private route = inject(ActivatedRoute);
 
-  constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService) {
+  constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService, private webSocketService: WebSocketService) {
     this.initializeGrid();
     this.loadSavedGrids();
+    this.webSocketService.getMessage().subscribe((message: unknown) => {
+      const msg = message as { type: string, grid: GridCell[][], id: string};
+      if (msg.type === 'GRID_UPDATE' && this.gridPackage._id == (message as { id: string }).id) {
+        this.applyGridUpdate(msg.grid);
+        this.applyGridUpdate((message as { grid: GridCell[][] }).grid);
+      }
+    });
+  }
+
+  private applyGridUpdate(grid: GridCell[][]) {
+    this.gridPackage.grid = grid;
+    this.gridHeight = grid.length;
+    this.gridWidth = grid[0].length;
   }
 
   /**
@@ -69,19 +90,19 @@ export class GridComponent {
    * Reinitializes the grid based on the new size.
    */
   initializeGrid() {
-    this.grid=[];
+    this.gridPackage.grid=[];
       for(let row=0; row<this.gridHeight; ++row) {
-        this.grid.push([]);
+        this.gridPackage.grid.push([]);
         for(let col=0; col<this.gridWidth; ++col) {
-          this.grid[row].push(new GridCell());
+          this.gridPackage.grid[row].push(new GridCell());
     }
    }
   }
 
   saveGrid() {
-    const gridData: Partial<Grid> = {
-      owner: 'currentUser', // Again a placeholder
-      grid: this.grid
+    const gridData: Partial<GridPackage> = {
+      owner: this.gridPackage.owner,
+      grid: this.gridPackage.grid
     };
     this.gridService.saveGrid(gridData).subscribe(() => {
       this.loadSavedGrids();
@@ -94,12 +115,27 @@ export class GridComponent {
     });
   }
 
-  loadGrid(grid: Grid) {
-    this.grid = grid.grid;
-    this.gridHeight = this.grid.length;
-    this.gridWidth = this.grid[0].length;
+  loadGrid(grid: GridPackage) {
+    this.gridPackage._id = grid._id;
+    this.gridPackage.owner = grid.owner;
+    this.gridPackage.grid = grid.grid;
+    this.gridHeight = this.gridPackage.grid.length;
+    this.gridWidth = this.gridPackage.grid[0].length;
 
   }
+
+  onGridChange() {
+    const message = {
+      type: 'GRID_UPDATE',
+      grid: this.gridPackage.grid,
+      owner: this.gridPackage.owner,
+      id: this.gridPackage._id
+
+    };
+    console.log(message);
+    this.webSocketService.sendMessage(message);
+  }
+
 
 
   activeGrid = toSignal(
@@ -127,6 +163,7 @@ export class GridComponent {
       // finalize(() => console.log('We got a new user, and we are done!'))
     )
   );
+
   error = signal({ help: '', httpResponse: '', message: '' });
 
   /**
@@ -151,7 +188,7 @@ export class GridComponent {
    * @param row - The row index of the focused cell.
    */
   onKeydown(event: KeyboardEvent, col: number, row: number) {
-    const cell = this.grid[row][col];
+    const cell = this.gridPackage.grid[row][col];
     const inputElement = this.elRef.nativeElement.querySelector(`app-grid-cell[col="${col}"][row="${row}"] input`);
 
     console.log('keydown', event.key, col, row);
@@ -249,7 +286,7 @@ export class GridComponent {
    * @param row - The row index of the target cell.
    */
   moveFocus(col: number, row: number) {
-    if (this.grid[row] != undefined && col >= 0 && col < this.grid[row].length && row >= 0 && row < this.grid.length) {
+    if (this.gridPackage.grid[row] != undefined && col >= 0 && col < this.gridPackage.grid[row].length && row >= 0 && row < this.gridPackage.grid.length) {
       this.currentCol = col;
       this.currentRow = row;
 
