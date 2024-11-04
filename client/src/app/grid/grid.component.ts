@@ -111,6 +111,13 @@ export class GridComponent {
     this.webSocketService.sendMessage(message);
   }
 
+  handleMessage(message: unknown): void {
+    console.log('Handling message:', message);
+    this.grid = (message as { grid: GridCell[][] }).grid;
+    throw new Error('Method not implemented.');
+  }
+
+
 
   activeGrid = toSignal(
     this.route.paramMap.pipe(
@@ -137,6 +144,7 @@ export class GridComponent {
       // finalize(() => console.log('We got a new user, and we are done!'))
     )
   );
+
   error = signal({ help: '', httpResponse: '', message: '' });
 
   /**
