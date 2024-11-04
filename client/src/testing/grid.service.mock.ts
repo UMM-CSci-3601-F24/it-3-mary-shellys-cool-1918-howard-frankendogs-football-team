@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Grid } from 'src/app/grid/grid';
+import { GridPackage } from 'src/app/grid/gridPackage';
 import { GridService } from 'src/app/grid/grid.service';
 import { AppComponent } from 'src/app/app.component';
 
@@ -8,7 +8,7 @@ import { AppComponent } from 'src/app/app.component';
   providedIn: AppComponent
 })
 export class MockGridService extends GridService {
-  static testGrids: Grid[] = [
+  static testGrids: GridPackage[] = [
     {
       _id: 'testGridId',
       owner: 'testOwner',
@@ -29,12 +29,12 @@ export class MockGridService extends GridService {
     super(null);
   }
 
-  getGrids(): Observable<Grid[]> {
+  getGrids(): Observable<GridPackage[]> {
     return of(MockGridService.testGrids);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  saveGrid(gridData: Partial<Grid>): Observable<string> {
+  saveGrid(gridData: Partial<GridPackage>): Observable<string> {
     return of('newGridId');
   }
 
