@@ -6,20 +6,18 @@ describe('Grid Component', () => {
     beforeEach(() => {
       page.navigateTo();
       cy.task('seed:database');
-      // cy.visit('/grid');
-    //   cy.visit('localhost:4200/grid');
     });
 
       it('should open saved grid to server', () => {
         cy.get(':nth-child(3) > button').click();
-        cy.get(':nth-child(3) > button').click(); // the saved grid doesnt show up untill the second click
+        cy.get(':nth-child(3) > button').click();
         cy.intercept('api/grid').as('saveGrid');
         cy.url().should('match', /\/grid\/67282673702f8c628808e12e$/);
         cy.get('#mat-input-233').should('have.css', 'background-color').and('eq', 'rgb(0, 0, 0)');
       });
 
       it('should save a grid to server', () => {
-        cy.get('[data-test=saveGridButton]').click()
+        page.saveGrid();
         cy.intercept('api/grid').as('saveGrid');
 
         cy.url({timeout: 300}).should('match', /\/grid$/);
