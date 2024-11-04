@@ -114,6 +114,7 @@ export class GridCellComponent {
       default:
         break;
     }
+    this.gridChange.emit();
   }
 
   /**
