@@ -64,8 +64,11 @@
                   (click)="deleteWord(word._id)" routerLink="/anagram" data-test="deleteWordButton">
                   <mat-icon aria-label="Delete Word">delete</mat-icon>
                 </button>
-                <br>
               </div>
+            }
+            <br>
+            @if(filteredWords().length === 0){
+              <p>No words match your search parameters</p>
             }
             <!-- this stops the webpage from bugging out, but it should ideally also be limited in the server -->
             @if(filteredWords().length > 100) {
@@ -87,6 +90,7 @@
     </div>
   }
 </div>
+<br>
 <div class="flex-row">
   @if(serverFilteredContext()){
     <div class="flex-1">
@@ -96,7 +100,7 @@
             @if(searchHistory().length === 0){
               <p>No Saved Searches</p>
             }
-            @for(search of searchHistory().slice(max(searchHistory().length - 100, 0),searchHistory().length).reverse(); track search._id) {
+            @for(search of searchHistory().slice(max(searchHistory().length - 40, 0),searchHistory().length).reverse(); track search._id) {
               <div class="anagram-list-item">
                 @if(search.contains !== null){
                   <span matListItemLine class="anagram-search-history-contains">Contains: "{{search.contains}}"</span>
@@ -104,6 +108,7 @@
                 @if(search.wordGroup !== null){
                   <span matListItemLine class="anagram-search-history-wordGroup">From word group: "{{search.wordGroup}}"</span>
                 }
+                <br>
               </div>
             }
           </mat-list>
