@@ -100,10 +100,18 @@ export class GridComponent {
   }
 
   saveGrid() {
-    const gridData: Partial<GridPackage> = {
-      owner: this.gridPackage.owner,
-      grid: this.gridPackage.grid
-    };
+    if (this.gridPackage._id !== null && this.gridPackage._id !== ''){
+      var gridData: Partial<GridPackage> = {
+        owner: this.gridPackage.owner,
+        grid: this.gridPackage.grid,
+        _id: this.gridPackage._id
+      };
+    } else {
+      var gridData: Partial<GridPackage> = {
+        owner: this.gridPackage.owner,
+        grid: this.gridPackage.grid
+      };
+    }
     this.gridService.saveGrid(gridData).subscribe(() => {
       this.loadSavedGrids();
     });
