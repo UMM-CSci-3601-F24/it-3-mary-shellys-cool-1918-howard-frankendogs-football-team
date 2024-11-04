@@ -100,13 +100,24 @@ export class GridComponent {
   }
 
   saveGrid() {
-    const gridData: Partial<GridPackage> = {
-      owner: this.gridPackage.owner,
-      grid: this.gridPackage.grid
-    };
-    this.gridService.saveGrid(gridData).subscribe(() => {
-      this.loadSavedGrids();
-    });
+    if (this.gridPackage._id !== null && this.gridPackage._id !== ''){
+      const gridData: Partial<GridPackage> = {
+        owner: this.gridPackage.owner,
+        grid: this.gridPackage.grid,
+        _id: this.gridPackage._id
+      };
+      this.gridService.saveGrid(gridData).subscribe(() => {
+        this.loadSavedGrids();
+      });
+    } else {
+      const gridData: Partial<GridPackage> = {
+        owner: this.gridPackage.owner,
+        grid: this.gridPackage.grid
+      };
+      this.gridService.saveGrid(gridData).subscribe(() => {
+        this.loadSavedGrids();
+      });
+    }
   }
 
   loadSavedGrids() {

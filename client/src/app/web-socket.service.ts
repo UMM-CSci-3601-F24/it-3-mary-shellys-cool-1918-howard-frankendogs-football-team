@@ -10,7 +10,7 @@ export class WebSocketService {
   private messageSubject = new Subject<unknown>();
 
   constructor() {
-    this.socket$ = new WebSocketSubject('ws://localhost:4567/websocket');
+    this.socket$ = new WebSocketSubject('ws://localhost:4567/api/websocket');
     this.socket$.subscribe(
       (message) => this.handleMessage(message),
       (err) => console.error('WebSocket error:', err),
