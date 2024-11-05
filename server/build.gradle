@@ -1,0 +1,151 @@
+// Server side build.gradle
+// Builds and tests the server side of the project
+
+plugins {
+  // Apply the application plugin to add support for building a CLI application
+  id 'application'
+
+  // Apply the Jacoco plugin to add suppport for JUnit test coverage reports.
+  id 'jacoco'
+
+  // Apply the checkstyle plugin to check for appropriate Java code style.
+  id 'checkstyle'
+}
+
+// Build and run the project with Java 17
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+  // Use Maven Central for resolving your dependencies.
+  // You can declare any Maven/Ivy/file repository here.
+  mavenCentral()
+}
+
+// External dependencies that our application utilizes
+dependencies {
+  // Javalin, a simple web framework for Java
+  implementation 'io.javalin:javalin:6.3.0'
+
+  // Mongo DB Driver for Java
+  implementation 'org.mongodb:mongodb-driver-sync:5.1.4'
+
+  // MongoJack, MongoDB integration for Jackson
+  implementation 'org.mongojack:mongojack:5.0.1'
+
+  // Simple Logging Facade for Java
+  implementation 'org.slf4j:slf4j-simple:2.0.16'
+
+  // JUnit Jupiter API for testing.
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0'
+
+  // JUnit Jupiter Engine for testing.
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.1'
+
+  // JUnit Platform Launcher for testing.
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+  // Mockito for testing
+  testImplementation 'org.mockito:mockito-core:5.13.0'
+
+  testImplementation 'com.mockrunner:mockrunner-servlet:2.0.7'
+}
+
+application {
+  // Define the main class for the application
+  mainClass = 'umm3601.Main'
+}
+
+test {
+  // Use junit platform for unit tests
+  useJUnitPlatform()
+
+  // After running the tests, generate a coverage report
+  finalizedBy jacocoTestReport
+  // After running the tests, check the coverage level
+  finalizedBy jacocoTestCoverageVerification
+}
+
+jacocoTestReport {
+  // Running the test report task automatically runs test first
+  dependsOn test
+
+  reports {
+    // This isn't strictly necessary, but the default reports
+    // location is buried pretty deep in the build directory,
+    // so this makes it easier to find.
+    html.outputLocation = file("${buildDir}/jacocoHtml")
+  }
+
+  afterEvaluate {
+    // This excludes the `Main` class from the coverage report. We don't
+    // have any good way to test the `Main` class (we'd have
+    // to somehow fake incoming HTTP requests), so we are just
+    // leaving it out of the coverage report and the coverage limits.
+    classDirectories.setFrom(files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: ['umm3601/Main.class', 'umm3601/Server.class'])
+    }))
+  }
+}
+
+jacocoTestCoverageVerification {
+  // Running the test verification task automatically runs test first
+  dependsOn test
+
+  // These are the rules applied to the test coverage
+  violationRules {
+    rule {
+      // We are looking at the entire bundle overall, i.e.,
+      // 80% of all instructions across all the Java files
+      // (except Main.java) need to be covered.
+      element = 'BUNDLE'
+
+      // 80% of instructions should be covered
+      limit {
+        counter = 'INSTRUCTION'
+        minimum = 0.8
+      }
+
+      // 80% of lines should be covered
+      limit {
+        counter = 'LINE'
+        minimum = 0.8
+      }
+
+      // 80% of branches should be covered
+      limit {
+        counter = 'BRANCH'
+        minimum = 0.8
+      }
+
+      // 80% of methods should be covered
+      limit {
+        counter = 'METHOD'
+        minimum = 0.8
+      }
+    }
+  }
+
+  // This excludes the `Main` class from coverage verification. We don't
+  // have any good way to test the `Main` class (we'd have
+  // to somehow fake incoming HTTP requests), so we are just
+  // leaving it out of the coverage report and the coverage limits.
+  afterEvaluate {
+    classDirectories.setFrom(files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: ['umm3601/Main.class', 'umm3601/Server.class'])
+    }))
+  }
+}
+
+tasks.withType(JavaCompile) {
+  // All of our source files are written in UTF-8
+  options.encoding = 'UTF-8'
+}
+
+wrapper {
+  distributionType = Wrapper.DistributionType.ALL
+}

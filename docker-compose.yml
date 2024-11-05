@@ -1,0 +1,38 @@
+version: '3.7'
+services:
+  client:
+    build: ./client # Location of the Dockerfile for the client
+    restart: always
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      CADDY_HOST: "${APP_HOST:-localhost}" # The domain/host to serve to
+      CADDY_GLOBAL_OPTIONS: "${APP_CADDY_GLOBAL_OPTIONS}" # A valid Caddy global option, see Caddyfile
+    ports:
+      - "80:80" # http
+      - "443:443" # https
+    depends_on:
+      - server
+  server:
+    build: ./server # Location of the Dockerfile for the client
+    restart: always
+    environment:
+      MONGO_ADDR: mongo # hostname of the mongo container
+      MONGO_DB: prod
+      WAIT_HOSTS: mongo:27017 # wait for mongo to start up before starting the server
+    depends_on:
+      - mongo
+  mongo:
+      image: mongo:5
+      restart: always
+      environment:
+        MONGO_DB: prod
+      volumes:
+          - mongo_data:/data/db
+          - ./database:/docker-entrypoint-initdb.d
+
+volumes:
+  mongo_data:
+  caddy_data:
+  caddy_config:
