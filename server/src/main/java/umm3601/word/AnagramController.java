@@ -122,11 +122,12 @@ public class AnagramController implements Controller {
   // }
 
   private Bson constructSortingOrder(Context ctx) {
-    String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "alphabetical");
+    String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "word");
     String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "false");
+
     Bson sortingOrder = sortOrder.equals("desc") ? Sorts.descending(sortBy) : Sorts.ascending(sortBy);
     return sortingOrder;
-  }
+}
 
   public void addNewWord(Context ctx) {
 
