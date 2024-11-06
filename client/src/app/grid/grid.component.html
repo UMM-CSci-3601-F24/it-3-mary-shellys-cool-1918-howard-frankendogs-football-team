@@ -1,0 +1,80 @@
+<input matInput
+  [(ngModel)]="n"
+  type="number"
+  (input)="onSizeInput()"
+  placeholder="{{n}}">
+  <input matInput
+  [(ngModel)]="m"
+  type="number"
+  placeholder="{{m}}">
+
+  <div [ngStyle]="{'height': (n * m) + 'px', 'width': (n * m) + 'px'}"  >
+    <mat-grid-list cols="{{n}}" rowHeight="1:1" gutterSize="0">
+      @for (row of grid; track row; let rowIndex = $index) {
+        @for (cell of row; track cell; ; let colIndex = $index) {
+          <mat-grid-tile Rowspan="1" Colspan="1" >
+            <app-grid-cell
+            tabindex= "0"
+            [gridCell]= "grid[colIndex][rowIndex]"
+            (keydown)= "onKeydown($event, currentCol, currentRow)"
+            (click)="onClick($event, colIndex, rowIndex)"
+            [attr.data-col]="colIndex"
+            [attr.data-row]="rowIndex"
+            [ngStyle]="{'height': m + 'px', 'width': m + 'px'}"
+            ></app-grid-cell>
+          </mat-grid-tile>
+        }
+      }
+    </mat-grid-list>
+  </div>
+
+<button mat-button (click)="cycleTypingDirection()">Cycle Typing Direction</button>
+<p>Current Typing Direction is {{typeDirection}}</p>
+
+<mat-list>
+  <mat-list-item> <mat-icon> tips_and_updates </mat-icon> <b>Legend</b> </mat-list-item>
+  <mat-list-item>Typing/Letters types directly into the grid and move in the direction specified.</mat-list-item>
+  <mat-list-item>Backspace alone deletes current cell value and moves opposite of direction specified.</mat-list-item>
+  <mat-list-item>Ctrl + Backspace deletes current cell value without moving.</mat-list-item>
+  <mat-list-item>Arrow keys alone navigate the array in the respective direction.</mat-list-item>
+  <mat-list-item>Ctrl + Arrow keys bold the edge in the respective direction.</mat-list-item>
+  <mat-list-item>Clicking on a cell will focus onto that cell.</mat-list-item>
+  <mat-list-item>The left number input changes the number of cells in each row.</mat-list-item>
+  <mat-list-item>The right number input changes the pixel size of each cell.</mat-list-item>
+  <mat-list-item>Highlight Yellow [CRTL+1]</mat-list-item>
+  <mat-list-item>Highlight Green [CRTL+2]</mat-list-item>
+  <mat-list-item>Highlight Red [CRTL+3]</mat-list-item>
+
+ </mat-list>
+
+
+<!-- <mat-expansion-panel hideToggle>
+  <mat-expansion-panel-header>
+    <mat-panel-title> Controls Legend </mat-panel-title>
+    <mat-panel-description>
+      <mat-icon> tips_and_updates </mat-icon>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p> Typing/Letters types directly into the grid and move in the direction specified.
+  </p>
+  <p>
+    Backspace alone deletes current cell value and moves opposite of direction specified.
+  </p>
+  <p>
+    Ctrl + Backspace deletes current cell value without moving.
+  </p>
+  <p>
+    Arrow keys alone navigate the array in the respective direction.
+  </p>
+  <p>
+    Ctrl + Arrow keys bold the edge in the respective direction.
+  </p>
+  <p>
+    Clicking on a cell will focus onto that cell.
+  </p>
+  <p>
+    The left number input changes the number of cells in each row.
+  </p>
+ <p>
+    The right number input changes the pixel size of each cell. </p>
+</mat-expansion-panel> -->
