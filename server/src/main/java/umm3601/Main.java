@@ -3,32 +3,33 @@ package umm3601;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
-import umm3601.grid.GridController;
-import umm3601.word.AnagramController;
+
+import umm3601.word.WordController;
 
 public class Main {
-    public static void main(String[] args) {
-        // Get the MongoDB address and database name from environment variables and
-        // if they aren't set, use the defaults of "localhost" and "dev".
-        String mongoAddr = Main.getEnvOrDefault("MONGO_ADDR", "localhost");
-        String databaseName = Main.getEnvOrDefault("MONGO_DB", "dev");
 
-        // Set up the MongoDB client
-        MongoClient mongoClient = Server.configureDatabase(mongoAddr);
-        // Get the database
-        MongoDatabase database = mongoClient.getDatabase(databaseName);
+  public static void main(String[] args) {
+    // Get the MongoDB address and database name from environment variables and
+    // if they aren't set, use the defaults of "localhost" and "dev".
+    String mongoAddr = Main.getEnvOrDefault("MONGO_ADDR", "localhost");
+    String databaseName = Main.getEnvOrDefault("MONGO_DB", "dev");
 
-        // The implementations of `Controller` used for the server. These will presumably
-        // be one or more controllers, each of which implements the `Controller` interface.
-        // You'll add your own controllers in `getControllers` as you create them.
-        final Controller[] controllers = Main.getControllers(database);
+    // Set up the MongoDB client
+    MongoClient mongoClient = Server.configureDatabase(mongoAddr);
+    // Get the database
+    MongoDatabase database = mongoClient.getDatabase(databaseName);
 
-        // Construct the server
-        Server server = new Server(mongoClient, controllers);
+    // The implementations of `Controller` used for the server. These will presumably
+    // be one or more controllers, each of which implements the `Controller` interface.
+    // You'll add your own controllers in `getControllers` as you create them.
+    final Controller[] controllers = Main.getControllers(database);
 
-        // Start the server
-        server.startServer();
-    }
+    // Construct the server
+    Server server = new Server(mongoClient, controllers);
+
+    // Start the server
+    server.startServer();
+  }
 
   /**
    * Get the value of an environment variable, or return a default value if it's not set.
@@ -39,9 +40,8 @@ public class Main {
    * @return The value of the environment variable, or the default value if it's not set
    */
   static String getEnvOrDefault(String envName, String defaultValue) {
-      return System.getenv().getOrDefault(envName, defaultValue);
+    return System.getenv().getOrDefault(envName, defaultValue);
   }
-
 
   /**
    * Get the implementations of `Controller` used for the server.
@@ -54,11 +54,16 @@ public class Main {
    *               to access the database.
    * @return An array of implementations of `Controller` for the server.
    */
-    static Controller[] getControllers(MongoDatabase database) {
-        Controller[] controllers = new Controller[] {
-            new AnagramController(database),
-            new GridController(database),
-        };
-        return controllers;
-    }
+  static Controller[] getControllers(MongoDatabase database) {
+    Controller[] controllers = new Controller[] {
+      // You would add additional controllers here, as you create them,
+      // although you need to make sure that each of your new controllers implements
+      // the `Controller` interface.
+      //
+      // You can also remove this UserController once you don't need it.
+      new WordController(database)
+    };
+    return controllers;
+  }
+
 }
