@@ -1,9 +1,11 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+
 import { WordService } from './word.service';
 import { Word } from './word';
 import { HttpClient, HttpParams, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
+// import { MockWordService } from 'src/testing/word.service.mock';
 
 describe('WordService', () => {
   const testWords: Word[] = [
@@ -23,8 +25,8 @@ describe('WordService', () => {
       wordGroup: 'team member',
     },
     {
-      _id: "Kennan_id",
-      word: 'Kennan',
+      _id: "Keenan_id",
+      word: 'Keenan',
       wordGroup: 'team member',
     },
     {
@@ -60,10 +62,8 @@ describe('WordService', () => {
       });
     }));
   });
-
   describe('When getWords() is called with parameters it forms proper HTTP request(Sever Filtering)', () => {
     // server filtering is contains and group as of 10/4/24
-    // All three of these tests just look to see if a call once and is made with the correct words in the url
     it('correctly calls api/anagram with  filter parameter contains', () => {
       const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testWords));
 
@@ -114,12 +114,22 @@ describe('WordService', () => {
   });
 
   describe('sorting on the client (alphabetical, by length)', () => {
-    it('calls sortWords with proper params', () => {
-      // const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testWords));
-      wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false});
-      expect()
-    })
-
+    it('filters by alphabetical decreasing', () => {
+      const sortType = "alphabetical";
+      const sortOrder = true;
+      const filteredWords = wordService.sortWords(testWords, {sortType: sortType, sortOrder: sortOrder});
+      expect(filteredWords[0].word).toBe("El");
+      // expect(filteredWords[4].word).toBe("El");
+      // expect(filteredWords[3].word).toBe("Jakob");
+      // expect(filteredWords[2].word).toBe("Keenan");
+      // expect(filteredWords[1].word).toBe("Mac");
+      // expect(filteredWords[0].word).toBe("Nic");
+    });
+    // it('calls sortWords with proper params', () => {
+    //   // const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testWords));
+    //   wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false});
+    //   expect()
+    // })
     it('returns a list of 5 words after calling sort function', () => {
       const filteredWords = wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false});
       expect(filteredWords.length).toBe(5);
@@ -147,6 +157,7 @@ describe('WordService', () => {
     }));
   })
 
+
   describe('Deleting a word using deleteWord()', () => {
     it('Talks to correct endpoint with correct call', waitForAsync(() => {
       const targetWord: Word = testWords[1];
@@ -166,20 +177,4 @@ describe('WordService', () => {
       });
     }))
   })
-
-  // describe('Deleting a wordGroup', () => {
-  //   it('talks to correct endpoint with correct param', waitForAsync(() => {
-  //     const targetGroup: string = testWords[1].wordGroup
-
-  //     const mockedMethod = spyOn(httpClient, 'delete')
-  //       .and
-  //       .returnValue(of(targetGroup));
-
-  //     wordService.deleteWordGroup(targetGroup).subscribe(() => {
-  //       expect(mockedMethod).withContext('one call').toHaveBeenCalledTimes(1);
-  //       expect(mockedMethod).withContext('talks to correct endpoint').toHaveBeenCalledWith(`${wordService.wordUrl}/${targetGroup}`);
-  //     });
-  //   }))
-  // })
-
 });

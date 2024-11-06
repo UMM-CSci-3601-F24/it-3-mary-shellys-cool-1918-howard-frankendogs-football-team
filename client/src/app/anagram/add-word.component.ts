@@ -7,6 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { WordService } from './word.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+
 
 @Component({
   selector: 'app-add-word',
@@ -25,16 +27,15 @@ import { Router } from '@angular/router';
 export class AddWordComponent {
   addWordForm = new FormGroup({
     word: new FormControl('', Validators.compose([
-      //requires field to be non-empty and at lease one character
       Validators.required,
       Validators.minLength(1)
     ])),
     wordGroup: new FormControl('', Validators.compose([
-      //requires field to be non-empty and at lease one character
       Validators.required,
       Validators.minLength(1),
     ])),
   });
+
 
   readonly addWordValidationMessages = {
     word: [
@@ -47,16 +48,19 @@ export class AddWordComponent {
     ]
   };
 
+
   constructor(
     private wordService: WordService,
     private snackBar: MatSnackBar,
     private router: Router) {
   }
 
+
   formControlHasError(controlName: string): boolean {
     return this.addWordForm.get(controlName).invalid &&
       (this.addWordForm.get(controlName).dirty || this.addWordForm.get(controlName).touched);
   }
+
 
   getErrorMessage(name: keyof typeof this.addWordValidationMessages): string {
     for(const {type, message} of this.addWordValidationMessages[name]) {
@@ -67,33 +71,28 @@ export class AddWordComponent {
     return 'Unknown error';
   }
 
+
   submitForm() {
-    this.wordService.addWord(this.addWordForm.value).subscribe({
-      next: () => {
-        // Generates a snackBar message
-        this.snackBar.open(
-          `Added word group: ${this.addWordForm.value.wordGroup}`,
-          null,
-          {duration: 2000}
-        );
-        // brings you back to main anagram page
-        this.router.navigate(['/anagram']);
-      },
-      error: err => {
-        if (err.status === 400) {
-          this.snackBar.open(
-            `The server failed to process your request to add a new word group. Is the server up? – Error Code: ${err.status}\nMessage: ${err.message}`,
-              'OK',
-              { duration: 5000 }
-          );
-        } else {
-          this.snackBar.open(
-            `An unexpected error occurred – Error Code: ${err.status}\nMessage: ${err.message}`,
-              'OK',
-              { duration: 5000 }
-          );
-        }
-      },
-    });
-  }
+    const wordsInput = this.addWordForm.value.word;
+    const wordGroup = this.addWordForm.value.wordGroup;
+    const wordsArray = wordsInput.split(',').map(word => word.trim()).filter(word => word.length > 0);
+  const addWordObservables = wordsArray.map(word => {
+    return this.wordService.addWord({ word, wordGroup });
+  });
+
+  forkJoin(addWordObservables).subscribe({
+    next: () => {
+      this.snackBar.open(`Added words to group: ${wordGroup}`, null, { duration: 2000 });
+      this.addWordForm.reset();
+      this.router.navigate(['/anagram']);
+    },
+    error: err => {
+      if (err.status === 400) {
+        this.snackBar.open(`Error adding words: ${err.message}`, 'OK', { duration: 5000 });
+      } else {
+        this.snackBar.open(`An unexpected error occurred: ${err.message}`, 'OK', { duration: 5000 });
+      }
+    }
+  });
+}
 }

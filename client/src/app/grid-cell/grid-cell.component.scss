@@ -23,15 +23,22 @@ $borderSize: 5px;
   border-left: $borderSize solid rgb(0, 0, 0);
 }
 
+.highlight-yellow {
+  background-color: rgb(251, 255, 0);
+}
+.highlight-green {
+  background-color: rgb(60, 255, 0);
+}
+.highlight-red {
+  background-color: rgb(255, 0, 0);
+}
+
+
 .cell-input {
   width: 100%;
   height: 100%;
   text-align: center;
   border: none;
-}
-
-.blacked-out {
-  background-color: black;
 }
 
 .cell-input:focus {

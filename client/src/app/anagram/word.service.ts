@@ -3,7 +3,6 @@ import { Word } from './word';
 import { environment } from 'src/environments/environment';
 import { map, Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { SearchContext } from './searchContext';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +10,15 @@ import { SearchContext } from './searchContext';
 export class WordService {
   readonly wordUrl: string = `${environment.apiUrl}anagram`;
 
-  private readonly groupKey = 'wordGroup';
-  private readonly containsKey = 'word';
+  readonly wordsUrl: string = `${environment.apiUrl}anagram/multiple`
+
+  private readonly groupKey = 'wordGroup';//'group';
+  private readonly containsKey = 'word';//'contains';
 
 
   constructor(private httpClient: HttpClient) { }
 
-  getWords(filters?: {word?: string; wordGroup?: string}): Observable<SearchContext> {
+  getWords(filters?: {word?: string; wordGroup?: string}): Observable<Word[]> {
 
     let httpParams: HttpParams = new HttpParams();
     if(filters) {
@@ -28,22 +29,35 @@ export class WordService {
         httpParams = httpParams.set(this.groupKey, filters.wordGroup);
       }
     }
-    return this.httpClient.get<SearchContext>(this.wordUrl, {
+    return this.httpClient.get<Word[]>(this.wordUrl, {
       params: httpParams,
     });
   }
-
-  sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean}): Word[] {
+  sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean; sortByWordOrGroup?: string}): Word[] {
     const filteredWords = words;
+
+
     //let filteredWords = words;
+    // filteredWords.sort((a, b) => a.word.localeCompare(b.word));
+
 
     if(filters.sortType) {
       if(filters.sortType === "alphabetical"){
-        filteredWords.map(w => w.word).sort();
+        if(filters.sortByWordOrGroup =="word") {
+          filteredWords.sort((a, b) => a.word.localeCompare(b.word));
+        }
+        else {
+          filteredWords.sort((a, b) => a.wordGroup.localeCompare(b.wordGroup));
+        }
       }
+
+
+      if(filters.sortType === "null"){
+        return filteredWords
+      }
+
     }
     if(filters.sortOrder) {
-      // if sortOrder is true reverse the results
       filteredWords.reverse();
     }
     return filteredWords;
@@ -57,8 +71,8 @@ export class WordService {
     return this.httpClient.delete<void>(`${this.wordUrl}/${id}`);
   }
 
-  deleteWordGroup(wordGroup: string): Observable<void> {
-    console.log(`delete word group was called with param : ${wordGroup}`)
-    return this.httpClient.delete<void>(`${this.wordUrl}/${wordGroup}`);
-  }
+  // deleteWordGroup(wordGroup: string): Observable<void> {
+  //   console.log(`delete word group was called with param : ${wordGroup}`)
+  //   return this.httpClient.delete<void>(`${this.wordUrl}/${wordGroup}`);
+  // }
 }

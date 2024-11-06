@@ -22,7 +22,7 @@ export class AppPage {
     return cy.get(this.sideNav);
   }
 
-  getNavLink(navOption: 'Home' | 'Grid' | 'Anagram Generator') {
+  getNavLink(navOption: 'Home' | 'Users') {
     return cy.contains(this.sideNavOption, `${navOption}`);
   }
 }
