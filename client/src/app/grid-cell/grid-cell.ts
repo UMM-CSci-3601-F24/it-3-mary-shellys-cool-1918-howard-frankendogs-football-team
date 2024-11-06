@@ -1,5 +1,5 @@
 import { Edges } from './edges';
-import { Colors } from './colors';
+// import { Colors } from './colors';
 
 export class GridCell {
   editable: boolean = true;

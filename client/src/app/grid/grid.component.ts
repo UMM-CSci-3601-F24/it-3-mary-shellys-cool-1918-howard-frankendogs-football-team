@@ -1,7 +1,7 @@
 import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { Colors } from '../grid-cell/colors';
+// import { Colors } from '../grid-cell/colors';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -151,28 +151,7 @@ export class GridComponent {
     this.webSocketService.sendMessage(message);
   }
 
-  highlightCell(color: string, col: number, row: number) {
-    // const cell = this.gridPackage.grid[col][row];
-    // const isActive = cell.color[color as keyof Colors];
 
-    // cell.color.yellow = false;
-    // cell.color.green = false;
-    // cell.color.red = false;
-
-    // if (!isActive) {
-    //   switch (color) {
-    //     case 'yellow':
-    //       cell.toggleYellowColor();
-    //       break;
-    //     case 'green':
-    //       cell.toggleGreenColor();
-    //       break;
-    //     case 'red':
-    //       cell.toggleRedColor();
-    //       break;
-    //   }
-    // }
-  }
 
   /**
    * Handles the click event on a grid cell.
@@ -282,22 +261,22 @@ export class GridComponent {
               setTimeout(() => this.moveFocus(col, row), 0);
             }
             break;
-          case '1':
-            {
-              console.log('Handling key event ' + event.key);
-              this.highlightCell('yellow', col, row);
-            }
-            break;
-          case '2':
-            {
-              this.highlightCell('green', col, row);
-            }
-            break;
-          case '3':
-            {
-              this.highlightCell('red', col, row);
-            }
-            break;
+          // case '1':
+          //   {
+          //     console.log('Handling key event ' + event.key);
+          //     this.highlightCell('yellow', col, row);
+          //   }
+          //   break;
+          // case '2':
+          //   {
+          //     this.highlightCell('green', col, row);
+          //   }
+          //   break;
+          // case '3':
+          //   {
+          //     this.highlightCell('red', col, row);
+          //   }
+          //   break;
             default:
         }
       }

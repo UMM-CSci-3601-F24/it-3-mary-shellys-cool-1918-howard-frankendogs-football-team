@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { GridCell } from './grid-cell';
 import { Edges } from './edges';
-import { Colors } from './colors';
+// import { Colors } from './colors';
 
 
 @Component({
