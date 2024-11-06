@@ -1,7 +1,6 @@
 export interface Word {
-  _id: string;
 
-  //numLetters: number;
+  _id: string;
   wordGroup: string;
   word: string;
 

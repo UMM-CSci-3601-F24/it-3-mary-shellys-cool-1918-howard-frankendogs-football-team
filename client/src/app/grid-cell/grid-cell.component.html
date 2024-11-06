@@ -1,4 +1,3 @@
-
 <div
   class="cell"
   [ngClass]="{
@@ -11,17 +10,16 @@
 @if (gridCell.editable) {
   <input matInput
     [(ngModel)]="gridCell.value"
-    [ngClass]="{
-      'highlight-yellow': gridCell.color.yellow,
-      'highlight-green': gridCell.color.green,
-      'highlight-red': gridCell.color.red,
+    [ngClass] = "{
+      'cell-input': true,
+      'blacked-out': gridCell.edges.left && gridCell.edges.bottom && gridCell.edges.top && gridCell.edges.right,
     }"
-    class="cell-input"
     type="text"
     maxlength="1"
     (input)="onInput(gridCell.value)"
     (keydown)="onKeyDown($event)"
-    placeholder="{{gridCell.value}}">
+    (click)="onClick($event)"
+ >
 }
     @else {
 <div class="cell-content">{{ gridCell.value }}</div>

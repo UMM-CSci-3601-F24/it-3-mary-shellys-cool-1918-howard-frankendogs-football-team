@@ -1,6 +1,4 @@
 package umm3601.word;
-
-
 import org.mongojack.Id;
 import org.mongojack.ObjectId;
 

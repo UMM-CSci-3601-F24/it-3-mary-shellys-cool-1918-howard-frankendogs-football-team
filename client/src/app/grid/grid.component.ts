@@ -1,5 +1,7 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
-
+import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { Colors } from '../grid-cell/colors';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -7,9 +9,12 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { CommonModule } from '@angular/common';
 import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { Colors } from '../grid-cell/colors';
+import { GridService } from './grid.service';
+import { GridPackage } from './gridPackage';
+import { ActivatedRoute } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { WebSocketService } from '../web-socket.service';
 
 @Component({
   selector: 'app-grid-component',
@@ -26,22 +31,49 @@ import { Colors } from '../grid-cell/colors';
     MatGridListModule,
     MatIconModule,
     MatListModule,
+    RouterLink,
+    MatButtonModule,
   ],
 })
 export class GridComponent {
-  n: number = 10;
-  m: number = 40;
 
-  grid: GridCell[][] = [];
+  gridHeight: number = 10;
+  gridWidth: number = 10;
+  cellSize: number = 40;
+
+  gridPackage: GridPackage = {
+    grid: [],
+    _id: '',
+    owner: 'currentUser'
+  }
+
+  savedGrids: GridPackage[];
+
   currentRow: number = 0;
   currentCol: number = 0;
-  typeDirection: string = 'right'; // Current direction
-  typingDirections: string[] = ['right', 'left', 'up', 'down']; // Possible Directions
+  typeDirection: string = "right"; // Current direction
+  typingDirections: string[] = ["right", "left", "up", "down"]; // Possible Directions
   currentDirectionIndex: number = 0;
-  private focusTimeout: ReturnType<typeof setTimeout>;
 
-  constructor(private renderer: Renderer2, public elRef: ElementRef) {
+  private focusTimeout: ReturnType<typeof setTimeout>;
+  private route = inject(ActivatedRoute);
+
+  constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService, private webSocketService: WebSocketService) {
     this.initializeGrid();
+    this.loadSavedGrids();
+    this.webSocketService.getMessage().subscribe((message: unknown) => {
+      const msg = message as { type: string, grid: GridCell[][], id: string};
+      if (msg.type === 'GRID_UPDATE' && this.gridPackage._id == (message as { id: string }).id) {
+        this.applyGridUpdate(msg.grid);
+        // this.applyGridUpdate((message as { grid: GridCell[][] }).grid);
+      }
+    });
+  }
+
+  private applyGridUpdate(grid: GridCell[][]) {
+    this.gridPackage.grid = grid;
+    this.gridHeight = grid.length;
+    this.gridWidth = grid[0].length;
   }
 
   /**
@@ -49,7 +81,8 @@ export class GridComponent {
    * Reinitializes the grid based on the new size.
    */
   onSizeInput() {
-    console.log(this.n);
+    console.log(this.gridWidth);
+    console.log(this.gridHeight);
     this.initializeGrid();
   }
 
@@ -58,62 +91,87 @@ export class GridComponent {
    * Reinitializes the grid based on the new size.
    */
   initializeGrid() {
-    this.grid = [];
-    for (let row = 0; row < this.n; ++row) {
-      this.grid.push([]);
-      for (let col = 0; col < this.n; ++col) {
-        this.grid[row].push(new GridCell());
-      }
+    this.gridPackage.grid=[];
+      for(let row=0; row<this.gridHeight; ++row) {
+        this.gridPackage.grid.push([]);
+        for(let col=0; col<this.gridWidth; ++col) {
+          this.gridPackage.grid[row].push(new GridCell());
+    }
+   }
+  }
+
+  saveGrid() {
+    if (this.gridPackage._id !== null && this.gridPackage._id !== ''){
+      const gridData: Partial<GridPackage> = {
+        owner: this.gridPackage.owner,
+        grid: this.gridPackage.grid,
+        _id: this.gridPackage._id
+      };
+      this.gridService.saveGrid(gridData).subscribe(() => {
+        this.loadSavedGrids();
+      });
+    } else {
+      const gridData: Partial<GridPackage> = {
+        owner: this.gridPackage.owner,
+        grid: this.gridPackage.grid
+      };
+      this.gridService.saveGrid(gridData).subscribe(() => {
+        this.loadSavedGrids();
+      });
     }
   }
 
-  boldAdjacent(edge: string, col: number, row: number) {
-    switch (edge) {
-      case 'top':
-        if (this.grid[col][row - 1]) {
-          this.grid[col][row - 1].toggleBottomEdge();
-        }
-        break;
-      case 'bottom':
-        if (this.grid[col][row + 1]) {
-          this.grid[col][row + 1].toggleTopEdge();
-        }
-        break;
-      case 'left':
-        if (this.grid[col - 1][row]) {
-          this.grid[col - 1][row].toggleRightEdge();
-        }
-        break;
-      case 'right':
-        if (this.grid[col + 1][row]) {
-          this.grid[col + 1][row].toggleLeftEdge();
-        }
-        break;
-    }
+  loadSavedGrids() {
+    this.gridService.getGrids().subscribe(grids => {
+      this.savedGrids = grids;
+    });
   }
 
+  loadGrid(id: string) {
+    this.gridService.getGridById(id).subscribe(
+      (activeGrid) => {
+        console.log(activeGrid._id);
+
+        this.gridPackage._id = activeGrid._id;
+        this.gridPackage.owner = activeGrid.owner;
+        this.applyGridUpdate(activeGrid.grid);
+      },
+    );
+  }
+
+  onGridChange() {
+    const message = {
+      type: 'GRID_UPDATE',
+      grid: this.gridPackage.grid,
+      owner: this.gridPackage.owner,
+      id: this.gridPackage._id
+
+    };
+    console.log(message);
+    this.webSocketService.sendMessage(message);
+  }
 
   highlightCell(color: string, col: number, row: number) {
-    const cell = this.grid[col][row];
-    const isActive = cell.color[color as keyof Colors];
+    // const cell = this.gridPackage.grid[col][row];
+    // const isActive = cell.color[color as keyof Colors];
 
-    cell.color.yellow = false;
-    cell.color.green = false;
-    cell.color.red = false;
+    // cell.color.yellow = false;
+    // cell.color.green = false;
+    // cell.color.red = false;
 
-    if (!isActive) {
-      switch (color) {
-        case 'yellow':
-          cell.toggleYellowColor();
-          break;
-        case 'green':
-          cell.toggleGreenColor();
-          break;
-        case 'red':
-          cell.toggleRedColor();
-          break;
-      }
-    }
+    // if (!isActive) {
+    //   switch (color) {
+    //     case 'yellow':
+    //       cell.toggleYellowColor();
+    //       break;
+    //     case 'green':
+    //       cell.toggleGreenColor();
+    //       break;
+    //     case 'red':
+    //       cell.toggleRedColor();
+    //       break;
+    //   }
+    // }
   }
 
   /**
@@ -124,6 +182,7 @@ export class GridComponent {
    * @param col - The column index of the clicked cell.
    * @param row - The row index of the clicked cell.
    */
+
   onClick(event: MouseEvent, col: number, row: number) {
     this.moveFocus(col, row);
   }
@@ -137,10 +196,8 @@ export class GridComponent {
    * @param row - The row index of the focused cell.
    */
   onKeydown(event: KeyboardEvent, col: number, row: number) {
-    const cell = this.grid[col][row];
-    const inputElement = this.elRef.nativeElement.querySelector(
-      `app-grid-cell[data-col="${col}"][data-row="${row}"] input`
-    );
+    const cell = this.gridPackage.grid[row][col];
+    const inputElement = this.elRef.nativeElement.querySelector(`app-grid-cell[col="${col}"][row="${row}"] input`);
 
     console.log('keydown', event.key, col, row);
 
@@ -148,10 +205,9 @@ export class GridComponent {
       clearTimeout(this.focusTimeout);
     }
 
-    this.focusTimeout = setTimeout(() => {
-      // Look into debounce, probably a better solution than timeout
-      if (!event.ctrlKey) {
-        switch (event.key) {
+    this.focusTimeout = setTimeout(() => { // Look into debounce, probably a better solution than timeout
+    if (!event.ctrlKey) {
+      switch (event.key) {
           case 'ArrowUp':
             this.moveFocus(col, row - 1);
             break;
@@ -168,36 +224,51 @@ export class GridComponent {
             if (inputElement) {
               cell.value = '';
             }
-            if (this.typeDirection === 'right') {
-              this.moveFocus(col - 1, row);
+            if (this.typeDirection === "right") {
+              if (cell.edges.left === false) {
+                this.moveFocus(col - 1, row)
+              }
             }
-            if (this.typeDirection === 'left') {
-              this.moveFocus(col + 1, row);
+            if (this.typeDirection === "left") {
+              if (cell.edges.right === false) {
+                this.moveFocus(col + 1, row)
+              }
             }
-            if (this.typeDirection === 'up') {
-              this.moveFocus(col, row + 1);
+            if (this.typeDirection === "up") {
+              if (cell.edges.bottom === false) {
+                this.moveFocus(col, row + 1)
+              }
             }
-            if (this.typeDirection === 'down') {
-              this.moveFocus(col, row - 1);
+            if (this.typeDirection === "down") {
+              if (cell.edges.top === false) {
+                this.moveFocus(col, row - 1)
+               }
             }
             break;
           default:
             if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
-              console.log('old cell value = ', cell.value);
+
               cell.value = event.key;
-              console.log('new cell value = ', cell.value);
-              if (this.typeDirection === 'right') {
-                console.log('moving focus to ', col + 1, row);
-                this.moveFocus(col + 1, row);
+
+              if (this.typeDirection === "right") {
+                if (cell.edges.right === false) {
+                  this.moveFocus(col + 1, row)
+                }
               }
-              if (this.typeDirection === 'left') {
-                this.moveFocus(col - 1, row);
+              if (this.typeDirection === "left") {
+                if (cell.edges.left === false) {
+                  this.moveFocus(col - 1, row)
+                }
               }
-              if (this.typeDirection === 'up') {
-                this.moveFocus(col, row - 1);
+              if (this.typeDirection === "up") {
+                if (cell.edges.top === false) {
+                 this.moveFocus(col, row - 1)
+                }
               }
-              if (this.typeDirection === 'down') {
-                this.moveFocus(col, row + 1);
+              if (this.typeDirection === "down") {
+                if (cell.edges.bottom === false) {
+                  this.moveFocus(col, row + 1)
+                }
               }
             }
             break;
@@ -209,27 +280,6 @@ export class GridComponent {
               console.log(inputElement.value);
               this.renderer.setProperty(inputElement, 'value', '');
               setTimeout(() => this.moveFocus(col, row), 0);
-              console.log(inputElement.value);
-            }
-            break;
-          case 'ArrowUp':
-            {
-              this.boldAdjacent('top', col, row);
-            }
-            break;
-          case 'ArrowDown':
-            {
-              this.boldAdjacent('bottom', col, row);
-            }
-            break;
-          case 'ArrowLeft':
-            {
-              this.boldAdjacent('left', col, row);
-            }
-            break;
-          case 'ArrowRight':
-            {
-              this.boldAdjacent('right', col, row);
             }
             break;
           case '1':
@@ -253,7 +303,6 @@ export class GridComponent {
       }
     });
   }
-
   /**
    * Moves the focus to the specified cell.
    *
@@ -261,20 +310,13 @@ export class GridComponent {
    * @param row - The row index of the target cell.
    */
   moveFocus(col: number, row: number) {
-    if (
-      col >= 0 &&
-      col < this.grid.length &&
-      row >= 0 &&
-      row < this.grid[col].length
-    ) {
+    if (this.gridPackage.grid[row] != undefined && col >= 0 && col < this.gridPackage.grid[row].length && row >= 0 && row < this.gridPackage.grid.length) {
       this.currentCol = col;
       this.currentRow = row;
 
       console.log(col, row);
 
-      const cellInput = document.querySelector(
-        `app-grid-cell[data-col="${col}"][data-row="${row}"] input`
-      );
+      const cellInput = document.querySelector(`app-grid-cell[col="${col}"][row="${row}"] input`);
       console.log(cellInput);
 
       if (cellInput) {
@@ -288,8 +330,7 @@ export class GridComponent {
    * Updates the current typing direction.
    */
   cycleTypingDirection() {
-    this.currentDirectionIndex =
-      (this.currentDirectionIndex + 1) % this.typingDirections.length;
+    this.currentDirectionIndex = (this.currentDirectionIndex + 1) % this.typingDirections.length;
     this.typeDirection = this.typingDirections[this.currentDirectionIndex];
     console.log(`Typing direction changed to: ${this.typeDirection}`);
   }

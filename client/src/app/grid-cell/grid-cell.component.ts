@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,6 +7,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { GridCell } from './grid-cell';
 import { Edges } from './edges';
 import { Colors } from './colors';
+
 
 @Component({
   selector: 'app-grid-cell',
@@ -24,7 +25,17 @@ import { Colors } from './colors';
   ],
 })
 export class GridCellComponent {
+
   @Input({ required: true }) gridCell: GridCell;
+  @Input({}) col: number;
+  @Input({}) row: number;
+  @Input({}) grid: GridCell[][];
+  @Output() gridChange = new EventEmitter<void>();
+
+
+  backgroundColor: string = "black";
+
+
 
   /**
    * Constructor for GridCellComponent.
@@ -32,17 +43,18 @@ export class GridCellComponent {
    */
   constructor() {
     if (!this.gridCell) {
-      this.gridCell = new GridCell();
+      this.gridCell = new GridCell;
     }
   }
 
-  /**
+   /**
    * Handles input changes and updates the grid cell value if valid.
    * @param value - The input value to be set.
    */
   onInput(value: string) {
     if (this.validateInput(value)) {
       this.gridCell.value = value;
+      this.gridChange.emit();
     } else {
       this.gridCell.value = '';
     }
@@ -58,6 +70,10 @@ export class GridCellComponent {
     return regex.test(value);
   }
 
+  //   setColors(colors: Colors) {
+  //   this.gridCell.color = colors;
+  // }
+
   /**
    * Sets the edges of the grid cell.
    * @param edges - The edges to be set.
@@ -66,9 +82,6 @@ export class GridCellComponent {
     this.gridCell.edges = edges;
   }
 
-  setColors(colors: Colors) {
-    this.gridCell.color = colors;
-  }
   /**
    * Sets the editable state of the grid cell.
    * @param state - The editable state to be set.
@@ -77,8 +90,62 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
+  toggleEdge(edge: string) {
+    switch (edge) {
+      case 'top':
+        this.gridCell.edges.top = !this.gridCell.edges.top;
+        if (this.grid && this.grid[this.row - 1]) {
+          this.grid[this.row - 1][this.col].edges.bottom = this.gridCell.edges.top;
+        }
+        break;
+      case 'right':
+        this.gridCell.edges.right = !this.gridCell.edges.right;
+        if (this.grid && this.grid[this.row][this.col + 1]) {
+          this.grid[this.row][this.col + 1].edges.left = this.gridCell.edges.right;
+        }
+        break;
+      case 'bottom':
+        this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
+        if (this.grid && this.grid[this.row + 1]) {
+          this.grid[this.row + 1][this.col].edges.top = this.gridCell.edges.bottom;
+        }
+        break;
+      case 'left':
+        this.gridCell.edges.left = !this.gridCell.edges.left;
+        if (this.grid && this.grid[this.row][this.col - 1]) {
+          this.grid[this.row][this.col - 1].edges.right = this.gridCell.edges.left;
+        }
+        break;
+      default:
+        break;
+    }
+    this.gridChange.emit();
+  }
+
   /**
-   * Handles keydown events to toggle the bold state of the grid cell edges.
+   * Blacks out a cell and its edges with ctrl, undoes this with alt
+   * @param event - checks the key clicked
+   */
+  onClick(event: MouseEvent) { // blacks out cell and edges
+    if (event.ctrlKey) {
+      if (this.gridCell.edges["top"] && this.gridCell.edges["right"] && this.gridCell.edges["bottom"] && this.gridCell.edges["left"]) {
+        for (const edge in this.gridCell.edges) {
+            this.toggleEdge(edge);
+        }
+      } else {
+        for (const edge in this.gridCell.edges) {
+          if (this.gridCell.edges[edge] === false) {
+            this.toggleEdge(edge);
+          }
+        }
+       }
+      }
+    }
+
+
+
+   /**
+   * Handles keydown gridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
    * @param event - The keyboard event.
    */
   onKeyDown(event: KeyboardEvent) {
@@ -86,19 +153,21 @@ export class GridCellComponent {
       event.preventDefault();
       switch (event.key) {
         case 'ArrowUp':
-          this.gridCell.toggleTopEdge();
+          this.toggleEdge('top');
           break;
         case 'ArrowRight':
-          this.gridCell.toggleRightEdge();
+          this.toggleEdge('right');
           break;
         case 'ArrowDown':
-          this.gridCell.toggleBottomEdge();
+          this.toggleEdge('bottom');
           break;
         case 'ArrowLeft':
-          this.gridCell.toggleLeftEdge();
+          this.toggleEdge('left');
           break;
         default:
+          break;
       }
     }
   }
 }
+

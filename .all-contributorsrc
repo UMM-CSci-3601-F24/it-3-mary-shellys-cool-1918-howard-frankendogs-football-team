@@ -1,0 +1,94 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "floogulinc",
+      "name": "Paul Friederichsen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1300395?v=4",
+      "profile": "https://floogulinc.com/",
+      "contributions": [
+        "code",
+        "content",
+        "doc",
+        "ideas",
+        "mentoring",
+        "question",
+        "review",
+        "security",
+        "test",
+        "a11y",
+        "infra",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "helloworld12321",
+      "name": "Joe Moonan Walbran",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56209343?v=4",
+      "profile": "https://github.com/helloworld12321",
+      "contributions": [
+        "bug",
+        "code",
+        "content",
+        "doc",
+        "ideas",
+        "infra",
+        "maintenance",
+        "mentoring",
+        "projectManagement",
+        "question",
+        "review",
+        "tool",
+        "test"
+      ]
+    },
+    {
+      "login": "kklamberty",
+      "name": "K.K. Lamberty",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2751987?v=4",
+      "profile": "https://github.com/kklamberty",
+      "contributions": [
+        "code",
+        "content",
+        "design",
+        "doc",
+        "ideas",
+        "mentoring",
+        "projectManagement",
+        "question",
+        "test",
+        "tutorial",
+        "a11y"
+      ]
+    },
+    {
+      "login": "NicMcPhee",
+      "name": "Nic McPhee",
+      "avatar_url": "https://avatars.githubusercontent.com/u/302297?v=4",
+      "profile": "http://www.morris.umn.edu/~mcphee",
+      "contributions": [
+        "infra",
+        "test",
+        "bug",
+        "content",
+        "doc",
+        "design",
+        "maintenance",
+        "projectManagement",
+        "question",
+        "review",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "3601-iteration-template",
+  "projectOwner": "UMM-CSci-3601",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": false
+}

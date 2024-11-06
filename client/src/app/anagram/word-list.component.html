@@ -50,7 +50,7 @@
 </div>
 <br>
 <div class="flex-row">
-  @if(serverFilteredWords()) {
+  @if(filteredWords()) {
     <div class="flex-1">
       <mat-card>
         <mat-card-content>
@@ -96,3 +96,32 @@
   }
 </div>
 
+<br>
+<div class="flex-row">
+  @if(serverFilteredContext()){
+    <div class="flex-1">
+      <mat-card>
+        <mat-card-content>
+          <mat-list class="anagram-nav-list-history">
+            @if(searchHistory().length === 0){
+              <p>No Saved Searches</p>
+            }
+            @for(search of searchHistory().slice(max(searchHistory().length - 40, 0),searchHistory().length).reverse(); track search._id) {
+              <div class="anagram-list-item">
+                @if(search.contains !== null){
+                  <span matListItemLine class="anagram-search-history-contains">Contains: "{{search.contains}}"</span>
+                }
+                @if(search.wordGroup !== null){
+                  <span matListItemLine class="anagram-search-history-wordGroup">From word group: "{{search.wordGroup}}"</span>
+                }
+                <br>
+              </div>
+            }
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  } @else {
+    <p>Something went wrong with getting your search history, Apologies!</p>
+  }
+</div>

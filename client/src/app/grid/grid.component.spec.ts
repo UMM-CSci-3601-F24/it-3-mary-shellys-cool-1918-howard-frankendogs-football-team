@@ -1,62 +1,64 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { GridComponent } from './grid.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { GridCellComponent } from '../grid-cell/grid-cell.component';
-import { CommonModule } from '@angular/common';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from '../app-routing.module';
-import { MatListModule } from '@angular/material/list';
+import { GridService } from './grid.service';
+import { MockGridService } from 'src/testing/grid.service.mock';
+import { RouterTestingModule } from '@angular/router/testing';
+import { GridPackage } from './gridPackage';
+import { of } from 'rxjs';
+import { By } from '@angular/platform-browser';
 
 describe('GridCellComponent', () => {
   let component: GridComponent;
   let fixture: ComponentFixture<GridComponent>;
+  let gridService: MockGridService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        CommonModule,
-        GridCellComponent,
-        MatGridListModule,
-        MatIconModule,
-        GridComponent,
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        MatListModule,
-      ]
+      imports: [FormsModule, GridComponent, RouterTestingModule],
+      providers: [{ provide: GridService, useValue: new MockGridService() }],
     })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(GridComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+      .compileComponents();
   });
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(GridComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      gridService = TestBed.inject(GridService);
+    })
+  }))
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should initialize grid correctly', () => {
-    expect(component.grid.length).toBe(component.n);
-    for (const row of component.grid) {
-      expect(row.length).toBe(component.n);
+    expect(component.gridPackage.grid.length).toBe(component.gridWidth);
+    for (const row of component.gridPackage.grid) {
+      expect(row.length).toBe(component.gridWidth);
     }
   });
 
-  it('should re-initialize grid on size input', () => {
-    component.n = 5;
+  it('should re-initialize even grid on size input', () => {
+    component.gridHeight = 5;
+    component.gridWidth = 5;
     component.onSizeInput();
-    expect(component.grid.length).toBe(5);
-    for (const row of component.grid) {
+    expect(component.gridPackage.grid.length).toBe(5);
+    for (const row of component.gridPackage.grid) {
       expect(row.length).toBe(5);
+    }
+  });
+
+  it('should re-initialize odd grid on size input', () => {
+    component.gridHeight = 5;
+    component.gridWidth = 6;
+    component.onSizeInput();
+    expect(component.gridPackage.grid.length).toBe(5);
+    for (const row of component.gridPackage.grid) {
+      expect(row.length).toBe(6);
     }
   });
 
@@ -118,7 +120,7 @@ describe('GridCellComponent', () => {
 
   it('should handle keydown events correctly', fakeAsync(() => {
     const moveFocusSpy = spyOn(component, 'moveFocus');
-    const cell = component.grid[1][1];
+    const cell = component.gridPackage.grid[1][1];
     const inputElement = document.createElement('input');
     spyOn(component.elRef.nativeElement, 'querySelector').and.returnValue(inputElement);
 
@@ -165,7 +167,7 @@ describe('GridCellComponent', () => {
 
   it('should handle backspace correctly', fakeAsync(() => {
     const moveFocusSpy = spyOn(component, 'moveFocus');
-    const cell = component.grid[1][1];
+    const cell = component.gridPackage.grid[1][1];
     const inputElement = document.createElement('input');
     spyOn(component.elRef.nativeElement, 'querySelector').and.returnValue(inputElement);
 
@@ -196,56 +198,37 @@ describe('GridCellComponent', () => {
     expect(cell.value).toBe('');
   }));
 
-  it('should bold adjacent cells on arrow key with ctrl key', fakeAsync(() => {
-    const boldAdjacentSpy = spyOn(component, 'boldAdjacent');
-    const inputElement = document.createElement('input');
-    spyOn(component.elRef.nativeElement, 'querySelector').and.returnValue(inputElement);
+  it('saveGrid() should call grid service and load grids', fakeAsync(() => {
+    const partialGrid: Partial<GridPackage> = {
+      owner: 'currentUser',
+      grid: component.gridPackage.grid
+    };
 
-    component.onKeydown(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }), 1, 1);
-    tick(100);
-    expect(boldAdjacentSpy).toHaveBeenCalledWith('top', 1, 1);
+    const saveGridSpy = spyOn(gridService, 'saveGrid').and.returnValue(of('newGridId'));
+    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids');
 
-    component.onKeydown(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }), 1, 1);
-    tick(100);
-    expect(boldAdjacentSpy).toHaveBeenCalledWith('bottom', 1, 1);
+    component.saveGrid();
+    tick();
 
-    component.onKeydown(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }), 1, 1);
-    tick(100);
-    expect(boldAdjacentSpy).toHaveBeenCalledWith('left', 1, 1);
+    expect(saveGridSpy).toHaveBeenCalledWith(partialGrid);
+    expect(loadSavedGridsSpy).toHaveBeenCalled();
 
-    component.onKeydown(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }), 1, 1);
-    tick(100);
-    expect(boldAdjacentSpy).toHaveBeenCalledWith('right', 1, 1);
+    component.loadSavedGrids();
+    expect(loadSavedGridsSpy).toHaveBeenCalled();
   }));
 
-  it('should bold the top adjacent cell', () => {
-    component.initializeGrid();
-    const toggleBottomEdgeSpy = spyOn(component.grid[1][0], 'toggleBottomEdge');
-    component.boldAdjacent('top', 1, 1);
-    expect(toggleBottomEdgeSpy).toHaveBeenCalled();
-  });
+  it('should call saveGrid and loadSavedGrids when save button is clicked', fakeAsync(() => {
+    const saveButton = fixture.debugElement.query(By.css('.save-button'));
+    const saveGridSpy = spyOn(component, 'saveGrid').and.callThrough();
+    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids').and.callThrough();
 
-  it('should bold the bottom adjacent cell', () => {
-    component.initializeGrid();
-    const toggleTopEdgeSpy = spyOn(component.grid[1][2], 'toggleTopEdge');
-    component.boldAdjacent('bottom', 1, 1);
-    expect(toggleTopEdgeSpy).toHaveBeenCalled();
-  });
+    saveButton.triggerEventHandler('click', null);
+    tick();
 
-  it('should bold the left adjacent cell', () => {
-    component.initializeGrid();
-    const toggleRightEdgeSpy = spyOn(component.grid[0][1], 'toggleRightEdge');
-    component.boldAdjacent('left', 1, 1);
-    expect(toggleRightEdgeSpy).toHaveBeenCalled();
-  });
+    expect(saveGridSpy).toHaveBeenCalled();
+    expect(loadSavedGridsSpy).toHaveBeenCalled();
 
-  it('should bold the right adjacent cell', () => {
-    component.initializeGrid();
-    const toggleLeftEdgeSpy = spyOn(component.grid[2][1], 'toggleLeftEdge');
-    component.boldAdjacent('right', 1, 1);
-    expect(toggleLeftEdgeSpy).toHaveBeenCalled();
-  });
+  }));
 
-
-
+// We also want to do the bold adjacent edge tests, but with current implementation, that should be done in grid-cell-component.spec.ts
 });

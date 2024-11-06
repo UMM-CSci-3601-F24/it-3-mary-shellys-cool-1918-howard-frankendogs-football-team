@@ -9,35 +9,40 @@ describe('App', () => {
     page.getAppTitle().should('contain', 'CSCI 3601 Iteration Template');
   });
 
+  it('The sidenav should open, navigate to "Grid","Home","anagram" and back to "Home"', () => {
+    // Before clicking on the button, the sidenav should be hidden
+    page.getSidenav()
+      .should('be.hidden');
+    page.getSidenavButton()
+      .should('be.visible');
 
-  // it('The sidenav should open, navigate to "Anagram" and back to "Home"', () => {
-  //     // Before clicking on the button, the sidenav should be hidden
-  //     page.getSidenav()
-  //       .should('be.hidden');
-  //     page.getSidenavButton()
-  //       .should('be.visible');
+    // navigate to grid page
+    page.getSidenavButton().click();
+    page.getNavLink('Grid').click();
+    cy.url().should('match', /\/grid$/);
+    page.getSidenav()
+      .should('be.hidden');
 
-  //     // Try to navigate to Home
-  //     page.getSidenavButton().click();
-  //     page.getNavLink('Home').click();
-  //     cy.url().should('match', /^https?:\/\/[^/]+\/?$/);
-  //     page.getSidenav()
-  //       .should('be.hidden');
-  //   });
+    // Try to navigate to Home
+    page.getSidenavButton().click();
+    page.getNavLink('Home').click();
+    cy.url().should('match', /^https?:\/\/[^/]+\/?$/);
+    page.getSidenav()
+      .should('be.hidden');
 
-  // it('The sidenav should open, navigate to "Users" and back to "Home"', () => {
-  //   // Before clicking on the button, the sidenav should be hidden
-  //   page.getSidenav()
-  //     .should('be.hidden');
-  //   page.getSidenavButton()
-  //     .should('be.visible');
+    // Navigate to Anagram Page
+    page.getSidenavButton().click();
+    page.getNavLink('Anagram Generator').click();
+    cy.url().should('match', /\/anagram$/);
+    page.getSidenav()
+      .should('be.hidden');
 
-  //   // Try to navigate to Home
-  //   page.getSidenavButton().click();
-  //   page.getNavLink('Home').click();
-  //   cy.url().should('match', /^https?:\/\/[^/]+\/?$/);
-  //   page.getSidenav()
-  //     .should('be.hidden');
-  // });
+    // Navigate home
+    page.getSidenavButton().click();
+    page.getNavLink('Home').click();
+    cy.url().should('match', /^https?:\/\/[^/]+\/?$/);
+    page.getSidenav()
+      .should('be.hidden');
+  });
 
 });
