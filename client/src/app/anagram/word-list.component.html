@@ -50,7 +50,7 @@
 </div>
 <br>
 <div class="flex-row">
-  @if(filteredWords()) {
+  @if(serverFilteredContext() && filteredWords()) {
     <div class="flex-1">
       <mat-card>
         <mat-card-content>

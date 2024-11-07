@@ -67,12 +67,12 @@ export class WordListComponent {
   serverFilteredContext =
     toSignal(
       combineLatest([this.contains$, this.group$]).pipe(
-        switchMap(([word, wordGroup]) =>
-          this.wordService.getWords({
+        switchMap(([word, wordGroup]) => {
+          return this.wordService.getWords({
             word,
             wordGroup,
           })
-        ),
+        }),
         catchError((err) => {
           if (err.error instanceof ErrorEvent) {
             this.errMsg.set(
