@@ -10,7 +10,7 @@ import { SearchContext } from './searchContext';
 })
 export class WordService {
   readonly wordUrl: string = `${environment.apiUrl}anagram`;
-  readonly wordsUrl: string = `${environment.apiUrl}anagram/multiple`
+  // readonly wordsUrl: string = `${environment.apiUrl}anagram/multiple`
 
   private readonly groupKey = 'wordGroup';
   private readonly containsKey = 'word';
@@ -32,6 +32,7 @@ export class WordService {
       params: httpParams,
     });
   }
+
   sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean; sortByWordOrGroup?: string}): Word[] {
     const filteredWords = words;
     if(filters.sortType) {
@@ -43,7 +44,6 @@ export class WordService {
           filteredWords.sort((a, b) => a.wordGroup.localeCompare(b.wordGroup));
         }
       }
-
       if(filters.sortType === "null"){
         return filteredWords
       }
@@ -53,6 +53,7 @@ export class WordService {
     }
     return filteredWords;
   }
+
   addWord(newWord: Partial<Word>): Observable<string> {
     return this.httpClient.post<{id: string}>(this.wordUrl, newWord).pipe(map(response => response.id))
   }

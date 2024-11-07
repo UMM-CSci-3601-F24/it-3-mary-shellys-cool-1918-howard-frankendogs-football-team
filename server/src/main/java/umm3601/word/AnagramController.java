@@ -20,6 +20,7 @@ import org.mongojack.JacksonMongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertManyResult;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
@@ -93,9 +94,11 @@ public class AnagramController implements Controller {
     Search newSearch = new Search();
     // if searching for contains will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
-      Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
-      filters.add(regex(WORD_KEY, pattern));
-      newSearch.setContains(ctx.queryParam(WORD_KEY));
+      String word = ctx.queryParam(WORD_KEY);
+      for (char c : word.toCharArray()) {
+        filters.add(regex("word", Pattern.compile(Pattern.quote(String.valueOf(c)), Pattern.CASE_INSENSITIVE)));
+      }
+      newSearch.setContains(word);
     }
     // if searching by word group will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
@@ -104,13 +107,13 @@ public class AnagramController implements Controller {
       newSearch.setWordGroup(ctx.queryParam(WORD_GROUP_KEY));
     }
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
-    // log into database
+    // log search into searchHistory database
     if ((ctx.queryParam(WORD_KEY) != null && ctx.queryParam(WORD_KEY) != "")
         || (ctx.queryParam(WORD_GROUP_KEY) != null && ctx.queryParam(WORD_GROUP_KEY) != "")) {
       searchCollection.insertOne(newSearch);
       System.err.println("search added to db with params: " + combinedFilter.toString());
     }
-    // return filter to be applied to db in getWords()
+    // return filter params to be applied to db in getWords()
     return combinedFilter;
   }
 
@@ -130,7 +133,6 @@ public class AnagramController implements Controller {
 }
 
   public void addNewWord(Context ctx) {
-
     String body = ctx.body();
     Word newWord = ctx.bodyValidator(Word.class)
         .check(nw -> nw.word != null && nw.word.length() > 0,
@@ -139,8 +141,17 @@ public class AnagramController implements Controller {
             "Word group must be non-empty and not null; body was " + body)
         .get();
 
-    wordCollection.insertOne(newWord);
-    ctx.json(Map.of("id", newWord._id));
+    String[] wordsArray = newWord.word.split(",");
+    List<Word> wordList = new ArrayList<>();
+
+    for (String wordNew : wordsArray) {
+      Word enteredWord = new Word();
+      enteredWord.word = wordNew.trim();
+      enteredWord.wordGroup = newWord.wordGroup;
+      wordList.add(enteredWord);
+    }
+    InsertManyResult result = wordCollection.insertMany(wordList);
+    ctx.json(Map.of("ids",result.getInsertedIds()));
     ctx.status(HttpStatus.CREATED);
   }
 

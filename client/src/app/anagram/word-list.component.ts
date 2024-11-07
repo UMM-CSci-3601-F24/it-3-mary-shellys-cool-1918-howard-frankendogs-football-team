@@ -53,7 +53,7 @@ export class WordListComponent {
   contains = signal<string|undefined>(undefined);
   group = signal<string|undefined>(undefined);
 
-  sortByWordOrGroup: string;
+  sortByWordOrGroup: string; // why is this an un-restricted string (limit options or make boolean?)
 
   errMsg = signal<string | undefined>(undefined);
 

@@ -30,7 +30,6 @@ public class Server {
      */
     public Server(MongoClient mongoClient, Controller[] controllers) {
         this.mongoClient = mongoClient;
-
         this.controllers = controllers;
     }
 

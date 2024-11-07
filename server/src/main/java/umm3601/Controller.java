@@ -16,11 +16,13 @@ import io.javalin.Javalin;
  * must implement this interface since the `Server` class
  * is just handed an array of `Controller` objects in its constructor. This
  * allows us to add routes to the server without having to modify the `Server`,
- * and without having the server know about any specific controller implementations.
+ * and without having the server know about any specific controller
+ * implementations.
  *
  * Note that this interface definition is _complete_ and you shouldn't need to
  * add anything to it. You just need to make sure that any new controllers
- * you implement also implement this interface, providing their own `addRoutes()`
+ * you implement also implement this interface, providing their own
+ * `addRoutes()`
  * method.
  */
 public interface Controller {
