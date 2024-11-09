@@ -172,7 +172,7 @@ class AnagramControllerSpec {
     String targetWordGroup = "brainrot";
     Map<String, List<String>> queryParams = new HashMap<>();
 
-    queryParams.put(AnagramController.WORD_GROUP_KEY, Arrays.asList(new String[] { targetWordGroup }));
+    queryParams.put(AnagramController.WORD_GROUP_KEY, Arrays.asList(new String[] {targetWordGroup}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.WORD_GROUP_KEY)).thenReturn(targetWordGroup);
 
@@ -205,7 +205,7 @@ class AnagramControllerSpec {
 
     Map<String, List<String>> queryParams = new HashMap<>();
 
-    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] { targetWord }));
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {targetWord}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(targetWord);
 
@@ -233,7 +233,7 @@ class AnagramControllerSpec {
     long dbSize = db.getCollection(SEARCH_COLLECTION).countDocuments();
     // makes search that will be passed
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] { "ha" }));
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
     // calls getWords() which calls constructFilter()
@@ -252,8 +252,8 @@ class AnagramControllerSpec {
     long dbSize = db.getCollection(SEARCH_COLLECTION).countDocuments();
     // makes search that will be passed
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] { "" }));
-    queryParams.put(AnagramController.WORD_GROUP_KEY, Arrays.asList(new String[] { "" }));
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {""}));
+    queryParams.put(AnagramController.WORD_GROUP_KEY, Arrays.asList(new String[] {""}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("");
     when(ctx.queryParam(AnagramController.WORD_GROUP_KEY)).thenReturn("");
@@ -287,7 +287,7 @@ class AnagramControllerSpec {
     System.setErr(new PrintStream(outContent));
     // makes search that will be passed
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] { "ha" }));
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
     // calls getWords() which calls constructFilter()
@@ -350,16 +350,23 @@ class AnagramControllerSpec {
 
     verify(ctx).status(HttpStatus.CREATED);
     String targetIds = mapCaptor.getAllValues().toString();
-    System.out.println("Line 353:" + targetIds);
-    Document addedWord = db.getCollection("words")
-        .find().first();
-    System.out.println(mapCaptor.getValue().get("ids")); // .chars(29,53)); // .get("0").get("value")));
-    assertNotEquals("", addedWord.get("_id"));
-    assertEquals(newWord.word, addedWord.get(AnagramController.WORD_KEY)); // ("word"));
-    assertEquals(newWord.wordGroup, addedWord.get("wordGroup")); // (WordController.WORD_GROUP_KEY));
 
-    // String addedWord = mapCaptor.getValue().toString();
+    // Query the database using a filter to find the correct word
+    Document addedWord = db.getCollection("words")
+        .find(eq("word", newWord.word)).first();
+
+    System.out.println(addedWord.get("word"));
+    Object ids = mapCaptor.getValue().get("ids");
+    if (ids instanceof String) {
+      System.out.println((String) ids);
+    } else {
+      System.out.println("ids is not a String: " + ids);
+    }
+    assertNotEquals("", addedWord.get("_id"));
+    assertEquals(newWord.word, addedWord.get(AnagramController.WORD_KEY));
+    assertEquals(newWord.wordGroup, addedWord.get("wordGroup"));
   }
+
   @Test
   void addBadWordWord() throws IOException {
     String newWordJson = """
@@ -482,7 +489,8 @@ class AnagramControllerSpec {
     /*
      * The only real thing this tests for is that three items are entered into the database.
      * You cant check the id's passed in the ctx with a preset string because they change every time
-     * to test better, try pulling id's out of map captor and checking their entries in the db with: computer, tablet, phone
+     * to test better, try pulling id's out of map captor and
+     * checking their entries in the db with: computer, tablet, phone
      *
      * Something along the lines of:
      *

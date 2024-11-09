@@ -151,7 +151,7 @@ public class AnagramController implements Controller {
       wordList.add(enteredWord);
     }
     InsertManyResult result = wordCollection.insertMany(wordList);
-    ctx.json(Map.of("ids",result.getInsertedIds()));
+    ctx.json(Map.of("ids", result.getInsertedIds()));
     ctx.status(HttpStatus.CREATED);
   }
 
