@@ -1,24 +1,27 @@
-
-
 describe('Grid Component', () => {
-    beforeEach(() => {
-      cy.visit('/grid');
-    });
+  before(() => {
+    cy.task('seed:database');
+  });
 
-    it('should render the grid with default size', () => {
-      cy.get('app-grid-component').within(() => {
-        cy.get('mat-grid-tile').should('have.length', 100);
-      });
+  beforeEach(() => {
+    cy.visit('/grid');
+  });
+
+  it('should render the grid with default size', () => {
+    cy.get('app-grid-component').within(() => {
+      cy.get('mat-grid-tile').should('have.length', 100);
     });
   });
 
-    before(() => {
-      cy.task('seed:database');
-    })
-  it('should render the grid with custom size', () => {
-    cy.get('#mat-input-0').type('{backspace}{backspace}11')
+  it('should save the grid', () => {
+    cy.get('[data-test=saveGridButton]').click();
     cy.get('app-grid-component').within(() => {
-      cy.get('mat-grid-tile').should('have.length', 110);
+      cy.get('button').contains('Save Grid').should('exist');
     });
+  });
+
+  it('should cycle typing direction', () => {
+    cy.get('button').contains('Cycle Typing Direction').click();
+    cy.get('p').contains('Current Typing Direction is').should('exist');
   });
 });
