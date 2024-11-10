@@ -1,19 +1,31 @@
-
 <div
   class="cell"
   [ngClass]="{
     'bold-top': gridCell.edges.top,
     'bold-right': gridCell.edges.right,
     'bold-bottom': gridCell.edges.bottom,
-    'bold-left': gridCell.edges.left
+    'bold-left': gridCell.edges.left,
   }"
 >
 @if (gridCell.editable) {
   <input matInput
     [(ngModel)]="gridCell.value"
-    [ngClass] = "{
+    [ngClass]="{
       'cell-input': true,
-      'blacked-out': gridCell.edges.left && gridCell.edges.bottom && gridCell.edges.top && gridCell.edges.right
+      'blacked-out': gridCell.color === 'white' && gridCell.edges.left && gridCell.edges.bottom && gridCell.edges.top && gridCell.edges.right,
+      'blackout-exeption': gridCell.color === ''
+    }"
+    [ngClass]="{
+      'cell-input': true,
+      'highlighted-pink': gridCell.color === 'pink'
+    }"
+    [ngClass]="{
+      'cell-input': true,
+      'highlighted-yellow': gridCell.color === 'yellow'
+    }"
+    [ngClass]="{
+      'cell-input': true,
+      'highlighted-green': gridCell.color === 'green'
     }"
     type="text"
     maxlength="1"

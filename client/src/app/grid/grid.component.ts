@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Input, inject, Renderer2 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,6 +16,7 @@ import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
 // import { Grid } from './grid';
+import {MatRadioModule} from '@angular/material/radio';
 
 @Component({
   selector: 'app-grid-component',
@@ -26,6 +27,7 @@ import { WebSocketService } from '../web-socket.service';
   imports: [
     MatFormFieldModule,
     MatInputModule,
+    MatRadioModule,
     FormsModule,
     CommonModule,
     GridCellComponent,
@@ -35,6 +37,9 @@ import { WebSocketService } from '../web-socket.service';
   ],
 })
 export class GridComponent {
+
+  @Input() currentColor: string;
+  highlight: string[] = ['pink', 'yellow', 'green'];
 
   gridHeight: number = 10;
   gridWidth: number = 10;
@@ -260,7 +265,7 @@ export class GridComponent {
             }
         }
       }
-    }, );
+    });
   }
 
   /**

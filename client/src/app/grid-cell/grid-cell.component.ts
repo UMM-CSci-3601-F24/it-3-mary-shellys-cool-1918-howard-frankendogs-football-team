@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { GridCell } from './grid-cell';
 import { Edges } from './edges';
+import { GridComponent } from '../grid/grid.component';
 
 
 @Component({
@@ -16,11 +17,13 @@ import { Edges } from './edges';
   standalone: true,
   imports: [
     AsyncPipe,
+    GridComponent,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
     CommonModule,
+
   ],
 })
 export class GridCellComponent {
@@ -30,11 +33,7 @@ export class GridCellComponent {
   @Input({}) row: number;
   @Input({}) grid: GridCell[][];
   @Output() gridChange = new EventEmitter<void>();
-
-
-  backgroundColor: string = "black";
-
-
+  @Output() currentColor: string;
 
   /**
    * Constructor for GridCellComponent.
@@ -85,6 +84,10 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
+  /**
+   * toggles the both this cells edge and adjacent cells edge
+   * @param edge
+   */
   toggleEdge(edge: string) {
     switch (edge) {
       case 'top':
@@ -117,6 +120,10 @@ export class GridCellComponent {
     this.gridChange.emit();
   }
 
+  highlight(color: string) {
+    this.gridCell.color = color;
+  }
+
   /**
    * Blacks out a cell and its edges with ctrl, undoes this with alt
    * @param event - checks the key clicked
@@ -134,6 +141,10 @@ export class GridCellComponent {
           }
         }
        }
+      }
+      if (event.altKey) {
+        this.highlight(this.currentColor);
+        console.log(this.currentColor);
       }
     }
 

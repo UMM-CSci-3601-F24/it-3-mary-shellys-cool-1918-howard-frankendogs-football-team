@@ -28,6 +28,7 @@ describe('GridCellComponent', () => {
     const edges = { top: true, right: false, bottom: true, left: false };
     cell.setEdges(edges);
 
+
     expect(cell.gridCell.edges.top).toBeTrue();
     expect(cell.gridCell.edges.right).toBeFalse();
     expect(cell.gridCell.edges.bottom).toBeTrue();
