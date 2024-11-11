@@ -12,19 +12,10 @@
     [(ngModel)]="gridCell.value"
     [ngClass]="{
       'cell-input': true,
-      'blacked-out': gridCell.color === 'white' && gridCell.edges.left && gridCell.edges.bottom && gridCell.edges.top && gridCell.edges.right,
-      'blackout-exeption': gridCell.color === ''
-    }"
-    [ngClass]="{
-      'cell-input': true,
-      'highlighted-pink': gridCell.color === 'pink'
-    }"
-    [ngClass]="{
-      'cell-input': true,
-      'highlighted-yellow': gridCell.color === 'yellow'
-    }"
-    [ngClass]="{
-      'cell-input': true,
+      'blacked-out': gridCell.edges.top && gridCell.edges.right && gridCell.edges.bottom && gridCell.edges.left,
+      'default-color': gridCell.color === '',
+      'highlighted-pink': gridCell.color === 'pink',
+      'highlighted-yellow': gridCell.color === 'yellow',
       'highlighted-green': gridCell.color === 'green'
     }"
     type="text"
@@ -32,6 +23,7 @@
     (input)="onInput(gridCell.value)"
     (keydown)="onKeyDown($event)"
     (click)="onClick($event)"
+    (contextmenu)="onRightClick($event)"
     placeholder="{{gridCell.value}}">
 }
     @else {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, inject, Renderer2 } from '@angular/core';
+import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -38,7 +38,7 @@ import {MatRadioModule} from '@angular/material/radio';
 })
 export class GridComponent {
 
-  @Input() currentColor: string;
+  currentColor: string;
   highlight: string[] = ['pink', 'yellow', 'green'];
 
   gridHeight: number = 10;

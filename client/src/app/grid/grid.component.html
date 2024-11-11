@@ -39,6 +39,7 @@
             [row]="rowIndex"
             [col]="colIndex"
             [grid]="gridPackage.grid"
+            [currentColor]="currentColor"
             [ngStyle]="{'height': cellSize + 'px', 'width': cellSize + 'px'}"
             (gridChange)="onGridChange()"
             ></app-grid-cell>

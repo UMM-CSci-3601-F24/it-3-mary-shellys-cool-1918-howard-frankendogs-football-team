@@ -30,13 +30,19 @@ $borderSize: 5px;
   border: none;
 }
 
+.default-color {
+  background-color: white;
+}
+
+.blackout-exeption {
+  background-color: aliceblue;
+}
+
 .blacked-out {
   background-color: black;
 }
 
-.blackout-exeption {
-  background-color: white;
-}
+
 
 .highlighted-pink {
   background-color: pink;

@@ -32,8 +32,9 @@ export class GridCellComponent {
   @Input({}) col: number;
   @Input({}) row: number;
   @Input({}) grid: GridCell[][];
+  @Input() currentColor: string;
+
   @Output() gridChange = new EventEmitter<void>();
-  @Output() currentColor: string;
 
   /**
    * Constructor for GridCellComponent.
@@ -140,15 +141,30 @@ export class GridCellComponent {
             this.toggleEdge(edge);
           }
         }
-       }
       }
-      if (event.altKey) {
+      this.highlight('black');
+    }
+    if (event.altKey) {
+      this.highlight('aliceblue');
+    }
+  }
+
+
+
+  onRightClick(event: MouseEvent) {
+    if (event.button == 2) {
+      if (this.gridCell.color !== this.currentColor) {
         this.highlight(this.currentColor);
         console.log(this.currentColor);
+        window.addEventListener('contextmenu', event => {
+          event.preventDefault();
+      });
+      }
+      else {
+        this.highlight('');
       }
     }
-
-
+  }
 
    /**
    * Handles keydown gridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
