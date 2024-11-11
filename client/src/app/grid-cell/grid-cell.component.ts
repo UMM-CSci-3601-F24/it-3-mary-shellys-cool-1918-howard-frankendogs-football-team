@@ -152,13 +152,12 @@ export class GridCellComponent {
 
 
   onRightClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
     if (event.button == 2) {
       if (this.gridCell.color !== this.currentColor) {
         this.highlight(this.currentColor);
         console.log(this.currentColor);
-        window.addEventListener('contextmenu', event => {
-          event.preventDefault();
-      });
       }
       else {
         this.highlight('');

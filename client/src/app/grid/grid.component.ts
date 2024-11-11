@@ -268,6 +268,7 @@ export class GridComponent {
     });
   }
 
+
   /**
    * Moves the focus to the specified cell.
    *
@@ -289,7 +290,6 @@ export class GridComponent {
       }
     }
   }
-
 
   /**
    * Cycles through the typing directions.
