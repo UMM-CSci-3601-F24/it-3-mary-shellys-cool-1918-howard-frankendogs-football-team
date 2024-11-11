@@ -65,7 +65,7 @@ describe('AddWordComponent', () => {
       wordControl.setValue('Foods');
       expect(wordControl.valid).toBeTruthy();
     })
-  })
+  });
 
   describe('the new words field', () => {
     let wordGroupControl: AbstractControl;

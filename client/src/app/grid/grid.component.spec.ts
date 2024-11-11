@@ -29,7 +29,7 @@ describe('GridCellComponent', () => {
 
       gridService = TestBed.inject(GridService);
     })
-  }))
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -154,7 +154,7 @@ describe('GridCellComponent', () => {
 
     component.typeDirection = 'up';
     component.onKeydown(new KeyboardEvent('keydown', { key: 'a' }), 1, 1);
-    tick(100)
+    tick(100);
     expect(cell.value).toBe('a');
     expect(moveFocusSpy).toHaveBeenCalledWith(1, 0);
 
@@ -185,7 +185,7 @@ describe('GridCellComponent', () => {
 
     component.typeDirection = 'up';
     component.onKeydown(new KeyboardEvent('keydown', { key: 'Backspace' }), 1, 1);
-    tick(100)
+    tick(100);
     expect(moveFocusSpy).toHaveBeenCalledWith(1, 2);
 
     component.typeDirection = 'down';

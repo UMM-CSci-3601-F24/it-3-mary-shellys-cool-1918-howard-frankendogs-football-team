@@ -94,6 +94,33 @@ describe('Word List', () => {
   });
 });
 
+describe('max function', () => {
+  let wordList: WordListComponent;
+  let fixture: ComponentFixture<WordListComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [COMMON_IMPORTS, WordListComponent],
+      providers: [{ provide: WordService, useValue: new MockWordService() }],
+    });
+  });
+
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(WordListComponent);
+      wordList = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+  }));
+
+  it("max() should return larger of two numbers", () => {
+    expect(wordList.max(5,10)).toBe(10);
+    expect(wordList.max(8,2)).toBe(8);
+    expect(wordList.max(4,4)).toBe(4);
+    // test with searchHistory().slice(max(searchHistory().length - 40, 0),searchHistory().length)
+  });
+})
+
 // describe('misbehaving word list', () => {
 //   let wordList: WordListComponent;
 //   let fixture: ComponentFixture<WordListComponent>;
