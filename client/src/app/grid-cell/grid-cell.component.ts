@@ -145,7 +145,8 @@ export class GridCellComponent {
       this.highlight('black');
     }
     if (event.altKey) {
-      this.highlight('aliceblue');
+      this.highlight('white');
+      console.log(this.gridCell.color);
     }
   }
 
