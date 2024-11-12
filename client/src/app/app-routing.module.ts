@@ -11,6 +11,7 @@ import { AddWordComponent } from './anagram/add-word.component';
 const routes: Routes = [
   {path: 'grid', component: GridComponent, title: 'grid'},
   {path: 'grid/:id', component: GridComponent, title: 'grid'},
+  { path: ':roomID/grid', component: GridComponent, title: 'Grid' },
 
   {path: 'anagram', component: WordListComponent, title: 'Anagram'},
   {path: 'anagram/new', component: AddWordComponent, title: 'Add Word'},

@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
+import { RoomService } from '../room.service';
 
 @Component({
   selector: 'app-grid-component',
@@ -54,7 +55,12 @@ export class GridComponent {
   private focusTimeout: ReturnType<typeof setTimeout>;
   private route = inject(ActivatedRoute);
 
-  constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService, private webSocketService: WebSocketService) {
+  constructor(
+    private renderer: Renderer2,
+    public elRef: ElementRef,
+    private gridService: GridService,
+    private roomService: RoomService,
+    private webSocketService: WebSocketService) {
     this.initializeGrid();
     this.loadSavedGrids();
     this.webSocketService.getMessage().subscribe((message: unknown) => {
@@ -103,22 +109,22 @@ export class GridComponent {
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id
       };
-      this.gridService.saveGrid(gridData).subscribe(() => {
+      this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
         this.loadSavedGrids();
       });
     } else {
-      const gridData: Partial<GridPackage> = {
+      const gridData:Partial<GridPackage> = {
         roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid
       };
-      this.gridService.saveGrid(gridData).subscribe(() => {
+      this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
         this.loadSavedGrids();
       });
     }
   }
 
   loadSavedGrids() {
-    this.gridService.getGrids().subscribe(grids => {
+    this.roomService.getGridsByRoomId(this.gridPackage.roomID).subscribe(grids => {
       this.savedGrids = grids;
     });
   }
