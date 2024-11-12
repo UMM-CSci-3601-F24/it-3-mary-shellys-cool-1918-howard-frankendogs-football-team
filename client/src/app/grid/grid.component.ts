@@ -66,21 +66,19 @@ export class GridComponent {
     this.loadSavedGrids();
 
     this.webSocketService.getMessage().subscribe((message: unknown) => {
-      console.log(message );
-      // need to differentiate btwn heartbeat and grid update
-      const messageJson = JSON.parse(message.toString());
-      console.log(messageJson);
-      if(message.toString().includes('grid')) {
-        const msg = message as { type: string; grid: GridCell[][]; id: string };
-        if (
-          msg.type === 'GRID_UPDATE' &&
-          this.gridPackage._id == (message as { id: string }).id
-        ) {
-          this.applyGridUpdate(msg.grid);
-        }
+      const msg = message as { type?: string; grid?: GridCell[][]; id?: string };
+      // all of these are optional to allow heartbeat messages to pass through
+      if (
+        // checks that message was a grid update
+        msg.type === 'GRID_UPDATE' &&
+        // checks that grid you have open is the same as the one that was updated
+        this.gridPackage._id == (message as { id: string }).id
+      ) {
+        this.applyGridUpdate(msg.grid);
       } else {
-        return null
+        return;
       }
+
     });
   }
 
