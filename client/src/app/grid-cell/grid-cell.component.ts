@@ -153,15 +153,12 @@ export class GridCellComponent {
     }
   }
 
-
-
   onRightClick(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
     if (event.button == 2) {
       if (this.gridCell.color !== this.currentColor) {
         this.highlight(this.currentColor);
-        console.log(this.currentColor);
       }
       else {
         this.highlight('');
@@ -169,6 +166,11 @@ export class GridCellComponent {
     }
   }
 
+  onDrag(event: MouseEvent) {
+    if (event.altKey) {
+      this.highlight(this.currentColor);
+    }
+  }
    /**
    * Handles keydown gridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
    * @param event - The keyboard event.
