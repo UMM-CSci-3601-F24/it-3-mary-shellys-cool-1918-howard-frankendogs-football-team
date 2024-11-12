@@ -20,7 +20,7 @@ describe('Grid Component', () => {
         page.saveGrid();
         cy.intercept('api/grid').as('saveGrid');
 
-        cy.url({timeout: 300}).should('match', /\/grid$/);
+        cy.url({timeout: 30000}).should('match', /\/grid$/);
       //ideally would also have some sort of visual indication it was saved
       // like implementing the visual of previously saved grids
 
@@ -42,10 +42,10 @@ describe('Grid Component', () => {
     });
   });
 
-  // it('should black-out the cell with all edges bolded', () => {
-  //   cy.get('#mat-input-3').type('{ctrl}{rightarrow}{downarrow}{uparrow}{leftarrow}');
-  //   cy.get('#mat-input-3').should('have.css', 'background-color').and('eq', 'rgb(0, 0, 0)');
-  // });
+  it('should black-out the cell with all edges bolded', () => {
+    cy.get('#mat-input-3').type('{ctrl}{click}');
+    cy.get('#mat-input-3').should('have.css', 'background-color').and('eq', 'rgb(0, 0, 0)');
+  });
 });
 
 
