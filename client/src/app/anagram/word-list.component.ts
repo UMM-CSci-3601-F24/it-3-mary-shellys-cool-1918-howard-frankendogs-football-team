@@ -50,6 +50,8 @@ export class WordListComponent {
   contains = signal<string|undefined>(undefined);
   group = signal<string|undefined>(undefined);
 
+  filterType = signal<boolean|undefined>(undefined);
+
   errMsg = signal<string | undefined>(undefined);
 
   constructor(private wordService: WordService, private snackBar: MatSnackBar) {
@@ -58,6 +60,7 @@ export class WordListComponent {
 
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
+  private filterType$ = toObservable(this.filterType);
 
   serverFilteredContext =
     toSignal(
@@ -86,6 +89,9 @@ export class WordListComponent {
         })
       )
     );
+
+  // serverFilterType =
+  //   toSignal(this.filterType$);
 
   filteredWords = computed(() => {
     // takes list of words returned by server

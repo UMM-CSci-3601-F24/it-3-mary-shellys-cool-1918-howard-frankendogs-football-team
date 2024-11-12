@@ -91,21 +91,36 @@ public class AnagramController implements Controller {
     // names data to be logged
     List<Bson> filters = new ArrayList<>();
     Search newSearch = new Search();
-    String searchedWord = ctx.queryParam(WORD_KEY);
     // String filterType =
     // if searching for contains will enter this loop
-    if (ctx.queryParamMap().containsKey(WORD_KEY)) {
-      if (filterType = exact) {
-          Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
-          filters.add(regex(WORD_KEY, pattern));
-          newSearch.setContains(ctx.queryParam(WORD_KEY));
-        } else {
-            for (char c : searchedWord.toCharArray()) {
-              filters.add(regex("word", Pattern.compile(Pattern.quote(String.valueOf(c)), Pattern.CASE_INSENSITIVE)));
+  //   if (ctx.queryParamMap().containsKey(WORD_KEY)) {
+  //     if (filterType = exact) {
+  //         Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
+  //         filters.add(regex(WORD_KEY, pattern));
+  //         newSearch.setContains(ctx.queryParam(WORD_KEY));
+  //       } else {
+  //           for (char c : searchedWord.toCharArray()) {
+  //             filters.add(regex("word", Pattern.compile(Pattern.quote(String.valueOf(c)), Pattern.CASE_INSENSITIVE)));
+  //         }
+  //   }
+  // }
+
+    //  if (ctx.queryParamMap().containsKey(WORD_KEY)) {
+    //   String word = ctx.queryParam(WORD_KEY);
+    //   for (char c : word.toCharArray()) {
+    //        filters.add(regex("word", Pattern.compile(Pattern.quote(String.valueOf(c)), Pattern.CASE_INSENSITIVE)));
+    //   }
+    //   newSearch.setContains(ctx.queryParam(WORD_KEY));
+    //  }
+
+      if (ctx.queryParamMap().containsKey(WORD_KEY)) {
+            Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
+            filters.add(regex(WORD_KEY, pattern));
+            newSearch.setContains(ctx.queryParam(WORD_KEY));
           }
-    }
-  }
+
     // if searching by word group will enter this loop
+
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(WORD_GROUP_KEY, pattern));
