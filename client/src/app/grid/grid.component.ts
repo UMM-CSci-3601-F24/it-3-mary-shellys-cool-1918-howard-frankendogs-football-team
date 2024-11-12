@@ -66,8 +66,10 @@ export class GridComponent {
     this.loadSavedGrids();
 
     this.webSocketService.getMessage().subscribe((message: unknown) => {
-      console.log(message.toString());
+      console.log(message );
       // need to differentiate btwn heartbeat and grid update
+      const messageJson = JSON.parse(message.toString());
+      console.log(messageJson);
       if(message.toString().includes('grid')) {
         const msg = message as { type: string; grid: GridCell[][]; id: string };
         if (
@@ -156,7 +158,7 @@ export class GridComponent {
       owner: this.gridPackage.owner,
       id: this.gridPackage._id,
     };
-    console.log(message);
+    console.log(message + "\n Inside onGridChange() in grid.component.ts" );
     this.webSocketService.sendMessage(message);
   }
 
@@ -316,7 +318,4 @@ export class GridComponent {
     console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
 
-  // saveGrid() {
-  //   this.gridService.saveGrid(this.grid);
-  // }
 }
