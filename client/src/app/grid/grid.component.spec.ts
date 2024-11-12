@@ -200,7 +200,7 @@ describe('GridCellComponent', () => {
 
   it('saveGrid() should call grid service and load grids', fakeAsync(() => {
     const partialGrid: Partial<GridPackage> = {
-      owner: 'currentUser',
+      roomID: 'currentUser',
       grid: component.gridPackage.grid
     };
 

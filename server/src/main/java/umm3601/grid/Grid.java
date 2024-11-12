@@ -7,8 +7,6 @@ public class Grid {
   @ObjectId @Id
   @SuppressWarnings({"memberName"})
   public String _id;
-  public String owner;
+  public String roomID;
   public GridCell[][] grid;
-  // public String id; // Load bearing coconut
-
 }

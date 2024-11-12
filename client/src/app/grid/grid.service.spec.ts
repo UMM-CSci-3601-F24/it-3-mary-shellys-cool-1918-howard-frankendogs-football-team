@@ -13,7 +13,7 @@ describe('GridService', () => {
   let httpTestingController : HttpTestingController;
   const testGrid: GridPackage = {
     _id:"hehe",
-    owner:"haha",
+    roomID:"haha",
     grid: [
       [{
         editable: true,

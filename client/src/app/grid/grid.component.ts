@@ -9,13 +9,10 @@ import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GridService } from './grid.service';
 import { GridPackage } from './gridPackage';
-// import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-// import { catchError, map, of, switchMap } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
-// import { Grid } from './grid';
 
 @Component({
   selector: 'app-grid-component',
@@ -43,7 +40,7 @@ export class GridComponent {
   gridPackage: GridPackage = {
     grid: [],
     _id: '',
-    owner: 'currentUser'
+    roomID: 'currentUser'
   }
 
   savedGrids: GridPackage[];
@@ -102,7 +99,7 @@ export class GridComponent {
   saveGrid() {
     if (this.gridPackage._id !== null && this.gridPackage._id !== ''){
       const gridData: Partial<GridPackage> = {
-        owner: this.gridPackage.owner,
+        roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id
       };
@@ -111,7 +108,7 @@ export class GridComponent {
       });
     } else {
       const gridData: Partial<GridPackage> = {
-        owner: this.gridPackage.owner,
+        roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid
       };
       this.gridService.saveGrid(gridData).subscribe(() => {
@@ -132,7 +129,7 @@ export class GridComponent {
         console.log(activeGrid._id);
 
         this.gridPackage._id = activeGrid._id;
-        this.gridPackage.owner = activeGrid.owner;
+        this.gridPackage.roomID = activeGrid.roomID;
         this.applyGridUpdate(activeGrid.grid);
       },
     );
@@ -142,7 +139,7 @@ export class GridComponent {
     const message = {
       type: 'GRID_UPDATE',
       grid: this.gridPackage.grid,
-      owner: this.gridPackage.owner,
+      roomID: this.gridPackage.roomID,
       id: this.gridPackage._id
 
     };

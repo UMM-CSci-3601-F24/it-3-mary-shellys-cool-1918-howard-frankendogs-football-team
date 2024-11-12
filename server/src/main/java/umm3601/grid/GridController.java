@@ -35,7 +35,7 @@ public class GridController implements Controller {
   public void saveGrid(Context ctx) {
     String body = ctx.body();
     Grid grid = ctx.bodyValidator(Grid.class)
-        .check(td -> td.owner != null, "Owner must be non-empty")
+        .check(td -> td.roomID != null, "roomID must be non-empty")
         .check(td -> td.grid != null, "Error with grid, grid was : " + body)
         .getOrThrow(m -> new RuntimeJsonMappingException("Failed to parse body as grid: " + body));
     System.err.println(grid._id);
