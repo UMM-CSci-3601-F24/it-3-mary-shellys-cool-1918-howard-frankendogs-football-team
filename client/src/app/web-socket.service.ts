@@ -11,11 +11,12 @@ export class WebSocketService {
 
   constructor() {
     /*
-    The web socket subject currently being used allows websocket to work on
-      digital ocean on El's specific droplet for it-2
-    To use with different droplet account change id #.
-    To use locally use:
+    To run locally use:
       this.socket$ = new WebSocketSubject('ws://localhost:4567/websocket');
+    To use with El's droplet for it-3 use:
+      this.socket$ = new WebSocketSubject('wss://138.197.75.137.nip.io/api/websocket');
+      also reach out ot El to have him change the branch the droplet is running on
+    To use with different droplet account change id #.
     */
     this.socket$ = new WebSocketSubject('wss://138.197.75.137.nip.io/api/websocket');
     this.socket$.subscribe(
