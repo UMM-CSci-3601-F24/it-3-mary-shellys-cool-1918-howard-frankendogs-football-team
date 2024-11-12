@@ -9,7 +9,6 @@ import { GridCell } from './grid-cell';
 import { Edges } from './edges';
 // import { GridComponent } from '../grid/grid.component';
 
-
 @Component({
   selector: 'app-grid-cell',
   templateUrl: 'grid-cell.component.html',
@@ -24,11 +23,9 @@ import { Edges } from './edges';
     MatInputModule,
     FormsModule,
     CommonModule,
-
   ],
 })
 export class GridCellComponent {
-
   @Input({ required: true }) gridCell: GridCell;
   @Input({}) col: number;
   @Input({}) row: number;
@@ -43,11 +40,11 @@ export class GridCellComponent {
    */
   constructor() {
     if (!this.gridCell) {
-      this.gridCell = new GridCell;
+      this.gridCell = new GridCell();
     }
   }
 
-   /**
+  /**
    * Handles input changes and updates the grid cell value if valid.
    * @param value - The input value to be set.
    */
@@ -90,70 +87,102 @@ export class GridCellComponent {
    * toggles the both this cells edge and adjacent cells edge
    * @param edge
    */
-  toggleEdge(edge: string) {
+  toggleEdge(edge: string, emitChange: boolean) {
     switch (edge) {
       case 'top':
         this.gridCell.edges.top = !this.gridCell.edges.top;
         if (this.grid && this.grid[this.row - 1]) {
-          this.grid[this.row - 1][this.col].edges.bottom = this.gridCell.edges.top;
+          this.grid[this.row - 1][this.col].edges.bottom =
+            this.gridCell.edges.top;
         }
+        this.isEdgesBold();
         break;
       case 'right':
         this.gridCell.edges.right = !this.gridCell.edges.right;
         if (this.grid && this.grid[this.row][this.col + 1]) {
-          this.grid[this.row][this.col + 1].edges.left = this.gridCell.edges.right;
+          this.grid[this.row][this.col + 1].edges.left =
+            this.gridCell.edges.right;
         }
+        this.isEdgesBold();
         break;
       case 'bottom':
         this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
         if (this.grid && this.grid[this.row + 1]) {
-          this.grid[this.row + 1][this.col].edges.top = this.gridCell.edges.bottom;
+          this.grid[this.row + 1][this.col].edges.top =
+            this.gridCell.edges.bottom;this.isEdgesBold();
         }
+        this.isEdgesBold();
         break;
       case 'left':
         this.gridCell.edges.left = !this.gridCell.edges.left;
         if (this.grid && this.grid[this.row][this.col - 1]) {
-          this.grid[this.row][this.col - 1].edges.right = this.gridCell.edges.left;
+          this.grid[this.row][this.col - 1].edges.right =
+            this.gridCell.edges.left;
         }
+        this.isEdgesBold();
         break;
       default:
         break;
     }
-    this.gridChange.emit();
+    if (emitChange) {
+      this.gridChange.emit();
+    }
   }
 
   highlight(color: string) {
     this.gridCell.color = color;
   }
 
+  isEdgesBold() {
+    if (
+      (this.gridCell.edges['top'] &&
+      this.gridCell.edges['right'] &&
+      this.gridCell.edges['bottom'] &&
+      this.gridCell.edges['left'] === true)
+    ) {
+      this.highlight('black');
+    } else {
+      this.highlight('');
+    }
+  }
+
   /**
    * Blacks out a cell and its edges with ctrl, undoes this with alt
    * @param event - checks the key clicked
    */
-  onClick(event: MouseEvent) { // blacks out cell and edges
+  onClick(event: MouseEvent) {
     if (event.ctrlKey) {
-      if (this.gridCell.edges["top"] && this.gridCell.edges["right"] && this.gridCell.edges["bottom"] && this.gridCell.edges["left"]) {
+      if (
+        this.gridCell.edges['top'] &&
+        this.gridCell.edges['right'] &&
+        this.gridCell.edges['bottom'] &&
+        this.gridCell.edges['left']
+      ) {
         for (const edge in this.gridCell.edges) {
-            this.toggleEdge(edge);
+          this.toggleEdge(edge, false);
         }
       } else {
         for (const edge in this.gridCell.edges) {
           if (this.gridCell.edges[edge] === false) {
-            this.toggleEdge(edge);
+            this.toggleEdge(edge, false);
           }
         }
       }
-      this.highlight('black');
+      this.gridChange.emit();
     }
-    if (event.altKey) {
-      if (this.gridCell.edges["top"] && this.gridCell.edges["right"] && this.gridCell.edges["bottom"] && this.gridCell.edges["left"]) {
-        this.highlight('white');
+    else if (event.altKey) {
+      if (
+        this.gridCell.edges['top'] &&
+        this.gridCell.edges['right'] &&
+        this.gridCell.edges['bottom'] &&
+        this.gridCell.edges['left']
+      ) {
+        this.highlight('');
         console.log(this.gridCell.color);
+        this.gridChange.emit();
       }
     }
   }
-
-
 
   onRightClick(event: MouseEvent) {
     event.preventDefault();
@@ -162,14 +191,13 @@ export class GridCellComponent {
       if (this.gridCell.color !== this.currentColor) {
         this.highlight(this.currentColor);
         console.log(this.currentColor);
-      }
-      else {
+      } else {
         this.highlight('');
       }
     }
   }
 
-   /**
+  /**
    * Handles keydown gridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
    * @param event - The keyboard event.
    */
@@ -178,16 +206,16 @@ export class GridCellComponent {
       event.preventDefault();
       switch (event.key) {
         case 'ArrowUp':
-          this.toggleEdge('top');
+          this.toggleEdge('top', true);
           break;
         case 'ArrowRight':
-          this.toggleEdge('right');
+          this.toggleEdge('right', true);
           break;
         case 'ArrowDown':
-          this.toggleEdge('bottom');
+          this.toggleEdge('bottom', true);
           break;
         case 'ArrowLeft':
-          this.toggleEdge('left');
+          this.toggleEdge('left', true);
           break;
         default:
           break;
