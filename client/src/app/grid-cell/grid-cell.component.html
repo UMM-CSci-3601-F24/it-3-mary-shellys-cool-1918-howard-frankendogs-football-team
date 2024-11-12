@@ -1,25 +1,29 @@
-
 <div
   class="cell"
   [ngClass]="{
     'bold-top': gridCell.edges.top,
     'bold-right': gridCell.edges.right,
     'bold-bottom': gridCell.edges.bottom,
-    'bold-left': gridCell.edges.left
+    'bold-left': gridCell.edges.left,
   }"
 >
 @if (gridCell.editable) {
   <input matInput
     [(ngModel)]="gridCell.value"
-    [ngClass] = "{
+    [ngClass]="{
       'cell-input': true,
-      'blacked-out': gridCell.edges.left && gridCell.edges.bottom && gridCell.edges.top && gridCell.edges.right
+      'blacked-out': gridCell.color === 'white' !== (gridCell.edges.top && gridCell.edges.right && gridCell.edges.bottom && gridCell.edges.left),
+      'default-color': gridCell.color === '',
+      'highlighted-pink': gridCell.color === 'pink',
+      'highlighted-yellow': gridCell.color === 'yellow',
+      'highlighted-green': gridCell.color === 'green'
     }"
     type="text"
     maxlength="1"
     (input)="onInput(gridCell.value)"
     (keydown)="onKeyDown($event)"
     (click)="onClick($event)"
+    (contextmenu)="onRightClick($event)"
     placeholder="{{gridCell.value}}">
 }
     @else {

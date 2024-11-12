@@ -39,6 +39,7 @@
             [row]="rowIndex"
             [col]="colIndex"
             [grid]="gridPackage.grid"
+            [currentColor]="currentColor"
             [ngStyle]="{'height': cellSize + 'px', 'width': cellSize + 'px'}"
             (gridChange)="onGridChange()"
             ></app-grid-cell>
@@ -47,6 +48,16 @@
       }
     </mat-grid-list>
   </div>
+
+<mat-radio-group
+  aria-labelledby="example-radio-group-label"
+  class="example-radio-group"
+  [(ngModel)]="currentColor">
+  @for (highlight of highlight; track highlight) {
+    <mat-radio-button class="example-radio-button" [value]="highlight">{{highlight}}</mat-radio-button>
+  }
+</mat-radio-group>
+
   <input matInput
   [(ngModel)]="cellSize"
   type="number"

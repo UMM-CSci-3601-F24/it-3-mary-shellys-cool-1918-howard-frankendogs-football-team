@@ -3,9 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
+// import { AsyncPipe } from '@angular/common';
 import { GridCell } from './grid-cell';
 import { Edges } from './edges';
+// import { GridComponent } from '../grid/grid.component';
 
 
 @Component({
@@ -15,12 +17,14 @@ import { Edges } from './edges';
   providers: [],
   standalone: true,
   imports: [
-    AsyncPipe,
+    // AsyncPipe,
+    // GridComponent,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
     CommonModule,
+
   ],
 })
 export class GridCellComponent {
@@ -29,12 +33,9 @@ export class GridCellComponent {
   @Input({}) col: number;
   @Input({}) row: number;
   @Input({}) grid: GridCell[][];
+  @Input() currentColor: string;
+
   @Output() gridChange = new EventEmitter<void>();
-
-
-  backgroundColor: string = "black";
-
-
 
   /**
    * Constructor for GridCellComponent.
@@ -85,6 +86,10 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
+  /**
+   * toggles the both this cells edge and adjacent cells edge
+   * @param edge
+   */
   toggleEdge(edge: string) {
     switch (edge) {
       case 'top':
@@ -117,6 +122,10 @@ export class GridCellComponent {
     this.gridChange.emit();
   }
 
+  highlight(color: string) {
+    this.gridCell.color = color;
+  }
+
   /**
    * Blacks out a cell and its edges with ctrl, undoes this with alt
    * @param event - checks the key clicked
@@ -133,11 +142,30 @@ export class GridCellComponent {
             this.toggleEdge(edge);
           }
         }
-       }
+      }
+      this.highlight('black');
+    }
+    if (event.altKey) {
+      this.highlight('white');
+      console.log(this.gridCell.color);
+    }
+  }
+
+
+
+  onRightClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.button == 2) {
+      if (this.gridCell.color !== this.currentColor) {
+        this.highlight(this.currentColor);
+        console.log(this.currentColor);
+      }
+      else {
+        this.highlight('');
       }
     }
-
-
+  }
 
    /**
    * Handles keydown gridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
