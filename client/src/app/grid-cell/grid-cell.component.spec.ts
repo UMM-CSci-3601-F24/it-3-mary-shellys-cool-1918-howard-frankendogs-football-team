@@ -157,31 +157,6 @@ describe('GridCellComponent', () => {
     expect(cellEditableElement.classList).not.toContain('blacked-out');
   });
 
-  it('should highlight on left click', () => {
-    const fixture = TestBed.createComponent(GridCellComponent);
-    const component = fixture.componentInstance;
-    const edges = { top: false, right: false, bottom: false, left: false };
-    component.setEdges(edges);
-    component.highlight(currentColor);
-    fixture.detectChanges();
-
-    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector('input');
-
-    inputElement.focus();
-    fixture.detectChanges();
-
-    expect(document.activeElement).toBe(inputElement);
-
-    const event = new MouseEvent('contextmenu');
-    inputElement.dispatchEvent(event);
-    fixture.detectChanges();
-
-    const cellEditableElement: HTMLElement = fixture.nativeElement.querySelector('.cell-input');
-    expect(component.gridCell.color).toBe(currentColor);
-    expect(component.gridCell.color).toContain('pink');
-    expect(cellEditableElement.classList).toContain('highlighted-pink');
-  });
-
   it('should disallow input into the cell', () => {
     const fixture = TestBed.createComponent(GridCellComponent);
     const component = fixture.componentInstance;
@@ -192,6 +167,27 @@ describe('GridCellComponent', () => {
     const inputElement: HTMLInputElement = fixture.nativeElement.querySelector('input');
     expect(inputElement).toBeNull();
   });
+
+  it('should disallow contextmenu when in cell', () => {
+    const fixture = TestBed.createComponent(GridCellComponent);
+    const component = fixture.componentInstance;
+    component.setEditable(true);
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector('input');
+    inputElement.focus();
+    fixture.detectChanges();
+
+    expect(document.activeElement).toBe(inputElement);
+
+    const event = new MouseEvent('click', { button: 2 });
+    spyOn(event, 'preventDefault');
+    component.onRightClick(event);
+    fixture.detectChanges();
+
+    expect(event.preventDefault).toHaveBeenCalled();
+  });
+
 
   it('should disallow invalid input into the cell', () => {
     const fixture = TestBed.createComponent(GridCellComponent);
