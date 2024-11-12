@@ -30,12 +30,10 @@ import com.mongodb.client.MongoDatabase;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import io.javalin.json.JavalinJackson;
 
 public class RoomControllerSpec {
   private static MongoClient mongoClient;
   private static MongoDatabase db;
-  private static JavalinJackson javalinJackson = new JavalinJackson();
 
   @Mock
   private Context ctx;
