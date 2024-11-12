@@ -11,7 +11,7 @@ export class MockGridService extends GridService {
   static testGrids: GridPackage[] = [
     {
       _id: 'testGridId',
-      owner: 'testOwner',
+      roomID: 'testOwner',
       grid: [
         [
           { editable: true, value: '1', edges: { top: false, right: false, bottom: false, left: false } },
