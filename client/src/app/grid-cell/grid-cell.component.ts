@@ -3,10 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
+// import { AsyncPipe } from '@angular/common';
 import { GridCell } from './grid-cell';
 import { Edges } from './edges';
-import { GridComponent } from '../grid/grid.component';
+// import { GridComponent } from '../grid/grid.component';
 
 
 @Component({
@@ -16,8 +17,8 @@ import { GridComponent } from '../grid/grid.component';
   providers: [],
   standalone: true,
   imports: [
-    AsyncPipe,
-    GridComponent,
+    // AsyncPipe,
+    // GridComponent,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
