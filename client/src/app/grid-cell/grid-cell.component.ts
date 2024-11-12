@@ -146,8 +146,10 @@ export class GridCellComponent {
       this.highlight('black');
     }
     if (event.altKey) {
-      this.highlight('white');
-      console.log(this.gridCell.color);
+      if (this.gridCell.edges["top"] && this.gridCell.edges["right"] && this.gridCell.edges["bottom"] && this.gridCell.edges["left"]) {
+        this.highlight('white');
+        console.log(this.gridCell.color);
+      }
     }
   }
 
