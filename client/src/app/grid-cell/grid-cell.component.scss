@@ -34,10 +34,6 @@ $borderSize: 5px;
   background-color: white;
 }
 
-.blackout-exception {
-  background-color: white;
-}
-
 .blacked-out {
   background-color: black;
 }
@@ -47,11 +43,11 @@ $borderSize: 5px;
 }
 
 .highlighted-yellow {
-  background-color: yellow;
+  background-color: rgb(255, 255, 140);
 }
 
 .highlighted-green {
-  background-color: green;
+  background-color: rgb(189, 255, 154);
 }
 
 .cell-input:focus {
