@@ -42,15 +42,15 @@ describe('Grid Component', () => {
   });
 
   it('should black-out the cell with all edges bolded', () => {
-    cy.get('#mat-input-3').click({ctrlKey: true})
+    cy.get('#mat-input-3').click({ ctrlKey: true });
     cy.get('#mat-input-103') // the current cell becomes 103 when its bold idk why we kinda have jank cell names
       .should('have.css', 'background-color')
       .and('eq', 'rgb(0, 0, 0)');
   });
 
   it('should un-black cell background, but keep edges', () => {
-    cy.get('#mat-input-3').click({ctrlKey: true})
-    cy.get('#mat-input-103').click({altKey: true})
+    cy.get('#mat-input-3').click({ ctrlKey: true });
+    cy.get('#mat-input-103').click({ altKey: true });
     cy.get('#mat-input-203') // the current cell become 203, also idk why but f it we ball
       .should('have.css', 'background-color')
       .and('eq', 'rgb(255, 255, 255)');
@@ -62,5 +62,14 @@ describe('Grid Component', () => {
     cy.get('#mat-input-103')
       .should('have.css', 'background-color')
       .and('eq', 'rgb(255, 192, 203)');
+  });
+
+  it('should un-highlight cell', () => {
+    cy.get('#mat-radio-2-input').click();
+    cy.get('#mat-input-3').rightclick();
+    cy.get('#mat-input-103').rightclick();
+    cy.get('#mat-input-203')
+      .should('have.css', 'background-color')
+      .and('eq', 'rgb(255, 255, 255)');
   });
 });
