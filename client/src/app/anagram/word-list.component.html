@@ -18,9 +18,9 @@
         </div>
         <div>
           <label for="filterType">Filter Type</label>
-          <mat-radio-group aria-label="Filter Type" [(ngModel)]="filterType" dataTest="filterTypeRadio">
-            <mat-radio-button checked value="exact">Exact</mat-radio-button>
-            <mat-radio-button value="contents">Contains</mat-radio-button>
+          <mat-radio-group [(ngModel)]="filterType" aria-label="Filter Type" dataTest="filterTypeRadio">
+            <mat-radio-button value="exact">Exact</mat-radio-button>
+            <mat-radio-button value="contains">Contains</mat-radio-button>
           </mat-radio-group>
         </div>
         <!-- Sorting is done on the client -->
