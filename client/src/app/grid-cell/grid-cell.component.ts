@@ -194,11 +194,16 @@ export class GridCellComponent {
   }
 
   onDrag(event: MouseEvent) {
-    if (event.altKey) {
-      this.highlight(this.currentColor);
+    if (event.shiftKey && event.button == 0) {
+      if (this.gridCell.color !== this.currentColor) {
+        this.setColor(this.currentColor);
+      } else {
+        this.setColor('');
+      }
     }
+    this.gridChange.emit();
   }
-  
+
    /**
    * Handles keydown gridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
    * @param event - The keyboard event.
