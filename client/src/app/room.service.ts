@@ -7,7 +7,7 @@ import { GridPackage } from './grid/gridPackage';
   providedIn: 'root'
 })
 export class RoomService {
-  private apiUrl = '/api/rooms';
+  private apiUrl = '/api';
 
   constructor(private http: HttpClient) { }
 

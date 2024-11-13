@@ -21,7 +21,7 @@ export class GridService {
   }
 
   saveGridWithRoomId(roomId: string, gridData: Partial<GridPackage>): Observable<string> {
-    return this.httpClient.post<{id: string}>(`${environment.apiUrl}rooms/${roomId}/grids`, gridData).pipe(map(response => response.id));
+    return this.httpClient.post<{id: string}>(`${environment.apiUrl}/grids`, gridData).pipe(map(response => response.id));
   }
 
   getGrids() {

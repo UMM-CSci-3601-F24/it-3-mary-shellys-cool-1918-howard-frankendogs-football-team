@@ -41,7 +41,7 @@ export class GridComponent {
   gridPackage: GridPackage = {
     grid: [],
     _id: '',
-    roomID: 'currentUser'
+    roomID: ''
   }
 
   savedGrids: GridPackage[];
@@ -61,13 +61,16 @@ export class GridComponent {
     private gridService: GridService,
     private roomService: RoomService,
     private webSocketService: WebSocketService) {
+    this.route.paramMap.subscribe(params => {
+      this.gridPackage.roomID = params.get('roomID');
+      console.log(params.get('roomID'));
+    });
     this.initializeGrid();
     this.loadSavedGrids();
     this.webSocketService.getMessage().subscribe((message: unknown) => {
       const msg = message as { type: string, grid: GridCell[][], id: string};
       if (msg.type === 'GRID_UPDATE' && this.gridPackage._id == (message as { id: string }).id) {
         this.applyGridUpdate(msg.grid);
-        // this.applyGridUpdate((message as { grid: GridCell[][] }).grid);
       }
     });
   }
