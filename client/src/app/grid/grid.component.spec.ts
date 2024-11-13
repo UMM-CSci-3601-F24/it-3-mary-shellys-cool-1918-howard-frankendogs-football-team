@@ -2,13 +2,15 @@ import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angul
 import { FormsModule } from '@angular/forms';
 import { GridComponent } from './grid.component';
 import { GridService } from './grid.service';
+import { RoomService } from '../room.service';
 import { MockGridService } from 'src/testing/grid.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { GridPackage } from './gridPackage';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 
-describe('GridCellComponent', () => {
+describe('GridComponent', () => {
   let component: GridComponent;
   let fixture: ComponentFixture<GridComponent>;
   let gridService: MockGridService;
@@ -16,20 +18,22 @@ describe('GridCellComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [FormsModule, GridComponent, RouterTestingModule],
-      providers: [{ provide: GridService, useValue: new MockGridService() }],
+      imports: [FormsModule, GridComponent, RouterTestingModule, HttpClientTestingModule],
+      providers: [
+        { provide: GridService, useValue: new MockGridService() },
+        RoomService
+      ],
     })
       .compileComponents();
   });
+
   beforeEach(waitForAsync(() => {
     TestBed.compileComponents().then(() => {
       fixture = TestBed.createComponent(GridComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
-
-      gridService = TestBed.inject(GridService);
-    })
-  }))
+    });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -198,37 +202,19 @@ describe('GridCellComponent', () => {
     expect(cell.value).toBe('');
   }));
 
-  it('saveGrid() should call grid service and load grids', fakeAsync(() => {
-    const partialGrid: Partial<GridPackage> = {
-      roomID: 'currentUser',
-      grid: component.gridPackage.grid
-    };
-
-    const saveGridSpy = spyOn(gridService, 'saveGrid').and.returnValue(of('newGridId'));
-    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids');
-
-    component.saveGrid();
-    tick();
-
-    expect(saveGridSpy).toHaveBeenCalledWith(partialGrid);
-    expect(loadSavedGridsSpy).toHaveBeenCalled();
+  it('should load saved grids correctly', fakeAsync(() => {
+    const mockGrids: GridPackage[] = [
+      { grid: [], _id: '1', roomID: 'room1' },
+      { grid: [], _id: '2', roomID: 'room2' }
+    ];
+    spyOn(component['roomService'], 'getGridsByRoomId').and.returnValue(of(mockGrids));
 
     component.loadSavedGrids();
-    expect(loadSavedGridsSpy).toHaveBeenCalled();
-  }));
-
-  it('should call saveGrid and loadSavedGrids when save button is clicked', fakeAsync(() => {
-    const saveButton = fixture.debugElement.query(By.css('.save-button'));
-    const saveGridSpy = spyOn(component, 'saveGrid').and.callThrough();
-    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids').and.callThrough();
-
-    saveButton.triggerEventHandler('click', null);
     tick();
 
-    expect(saveGridSpy).toHaveBeenCalled();
-    expect(loadSavedGridsSpy).toHaveBeenCalled();
-
+    expect(component.savedGrids).toEqual(mockGrids);
   }));
+
 });
 
 

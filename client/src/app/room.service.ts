@@ -7,7 +7,7 @@ import { GridPackage } from './grid/gridPackage';
   providedIn: 'root'
 })
 export class RoomService {
-  private apiUrl = '/api';
+  private apiUrl = '/api/rooms';
 
   constructor(private http: HttpClient) { }
 
@@ -20,6 +20,6 @@ export class RoomService {
   }
 
   getGridsByRoomId(roomId: string): Observable<GridPackage[]> {
-    return this.http.get<GridPackage[]>(`${this.apiUrl}/${roomId}/grids`);
+    return this.http.get<GridPackage[]>(`/api/${roomId}/grids`);
   }
 }
