@@ -120,7 +120,7 @@ describe('GridCellComponent', () => {
     expect(cellEditableElement.classList).not.toContain('blacked-out');
   });
 
-  it('should keep bold edges but unbold backround on alt click', () => {
+  it('should keep bold edges but un-bold background on alt click', () => {
     const fixture = TestBed.createComponent(GridCellComponent);
     const component = fixture.componentInstance;
     const edges = { top: false, right: false, bottom: false, left: false };
