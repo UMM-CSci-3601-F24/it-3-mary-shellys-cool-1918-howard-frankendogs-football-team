@@ -5,7 +5,6 @@ import { GridCellComponent } from './grid-cell.component';
 describe('GridCellComponent', () => {
   let component: GridCellComponent;
   let fixture: ComponentFixture<GridCellComponent>;
-  const currentColor = 'pink'
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -47,10 +46,10 @@ describe('GridCellComponent', () => {
     expect(cell.gridCell.edges.bottom).toBeTrue();
     expect(cell.gridCell.edges.left).toBeFalse();
 
-    cell.toggleEdge('top');
-    cell.toggleEdge('right');
-    cell.toggleEdge('bottom');
-    cell.toggleEdge('left');
+    cell.toggleEdge('top', true);
+    cell.toggleEdge('right', true);
+    cell.toggleEdge('bottom', true);
+    cell.toggleEdge('left', true);
 
     expect(cell.gridCell.edges.top).toBeFalse();
     expect(cell.gridCell.edges.right).toBeTrue();

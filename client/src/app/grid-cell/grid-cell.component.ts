@@ -95,7 +95,6 @@ export class GridCellComponent {
           this.grid[this.row - 1][this.col].edges.bottom =
             this.gridCell.edges.top;
         }
-        this.isEdgesBold();
         break;
       case 'right':
         this.gridCell.edges.right = !this.gridCell.edges.right;
@@ -103,15 +102,13 @@ export class GridCellComponent {
           this.grid[this.row][this.col + 1].edges.left =
             this.gridCell.edges.right;
         }
-        this.isEdgesBold();
         break;
       case 'bottom':
         this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
         if (this.grid && this.grid[this.row + 1]) {
           this.grid[this.row + 1][this.col].edges.top =
-            this.gridCell.edges.bottom;this.isEdgesBold();
+            this.gridCell.edges.bottom;
         }
-        this.isEdgesBold();
         break;
       case 'left':
         this.gridCell.edges.left = !this.gridCell.edges.left;
@@ -119,7 +116,6 @@ export class GridCellComponent {
           this.grid[this.row][this.col - 1].edges.right =
             this.gridCell.edges.left;
         }
-        this.isEdgesBold();
         break;
       default:
         break;
@@ -131,19 +127,6 @@ export class GridCellComponent {
 
   highlight(color: string) {
     this.gridCell.color = color;
-  }
-
-  isEdgesBold() {
-    if (
-      (this.gridCell.edges['top'] &&
-      this.gridCell.edges['right'] &&
-      this.gridCell.edges['bottom'] &&
-      this.gridCell.edges['left'] === true)
-    ) {
-      this.highlight('black');
-    } else {
-      this.highlight('');
-    }
   }
 
   /**
@@ -177,7 +160,7 @@ export class GridCellComponent {
         this.gridCell.edges['bottom'] &&
         this.gridCell.edges['left']
       ) {
-        this.highlight('');
+        this.highlight('white');
         console.log(this.gridCell.color);
         this.gridChange.emit();
       }
@@ -195,6 +178,7 @@ export class GridCellComponent {
         this.highlight('');
       }
     }
+    this.gridChange.emit();
   }
 
   /**

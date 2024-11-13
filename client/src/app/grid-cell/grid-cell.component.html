@@ -12,8 +12,8 @@
     [(ngModel)]="gridCell.value"
     [ngClass]="{
       'cell-input': true,
-      'blacked-out': gridCell.color === 'black',
       'default-color': gridCell.color === '',
+      'blacked-out': (gridCell.color !== 'white') !&& (gridCell.edges.top && gridCell.edges.right && gridCell.edges.bottom && gridCell.edges.left),
       'highlighted-pink': gridCell.color === 'pink',
       'highlighted-yellow': gridCell.color === 'yellow',
       'highlighted-green': gridCell.color === 'green'
