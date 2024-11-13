@@ -76,6 +76,14 @@ export class GridCellComponent {
   }
 
   /**
+   * sets the color of the cell
+   * @param color - the color that the cell-background
+   */
+  setColor(color: string) {
+    this.gridCell.color = color;
+  }
+
+  /**
    * Sets the editable state of the grid cell.
    * @param state - The editable state to be set.
    */
@@ -125,12 +133,10 @@ export class GridCellComponent {
     }
   }
 
-  highlight(color: string) {
-    this.gridCell.color = color;
-  }
-
   /**
-   * Blacks out a cell and its edges with ctrl, undoes this with alt
+   * Blacks out a cell and its edges with ctrl
+   *
+   * Keeps all edges bolded, but makes the background white with alt
    * @param event - checks the key clicked
    */
   onClick(event: MouseEvent) {
@@ -160,22 +166,29 @@ export class GridCellComponent {
         this.gridCell.edges['bottom'] &&
         this.gridCell.edges['left']
       ) {
-        this.highlight('white');
+        this.setColor('white');
         console.log(this.gridCell.color);
         this.gridChange.emit();
       }
     }
   }
 
+  /**
+   * this will highlight a cell upon pressing the right click
+   *
+   * it will un-highlight if the cell you press on has the same color as the color
+   * you have selected (the selected color is from the parent)
+   * @param event - rightclick
+   */
   onRightClick(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
     if (event.button == 2) {
       if (this.gridCell.color !== this.currentColor) {
-        this.highlight(this.currentColor);
+        this.setColor(this.currentColor);
         console.log(this.currentColor);
       } else {
-        this.highlight('');
+        this.setColor('');
       }
     }
     this.gridChange.emit();
