@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 // import { MatCardModule } from '@angular/material/card';
 
 import { WordListComponent } from './word-list.component';
@@ -34,7 +34,6 @@ describe('Word List', () => {
       fixture.detectChanges();
     });
   }));
-  // general tests
   it('should create', () => {
     expect(wordList).toBeTruthy();
   });
@@ -118,91 +117,6 @@ describe('max function', () => {
     expect(wordList.max(8,2)).toBe(8);
     expect(wordList.max(4,4)).toBe(4);
 
-    // test with max(searchHistory().length - 40, 0)
   });
 })
 
-// describe('misbehaving word list', () => {
-//   let wordList: WordListComponent;
-//   let fixture: ComponentFixture<WordListComponent>;
-//   let originalTimeout;
-//   let wordServiceStub: {
-//     getWords: () => Observable<Word[]>;
-//   };
-//   beforeEach(() => {
-//     wordServiceStub = {
-//       getWords: () =>
-//         new Observable((observer) => {
-//           observer.error('getWords() Observer generates and error');
-//         }),
-//     };
-//     TestBed.configureTestingModule({
-//       imports: [WordListComponent, COMMON_IMPORTS],
-//       providers: [{ provide: WordService, useValue: wordServiceStub }],
-//     });
-//   });
-//   beforeEach(waitForAsync(() => {
-//     TestBed.compileComponents().then(() => {
-//       fixture = TestBed.createComponent(WordListComponent);
-//       wordList = fixture.componentInstance;
-//       fixture.detectChanges();
-//     });
-//   }));
-//   // these two functions are a workaround to build more time
-//   //into this test so it does not auto fail when another test fails
-//   beforeEach(function () {
-//     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-//     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-//   });
-//   afterEach(function () {
-//     jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-//   });
-//   it('generates an error if we don`t set up a WordListService', () => {
-//     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-//     expect(wordList.serverFilteredContext())
-//       .withContext('service cant give values of non-existent list')
-//       .toEqual(undefined);
-//     expect(wordList.errMsg())
-//       .withContext('the error message will be')
-//       .toContain('Problem contacting the server – Error Code:');
-//   });
-// });
-
-// there is no delete word method implemented in the mock word service
-// describe('delete Word', () => {
-//   let wordList: WordListComponent;
-//   let fixture: ComponentFixture<WordListComponent>;
-//   const mockSnackbarMock = jasmine.createSpyObj(['open']);
-//   mockSnackbarMock.open();
-
-//   beforeEach(() => {
-//     TestBed.configureTestingModule({
-//       imports: [COMMON_IMPORTS, WordListComponent],
-//       providers: [
-//         { provide: WordService, useValue: new MockWordService() },
-//         { provide: MatSnackBar, useValue: mockSnackbarMock },
-//       ],
-//     });
-//   });
-
-//   beforeEach(waitForAsync(() => {
-//     TestBed.compileComponents().then(() => {
-//       fixture = TestBed.createComponent(WordListComponent);
-//       wordList = fixture.componentInstance;
-//       fixture.detectChanges();
-//     });
-//   }));
-
-//   it('calls delete word', () => {
-//     expect(
-//       wordList.filteredWords().filter((word: Word) => word._id === 'Nic_id')
-//         .length
-//     ).toBe(1);
-//     wordList.deleteWord('Nic_id');
-//     expect(mockSnackbarMock.open).toHaveBeenCalledWith(
-//       `We deleted a word!`,
-//       'OK',
-//       { duration: 6000 }
-//     );
-//   });
-// });

@@ -67,6 +67,25 @@ describe('GridService', () => {
       })
     }));
   });
+
+  describe('When saveGrid is called', () => {
+    it("calls /grids with `post` command", waitForAsync(() => {
+      const mockedMethod = spyOn(httpClient, "post").and.returnValue(of("hehe"));
+      gridService.saveGrid(testGrid).subscribe(() => {
+        expect(mockedMethod).toHaveBeenCalledWith('/api/grids', testGrid);
+      });
+    }));
+  });
+
+  describe('When getGrid is called', () => {
+    it("calls /grids/:id with `get` command", waitForAsync(() => {
+      const mockedMethod = spyOn(httpClient, "get").and.returnValue(of(testGrid));
+      gridService.getGridById('hehe').subscribe(() => {
+        expect(mockedMethod).toHaveBeenCalledWith('/api/grids/hehe');
+      });
+    }));
+  });
+
   describe('getting grids', () => {
     it('getGrids() makes correct call', waitForAsync(() => {
       const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testGrid));

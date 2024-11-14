@@ -215,6 +215,37 @@ describe('GridComponent', () => {
     expect(component.savedGrids).toEqual(mockGrids);
   }));
 
+  it('should save grid with existing ID', fakeAsync(() => {
+    const saveGridSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of(''));
+    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids');
+
+    component.gridPackage._id = 'existingId';
+    component.saveGrid();
+    tick();
+
+    expect(saveGridSpy).toHaveBeenCalledWith(component.gridPackage.roomID, {
+      roomID: component.gridPackage.roomID,
+      grid: component.gridPackage.grid,
+      _id: component.gridPackage._id
+    });
+    expect(loadSavedGridsSpy).toHaveBeenCalled();
+  }));
+
+  it('should save grid without existing ID', fakeAsync(() => {
+    const saveGridSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of(''));
+    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids');
+
+    component.gridPackage._id = '';
+    component.saveGrid();
+    tick();
+
+    expect(saveGridSpy).toHaveBeenCalledWith(component.gridPackage.roomID, {
+      roomID: component.gridPackage.roomID,
+      grid: component.gridPackage.grid
+    });
+    expect(loadSavedGridsSpy).toHaveBeenCalled();
+  }));
+
 });
 
 
