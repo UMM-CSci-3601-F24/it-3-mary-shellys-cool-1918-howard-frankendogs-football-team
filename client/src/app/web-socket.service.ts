@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { WebSocketSubject } from 'rxjs/webSocket';
 import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,8 @@ export class WebSocketService {
       also reach out ot El to have him change the branch the droplet is running on
     To use with different droplet account change id #.
     */
-    this.socket$ = new WebSocketSubject('wss://138.197.75.137.nip.io/api/websocket');
+    // let wsURl = ${environment.wsURl};
+    this.socket$ = new WebSocketSubject(`${environment.wsURL}`);
     this.socket$.subscribe(
       (message) => this.handleMessage(message),
       (err) => console.error('WebSocket error:', err),
