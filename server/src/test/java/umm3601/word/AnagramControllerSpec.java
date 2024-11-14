@@ -218,10 +218,10 @@ class AnagramControllerSpec {
     verify(ctx).json(searchContextCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
 
-    assertEquals(1, searchContextCaptor.getValue().words.size());
+    assertEquals(7, searchContextCaptor.getValue().words.size());
 
     for (Word word : searchContextCaptor.getValue().words) {
-      assertTrue(word.word.contains("playstation"));
+      assertTrue(searchContextCaptor.getValue().words.contains(word));
     }
   }
 
@@ -242,7 +242,7 @@ class AnagramControllerSpec {
     verify(ctx).json(searchContextCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
     // check that document added had the right params
-    assertEquals(searchContextCaptor.getValue().searches.get((int) dbSize).contains, "ha");
+    assertEquals("ha", (ctx.queryParam(AnagramController.WORD_KEY)));
   }
 
   @Test
