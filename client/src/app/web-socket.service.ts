@@ -12,7 +12,7 @@ export class WebSocketService {
   constructor() {
     /*
     To run locally use:
-      this.socket$ = new WebSocketSubject('ws://localhost:4567/websocket');
+      this.socket$ = new WebSocketSubject('ws://localhost:4567/api/websocket');
     To use with El's droplet for it-3 use:
       this.socket$ = new WebSocketSubject('wss://138.197.75.137.nip.io/api/websocket');
       also reach out ot El to have him change the branch the droplet is running on
