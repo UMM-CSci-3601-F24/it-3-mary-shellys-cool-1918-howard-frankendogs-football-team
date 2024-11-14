@@ -14,12 +14,12 @@ export class MockGridService extends GridService {
       owner: 'testOwner',
       grid: [
         [
-          { editable: true, value: '1', edges: { top: false, right: false, bottom: false, left: false } },
-          { editable: true, value: '2', edges: { top: false, right: false, bottom: false, left: false } }
+          { editable: true, value: '1', edges: { top: false, right: false, bottom: false, left: false }, color: '' },
+          { editable: true, value: '2', edges: { top: false, right: false, bottom: false, left: false }, color: '' }
         ],
         [
-          { editable: true, value: '3', edges: { top: false, right: false, bottom: false, left: false } },
-          { editable: true, value: '4', edges: { top: false, right: false, bottom: false, left: false } }
+          { editable: true, value: '3', edges: { top: false, right: false, bottom: false, left: false }, color: '' },
+          { editable: true, value: '4', edges: { top: false, right: false, bottom: false, left: false }, color: '' }
         ]
       ]
     }

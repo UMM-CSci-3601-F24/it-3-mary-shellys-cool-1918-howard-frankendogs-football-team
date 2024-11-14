@@ -30,8 +30,24 @@ $borderSize: 5px;
   border: none;
 }
 
+.default-color {
+  background-color: white;
+}
+
 .blacked-out {
   background-color: black;
+}
+
+.highlighted-pink {
+  background-color: pink;
+}
+
+.highlighted-yellow {
+  background-color: rgb(255, 255, 140);
+}
+
+.highlighted-green {
+  background-color: rgb(189, 255, 154);
 }
 
 .cell-input:focus {
