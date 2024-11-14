@@ -22,7 +22,7 @@ public class GridController implements Controller {
 
   private static final String API_GRID_BY_ID = "/api/grids/{id}";
   private static final String API_GRIDS = "/api/grids";
-  private static final String API_GRID_BY_ROOM = "/api/rooms/{roomID}/grids";
+  private static final String API_GRID_BY_ROOM = "/api/{roomID}/grids";
 
   private final JacksonMongoCollection<Grid> gridCollection;
 
