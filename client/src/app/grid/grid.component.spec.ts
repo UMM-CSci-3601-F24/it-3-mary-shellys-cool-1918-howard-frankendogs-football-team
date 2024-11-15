@@ -8,13 +8,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { GridPackage } from './gridPackage';
 import { of } from 'rxjs';
-import { By } from '@angular/platform-browser';
 import { GridCell } from '../grid-cell/grid-cell';
 
 describe('GridComponent', () => {
   let component: GridComponent;
   let fixture: ComponentFixture<GridComponent>;
-  let gridService: MockGridService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -313,11 +311,11 @@ describe('GridComponent', () => {
       id: 'testId'
     };
 
-    const getMessageSpy = spyOn(component['webSocketService'], 'getMessage').and.returnValue(of(message));
+    spyOn(component['webSocketService'], 'getMessage').and.returnValue(of(message));
     component.gridPackage._id = 'testId';
 
     // This is a workaround to make the test work
-    component['webSocketService'].getMessage().subscribe((msg: any) => {
+    component['webSocketService'].getMessage().subscribe((msg: unknown) => {
       const receivedMessage = msg as { type: string, grid: GridCell[][], id: string };
       if (receivedMessage.type === 'GRID_UPDATE' && component.gridPackage._id === receivedMessage.id) {
         component.applyGridUpdate(receivedMessage.grid);
