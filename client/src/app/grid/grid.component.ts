@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
 import { RoomService } from '../room.service';
+import {MatRadioModule} from '@angular/material/radio';
 
 @Component({
   selector: 'app-grid-component',
@@ -24,6 +25,7 @@ import { RoomService } from '../room.service';
   imports: [
     MatFormFieldModule,
     MatInputModule,
+    MatRadioModule,
     FormsModule,
     CommonModule,
     GridCellComponent,
@@ -33,6 +35,9 @@ import { RoomService } from '../room.service';
   ],
 })
 export class GridComponent {
+
+  currentColor: string;
+  highlight: string[] = ['pink', 'yellow', 'green'];
 
   gridHeight: number = 10;
   gridWidth: number = 10;
@@ -266,8 +271,9 @@ export class GridComponent {
             }
         }
       }
-    }, );
+    });
   }
+
 
   /**
    * Moves the focus to the specified cell.
@@ -290,7 +296,6 @@ export class GridComponent {
       }
     }
   }
-
 
   /**
    * Cycles through the typing directions.

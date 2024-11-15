@@ -18,23 +18,27 @@ describe('GridService', () => {
       [{
         editable: true,
         value: "w",
-        edges: {top: false, right: false, bottom: false, left: false}
+        edges: {top: false, right: false, bottom: false, left: false},
+        color: ''
         },
         {
         editable: true,
         value: "x",
-        edges: {top: false, right: false, bottom: false, left: false}
+        edges: {top: false, right: false, bottom: false, left: false},
+        color: ''
         },
       ],
       [{
         editable: true,
         value: "y",
-        edges: {top: false, right: false, bottom: false, left: false}
+        edges: {top: false, right: false, bottom: false, left: false},
+        color: ''
         },
         {
         editable: true,
         value: "z",
-        edges: {top: false, right: false, bottom: false, left: false}
+        edges: {top: false, right: false, bottom: false, left: false},
+        color: ''
         },
       ]
     ]
