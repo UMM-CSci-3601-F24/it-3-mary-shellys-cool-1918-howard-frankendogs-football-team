@@ -3,6 +3,7 @@ package umm3601.word;
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,6 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -298,6 +300,39 @@ class AnagramControllerSpec {
     assertTrue(outContent.toString().contains("search added to db"));
   }
 
+  @Test
+    public void testExactFilter() throws IOException {
+
+        Map<String, List<String>> queryParams = new HashMap<>();
+
+        when(mockContext.queryParam("filterType")).thenReturn("exact");
+        when(mockContext.queryParam("word")).thenReturn("apple");
+        when(mockContext.queryParamMap()).thenReturn(Map.of("word", List.of("apple")));
+
+        // Act: Call the constructFilter method
+        Bson result = anagramController.constructFilter(mockContext);
+
+        // Assert: Check if the filter was created with the correct regex pattern
+        assertNotNull(result);
+        // Here, you would need to check if the regex filter is correctly set in `result`.
+        // Since Bson doesn't expose the exact structure easily, you might need additional inspection.
+    }
+
+
+  @Test
+    public void testContainsFilter() {
+        // Arrange: Set the query parameters for "contains" filter
+        when(mockContext.queryParam("filterType")).thenReturn("contains");
+        when(mockContext.queryParam("word")).thenReturn("apple");
+        when(mockContext.queryParamMap()).thenReturn(Map.of("word", List.of("apple")));
+
+        // Act: Call the constructFilter method
+        Bson result = controller.constructFilter(mockContext);
+
+        // Assert: Check if multiple regex filters are created for each character
+        assertNotNull(result);
+        // Further assertions can be made on the generated filters, which might require inspecting the filter list.
+    }
   @Test
   public void getWordWithExistentId() throws IOException {
     String id = wordId.toHexString();
