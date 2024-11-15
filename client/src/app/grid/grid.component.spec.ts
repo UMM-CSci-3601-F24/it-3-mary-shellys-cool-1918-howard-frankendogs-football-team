@@ -9,6 +9,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { GridPackage } from './gridPackage';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
+import { GridCell } from '../grid-cell/grid-cell';
 
 describe('GridComponent', () => {
   let component: GridComponent;
@@ -246,6 +247,89 @@ describe('GridComponent', () => {
     expect(loadSavedGridsSpy).toHaveBeenCalled();
   }));
 
+  it('should apply grid update correctly', () => {
+    const mockGrid: GridCell[][] = [
+      [new GridCell(), new GridCell()],
+      [new GridCell(), new GridCell()]
+    ];
+
+    component.applyGridUpdate(mockGrid);
+
+    expect(component.gridPackage.grid).toEqual(mockGrid);
+    expect(component.gridHeight).toBe(mockGrid.length);
+    expect(component.gridWidth).toBe(mockGrid[0].length);
+  });
+
+  it('should load grid correctly', fakeAsync(() => {
+    const mockGridPackage: GridPackage = {
+      grid: [
+        [new GridCell(), new GridCell()],
+        [new GridCell(), new GridCell()]
+      ],
+      _id: 'testId',
+      roomID: 'testRoomId'
+    };
+
+    spyOn(component['gridService'], 'getGridById').and.returnValue(of(mockGridPackage));
+
+    component.loadGrid('testId');
+    tick();
+
+    expect(component.gridPackage._id).toBe(mockGridPackage._id);
+    expect(component.gridPackage.roomID).toBe(mockGridPackage.roomID);
+    expect(component.gridPackage.grid).toEqual(mockGridPackage.grid);
+    expect(component.gridHeight).toBe(mockGridPackage.grid.length);
+    expect(component.gridWidth).toBe(mockGridPackage.grid[0].length);
+  }));
+
+  it('should send grid update message on grid change', () => {
+    const sendMessageSpy = spyOn(component['webSocketService'], 'sendMessage');
+    const mockGrid: GridCell[][] = [
+      [new GridCell(), new GridCell()],
+      [new GridCell(), new GridCell()]
+    ];
+    component.gridPackage.grid = mockGrid;
+    component.gridPackage._id = 'testId';
+    component.gridPackage.roomID = 'testRoomId';
+
+    component.onGridChange();
+
+    expect(sendMessageSpy).toHaveBeenCalledWith({
+      type: 'GRID_UPDATE',
+      grid: mockGrid,
+      roomID: 'testRoomId',
+      id: 'testId'
+    });
+  });
+
+  it('should handle websocket messages correctly', fakeAsync(() => {
+    const mockGrid: GridCell[][] = [
+      [new GridCell(), new GridCell()],
+      [new GridCell(), new GridCell()]
+    ];
+    const message = {
+      type: 'GRID_UPDATE',
+      grid: mockGrid,
+      id: 'testId'
+    };
+
+    const getMessageSpy = spyOn(component['webSocketService'], 'getMessage').and.returnValue(of(message));
+    component.gridPackage._id = 'testId';
+
+    // This is a workaround to make the test work
+    component['webSocketService'].getMessage().subscribe((msg: any) => {
+      const receivedMessage = msg as { type: string, grid: GridCell[][], id: string };
+      if (receivedMessage.type === 'GRID_UPDATE' && component.gridPackage._id === receivedMessage.id) {
+        component.applyGridUpdate(receivedMessage.grid);
+      }
+    });
+
+    tick();
+
+    expect(component.gridPackage.grid).toEqual(mockGrid);
+    expect(component.gridHeight).toBe(mockGrid.length);
+    expect(component.gridWidth).toBe(mockGrid[0].length);
+  }));
 });
 
 

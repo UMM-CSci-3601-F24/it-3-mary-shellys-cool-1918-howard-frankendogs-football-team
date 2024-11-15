@@ -29,13 +29,13 @@ export class MockGridService extends GridService {
     super(null);
   }
 
-  getGrids(): Observable<GridPackage[]> {
-    return of(MockGridService.testGrids);
-  }
+  // getGrids(): Observable<GridPackage[]> {
+  //   return of(MockGridService.testGrids);
+  // }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  saveGrid(gridData: Partial<GridPackage>): Observable<string> {
-    return of('newGridId');
-  }
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // saveGrid(gridData: Partial<GridPackage>): Observable<string> {
+  //   return of('newGridId');
+  // }
 
 }

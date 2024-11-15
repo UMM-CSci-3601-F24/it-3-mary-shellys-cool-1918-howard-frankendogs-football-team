@@ -75,7 +75,7 @@ export class GridComponent {
     });
   }
 
-  private applyGridUpdate(grid: GridCell[][]) {
+  applyGridUpdate(grid: GridCell[][]) {
     this.gridPackage.grid = grid;
     this.gridHeight = grid.length;
     this.gridWidth = grid[0].length;

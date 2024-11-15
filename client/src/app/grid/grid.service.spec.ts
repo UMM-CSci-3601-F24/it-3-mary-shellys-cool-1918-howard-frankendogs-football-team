@@ -102,4 +102,14 @@ describe('GridService', () => {
       })
     }));
   });
+
+  describe('When saveGridWithRoomId is called', () => {
+    it("calls /grids with `post` command and roomId", waitForAsync(() => {
+      const mockedMethod = spyOn(httpClient, "post").and.returnValue(of("hehe"));
+      gridService.saveGridWithRoomId("roomId", testGrid).subscribe(() => {
+        expect(mockedMethod).withContext('one call').toHaveBeenCalledTimes(1);
+        expect(mockedMethod).withContext('talks to correct endpoint').toHaveBeenCalledWith("/api/grids", testGrid);
+      });
+    }));
+  });
 });
