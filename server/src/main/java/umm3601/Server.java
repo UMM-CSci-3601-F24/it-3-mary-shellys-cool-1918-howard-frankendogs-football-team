@@ -4,7 +4,6 @@ import io.javalin.Javalin;
 import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.websocket.WsContext;
 
-import java.net.http.WebSocket;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
