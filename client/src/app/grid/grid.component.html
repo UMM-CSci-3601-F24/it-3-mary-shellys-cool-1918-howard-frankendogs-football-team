@@ -1,16 +1,18 @@
-<div>
-  <button class = "save-button" data-test="saveGridButton" (click)="saveGrid()">Save Grid</button>
+@if (this.gridPackage.roomID !== null){
   <div>
-    <h3>Saved Grids</h3>
-    @for (grid of this.savedGrids; track grid._id) {
-      <div>
-        <button routerLink="/grid/{{grid._id}}" (click)="loadGrid(grid._id)"  >{{ grid._id }}</button>
-      </div>
-    }
+    <button class = "save-button" data-test="saveGridButton" (click)="saveGrid()">Save Grid</button>
+    <div>
+      <h3>Saved Grids</h3>
+      @for (grid of this.savedGrids; track grid._id) {
+        <div>
+          <button routerLink="/{{gridPackage.roomID}}/grid/{{grid._id}}" (click)="loadGrid(grid._id)"  >{{ grid._id }}</button>
+        </div>
+      }
+    </div>
   </div>
-</div>
-<div>
+}
 
+<div>
 <p>Height</p>
 <input matInput
   [(ngModel)]="gridHeight"
@@ -39,6 +41,7 @@
             [row]="rowIndex"
             [col]="colIndex"
             [grid]="gridPackage.grid"
+            [currentColor]="currentColor"
             [ngStyle]="{'height': cellSize + 'px', 'width': cellSize + 'px'}"
             (gridChange)="onGridChange()"
             ></app-grid-cell>
@@ -47,6 +50,16 @@
       }
     </mat-grid-list>
   </div>
+
+<mat-radio-group
+  aria-labelledby="example-radio-group-label"
+  class="example-radio-group"
+  [(ngModel)]="currentColor">
+  @for (highlight of highlight; track highlight) {
+    <mat-radio-button class="example-radio-button" [value]="highlight">{{highlight}}</mat-radio-button>
+  }
+</mat-radio-group>
+
   <input matInput
   [(ngModel)]="cellSize"
   type="number"

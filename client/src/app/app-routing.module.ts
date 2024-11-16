@@ -9,8 +9,9 @@ import { AddWordComponent } from './anagram/add-word.component';
 // If 'users/:id' came first, it would accidentally catch requests to
 // 'users/new'; the router would just think that the string 'new' is a user ID.
 const routes: Routes = [
-  {path: 'grid', component: GridComponent, title: 'grid'},
-  {path: 'grid/:id', component: GridComponent, title: 'grid'},
+  {path: 'grid', component: GridComponent, title: 'Grid'},
+  {path: ':roomID/grid/:id', component: GridComponent, title: 'Grid'},
+  {path: ':roomID/grids', component: GridComponent, title: 'Grids'},
 
   {path: 'anagram', component: WordListComponent, title: 'Anagram'},
   {path: 'anagram/new', component: AddWordComponent, title: 'Add Word'},

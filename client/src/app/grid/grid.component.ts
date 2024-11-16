@@ -9,13 +9,12 @@ import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GridService } from './grid.service';
 import { GridPackage } from './gridPackage';
-// import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-// import { catchError, map, of, switchMap } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
-// import { Grid } from './grid';
+import { RoomService } from '../room.service';
+import {MatRadioModule} from '@angular/material/radio';
 
 @Component({
   selector: 'app-grid-component',
@@ -26,6 +25,7 @@ import { WebSocketService } from '../web-socket.service';
   imports: [
     MatFormFieldModule,
     MatInputModule,
+    MatRadioModule,
     FormsModule,
     CommonModule,
     GridCellComponent,
@@ -35,6 +35,10 @@ import { WebSocketService } from '../web-socket.service';
   ],
 })
 export class GridComponent {
+  currentColor: string;
+  highlight: string[] = ['pink', 'yellow', 'green'];
+
+
   gridHeight: number = 10;
   gridWidth: number = 10;
   cellSize: number = 40;
@@ -42,8 +46,8 @@ export class GridComponent {
   gridPackage: GridPackage = {
     grid: [],
     _id: '',
-    owner: 'currentUser',
-  };
+    roomID: ''
+  }
 
   savedGrids: GridPackage[];
 
@@ -60,8 +64,12 @@ export class GridComponent {
     private renderer: Renderer2,
     public elRef: ElementRef,
     private gridService: GridService,
-    private webSocketService: WebSocketService
-  ) {
+    private roomService: RoomService,
+    private webSocketService: WebSocketService) {
+    this.route.paramMap.subscribe(params => {
+      this.gridPackage.roomID = params.get('roomID');
+      console.log(params.get('roomID'));
+    });
     this.initializeGrid();
     this.loadSavedGrids();
 
@@ -73,16 +81,11 @@ export class GridComponent {
         msg.type === 'GRID_UPDATE' &&
         // checks that grid you have open is the same as the one that was updated
         this.gridPackage._id == (message as { id: string }).id
-      ) {
-        this.applyGridUpdate(msg.grid);
-      } else {
-        return;
-      }
-
+      ) { this.applyGridUpdate(msg.grid); }
     });
   }
 
-  private applyGridUpdate(grid: GridCell[][]) {
+  applyGridUpdate(grid: GridCell[][]) {
     this.gridPackage.grid = grid;
     this.gridHeight = grid.length;
     this.gridWidth = grid[0].length;
@@ -115,26 +118,26 @@ export class GridComponent {
   saveGrid() {
     if (this.gridPackage._id !== null && this.gridPackage._id !== '') {
       const gridData: Partial<GridPackage> = {
-        owner: this.gridPackage.owner,
+        roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id,
       };
-      this.gridService.saveGrid(gridData).subscribe(() => {
+      this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
         this.loadSavedGrids();
       });
     } else {
-      const gridData: Partial<GridPackage> = {
-        owner: this.gridPackage.owner,
-        grid: this.gridPackage.grid,
+      const gridData:Partial<GridPackage> = {
+        roomID: this.gridPackage.roomID,
+        grid: this.gridPackage.grid
       };
-      this.gridService.saveGrid(gridData).subscribe(() => {
+      this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
         this.loadSavedGrids();
       });
     }
   }
 
   loadSavedGrids() {
-    this.gridService.getGrids().subscribe((grids) => {
+    this.roomService.getGridsByRoomId(this.gridPackage.roomID).subscribe(grids => {
       this.savedGrids = grids;
     });
   }
@@ -143,18 +146,19 @@ export class GridComponent {
     this.gridService.getGridById(id).subscribe((activeGrid) => {
       console.log(activeGrid._id);
 
-      this.gridPackage._id = activeGrid._id;
-      this.gridPackage.owner = activeGrid.owner;
-      this.applyGridUpdate(activeGrid.grid);
-    });
+        this.gridPackage._id = activeGrid._id;
+        this.gridPackage.roomID = activeGrid.roomID;
+        this.applyGridUpdate(activeGrid.grid);
+      },
+    );
   }
 
   onGridChange() {
     const message = {
       type: 'GRID_UPDATE',
       grid: this.gridPackage.grid,
-      owner: this.gridPackage.owner,
-      id: this.gridPackage._id,
+      roomID: this.gridPackage.roomID,
+      id: this.gridPackage._id
     };
     console.log(message + "\n Inside onGridChange() in grid.component.ts" );
     this.webSocketService.sendMessage(message);
@@ -274,6 +278,7 @@ export class GridComponent {
       }
     });
   }
+
 
   /**
    * Moves the focus to the specified cell.
