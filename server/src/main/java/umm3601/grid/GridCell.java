@@ -5,4 +5,5 @@ public class GridCell {
     public boolean editable;
     public String value;
     public Edges edges;
+    public String color;
 }

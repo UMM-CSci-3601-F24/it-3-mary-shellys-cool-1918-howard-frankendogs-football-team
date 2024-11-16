@@ -9,13 +9,11 @@ import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GridService } from './grid.service';
 import { GridPackage } from './gridPackage';
-// import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-// import { catchError, map, of, switchMap } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
-// import { Grid } from './grid';
+import { RoomService } from '../room.service';
 import {MatRadioModule} from '@angular/material/radio';
 
 @Component({
@@ -48,7 +46,7 @@ export class GridComponent {
   gridPackage: GridPackage = {
     grid: [],
     _id: '',
-    owner: 'currentUser'
+    roomID: ''
   }
 
   savedGrids: GridPackage[];
@@ -62,19 +60,27 @@ export class GridComponent {
   private focusTimeout: ReturnType<typeof setTimeout>;
   private route = inject(ActivatedRoute);
 
-  constructor(private renderer: Renderer2, public elRef: ElementRef, private gridService: GridService, private webSocketService: WebSocketService) {
+  constructor(
+    private renderer: Renderer2,
+    public elRef: ElementRef,
+    private gridService: GridService,
+    private roomService: RoomService,
+    private webSocketService: WebSocketService) {
+    this.route.paramMap.subscribe(params => {
+      this.gridPackage.roomID = params.get('roomID');
+      console.log(params.get('roomID'));
+    });
     this.initializeGrid();
     this.loadSavedGrids();
     this.webSocketService.getMessage().subscribe((message: unknown) => {
       const msg = message as { type: string, grid: GridCell[][], id: string};
       if (msg.type === 'GRID_UPDATE' && this.gridPackage._id == (message as { id: string }).id) {
         this.applyGridUpdate(msg.grid);
-        // this.applyGridUpdate((message as { grid: GridCell[][] }).grid);
       }
     });
   }
 
-  private applyGridUpdate(grid: GridCell[][]) {
+  applyGridUpdate(grid: GridCell[][]) {
     this.gridPackage.grid = grid;
     this.gridHeight = grid.length;
     this.gridWidth = grid[0].length;
@@ -107,26 +113,26 @@ export class GridComponent {
   saveGrid() {
     if (this.gridPackage._id !== null && this.gridPackage._id !== ''){
       const gridData: Partial<GridPackage> = {
-        owner: this.gridPackage.owner,
+        roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id
       };
-      this.gridService.saveGrid(gridData).subscribe(() => {
+      this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
         this.loadSavedGrids();
       });
     } else {
-      const gridData: Partial<GridPackage> = {
-        owner: this.gridPackage.owner,
+      const gridData:Partial<GridPackage> = {
+        roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid
       };
-      this.gridService.saveGrid(gridData).subscribe(() => {
+      this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
         this.loadSavedGrids();
       });
     }
   }
 
   loadSavedGrids() {
-    this.gridService.getGrids().subscribe(grids => {
+    this.roomService.getGridsByRoomId(this.gridPackage.roomID).subscribe(grids => {
       this.savedGrids = grids;
     });
   }
@@ -137,7 +143,7 @@ export class GridComponent {
         console.log(activeGrid._id);
 
         this.gridPackage._id = activeGrid._id;
-        this.gridPackage.owner = activeGrid.owner;
+        this.gridPackage.roomID = activeGrid.roomID;
         this.applyGridUpdate(activeGrid.grid);
       },
     );
@@ -147,7 +153,7 @@ export class GridComponent {
     const message = {
       type: 'GRID_UPDATE',
       grid: this.gridPackage.grid,
-      owner: this.gridPackage.owner,
+      roomID: this.gridPackage.roomID,
       id: this.gridPackage._id
 
     };

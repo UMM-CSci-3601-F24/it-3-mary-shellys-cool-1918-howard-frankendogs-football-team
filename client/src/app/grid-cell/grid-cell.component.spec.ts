@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { GridCellComponent } from './grid-cell.component';
+import { GridCell } from './grid-cell';
 
 describe('GridCellComponent', () => {
   let component: GridCellComponent;
@@ -325,5 +326,64 @@ describe('GridCellComponent', () => {
     expect(cellElement.classList).toContain('bold-right');
     expect(cellElement.classList).toContain('bold-bottom');
     expect(cellElement.classList).toContain('bold-left');
+  });
+});
+
+describe('GridCellComponent toggleEdge', () => {
+  let component: GridCellComponent;
+  let fixture: ComponentFixture<GridCellComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      // declarations: [ ],
+      imports: [ FormsModule , GridCellComponent]
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(GridCellComponent);
+    component = fixture.componentInstance;
+    component.gridCell = new GridCell();
+    component.gridCell.edges = { top: false, right: false, bottom: false, left: false };
+    component.row = 1;
+    component.col = 1;
+    component.grid = [
+      [new GridCell(), new GridCell(), new GridCell()],
+      [new GridCell(), component.gridCell, new GridCell()],
+      [new GridCell(), new GridCell(), new GridCell()]
+    ];
+    fixture.detectChanges();
+  });
+
+  it('should toggle the top edge and update the adjacent cell', () => {
+    component.toggleEdge('top', true);
+    expect(component.gridCell.edges.top).toBeTrue();
+    expect(component.grid[0][1].edges.bottom).toBeTrue();
+  });
+
+  it('should toggle the right edge and update the adjacent cell', () => {
+    component.toggleEdge('right', true);
+    expect(component.gridCell.edges.right).toBeTrue();
+    expect(component.grid[1][2].edges.left).toBeTrue();
+  });
+
+  it('should toggle the bottom edge and update the adjacent cell', () => {
+    component.toggleEdge('bottom', true);
+    expect(component.gridCell.edges.bottom).toBeTrue();
+    expect(component.grid[2][1].edges.top).toBeTrue();
+  });
+
+  it('should toggle the left edge and update the adjacent cell', () => {
+    component.toggleEdge('left', true);
+    expect(component.gridCell.edges.left).toBeTrue();
+    expect(component.grid[1][0].edges.right).toBeTrue();
+  });
+
+  it('should not update any adjacent cell if the edge is invalid', () => {
+    component.toggleEdge('invalid', true);
+    expect(component.gridCell.edges.top).toBeFalse();
+    expect(component.gridCell.edges.right).toBeFalse();
+    expect(component.gridCell.edges.bottom).toBeFalse();
+    expect(component.gridCell.edges.left).toBeFalse();
   });
 });
