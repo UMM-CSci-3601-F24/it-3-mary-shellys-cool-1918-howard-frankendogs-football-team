@@ -156,6 +156,10 @@ describe('GridCellComponent', () => {
     expect(cellEditableElement.classList).not.toContain('blacked-out');
   });
 
+  it('should return true if all edges are true', () => {
+
+  });
+
   it('should disallow input into the cell', () => {
     const fixture = TestBed.createComponent(GridCellComponent);
     const component = fixture.componentInstance;

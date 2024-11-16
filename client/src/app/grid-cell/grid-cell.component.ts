@@ -91,6 +91,19 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
+  edgeCheck() {
+    if (this.gridCell.edges['top'] &&
+    this.gridCell.edges['right'] &&
+    this.gridCell.edges['bottom'] &&
+    this.gridCell.edges['left'])
+    {
+      this.setColor('black');
+  } else {
+      this.setColor('');
+  }
+
+  }
+
   /**
    * toggles the both this cells edge and adjacent cells edge
    * @param edge
@@ -103,6 +116,7 @@ export class GridCellComponent {
           this.grid[this.row - 1][this.col].edges.bottom =
             this.gridCell.edges.top;
         }
+        this.edgeCheck();
         break;
       case 'right':
         this.gridCell.edges.right = !this.gridCell.edges.right;
@@ -110,6 +124,7 @@ export class GridCellComponent {
           this.grid[this.row][this.col + 1].edges.left =
             this.gridCell.edges.right;
         }
+        this.edgeCheck();
         break;
       case 'bottom':
         this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
@@ -117,6 +132,7 @@ export class GridCellComponent {
           this.grid[this.row + 1][this.col].edges.top =
             this.gridCell.edges.bottom;
         }
+        this.edgeCheck();
         break;
       case 'left':
         this.gridCell.edges.left = !this.gridCell.edges.left;
@@ -124,6 +140,7 @@ export class GridCellComponent {
           this.grid[this.row][this.col - 1].edges.right =
             this.gridCell.edges.left;
         }
+        this.edgeCheck();
         break;
       default:
         break;
@@ -140,6 +157,7 @@ export class GridCellComponent {
    * @param event - checks the key clicked
    */
   onClick(event: MouseEvent) {
+    console.log(this.gridCell.color);
     if (event.ctrlKey) {
       if (
         this.gridCell.edges['top'] &&
@@ -158,8 +176,7 @@ export class GridCellComponent {
         }
       }
       this.gridChange.emit();
-    }
-    else if (event.altKey) {
+    } else if (event.altKey) {
       if (
         this.gridCell.edges['top'] &&
         this.gridCell.edges['right'] &&
@@ -183,6 +200,7 @@ export class GridCellComponent {
   onRightClick(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
+    if (this.gridCell.color !== 'black') {
     if (event.button == 2) {
       if (this.gridCell.color !== this.currentColor) {
         this.setColor(this.currentColor);
@@ -192,8 +210,10 @@ export class GridCellComponent {
     }
     this.gridChange.emit();
   }
+  }
 
   onDrag(event: MouseEvent) {
+    if (this.gridCell.color !== 'black') {
     if (event.shiftKey && event.button == 0) {
       if (this.gridCell.color !== this.currentColor) {
         this.setColor(this.currentColor);
@@ -203,8 +223,9 @@ export class GridCellComponent {
     }
     this.gridChange.emit();
   }
+  }
 
-   /**
+  /**
    * Handles keydown gridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
    * @param event - The keyboard event.
    */
