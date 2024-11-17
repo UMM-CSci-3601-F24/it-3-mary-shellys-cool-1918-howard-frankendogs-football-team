@@ -16,8 +16,12 @@ export class GridService {
     // console.log(`save grid was called with id: ${gridData._id}`);
 
     console.log(`save grid was called with grid{0,0} : ${gridData.grid[0][0].value}`);
-    console.log(`save grid was called with owner: ${gridData.owner}`);
+    console.log(`save grid was called with owner: ${gridData.roomID}`);
     return this.httpClient.post<{id: string}>(environment.apiUrl + 'grids', gridData).pipe(map(response => response.id));
+  }
+
+  saveGridWithRoomId(roomId: string, gridData: Partial<GridPackage>): Observable<string> {
+    return this.httpClient.post<{id: string}>(`${environment.apiUrl}grids`, gridData).pipe(map(response => response.id));
   }
 
   getGrids() {
