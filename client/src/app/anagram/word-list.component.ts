@@ -131,11 +131,11 @@ export class WordListComponent {
    * pulls group from the wordGroup search box as of 10/20/24
    * @param group - name of wordGroup to be deleted
    */
-  deleteWordGroup(group: string) {
-    this.wordService.deleteWordGroup(group).subscribe(() => {
-      this.snackBar.open(`We deleted a word group!`, 'OK', {duration: 6000});
-    })
-  }
+  // deleteWordGroup(group: string) {
+  //   this.wordService.deleteWordGroup(group).subscribe(() => {
+  //     this.snackBar.open(`We deleted a word group!`, 'OK', {duration: 6000});
+  //   })
+  // }
 
   max(arg0: number,arg1: number): number {
     if (arg0 >= arg1){

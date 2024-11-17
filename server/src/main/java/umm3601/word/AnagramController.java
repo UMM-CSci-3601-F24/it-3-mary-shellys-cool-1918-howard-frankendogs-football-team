@@ -90,7 +90,7 @@ public class AnagramController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
-  private Bson constructFilter(Context ctx) {
+  Bson constructFilter(Context ctx) {
     // names data to be logged
     List<Bson> filters = new ArrayList<>();
     Search newSearch = new Search();

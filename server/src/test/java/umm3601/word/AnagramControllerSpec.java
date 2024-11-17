@@ -1,12 +1,15 @@
 package umm3601.word;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.regex;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+// import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,10 +22,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
+// import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -301,38 +306,108 @@ class AnagramControllerSpec {
   }
 
   @Test
-    public void testExactFilter() throws IOException {
+  public void testConstructFilterExactWordKey() {
 
-        Map<String, List<String>> queryParams = new HashMap<>();
+    Word newWord = new Word();
+    newWord.word = "word";
+    newWord.wordGroup = "testwords";
+    when(ctx.queryParam("filterType")).thenReturn("exact");
+    when(ctx.queryParam("word")).thenReturn("word");
 
-        when(mockContext.queryParam("filterType")).thenReturn("exact");
-        when(mockContext.queryParam("word")).thenReturn("apple");
-        when(mockContext.queryParamMap()).thenReturn(Map.of("word", List.of("apple")));
+    anagramController.constructFilter(ctx);
 
-        // Act: Call the constructFilter method
-        Bson result = anagramController.constructFilter(mockContext);
-
-        // Assert: Check if the filter was created with the correct regex pattern
-        assertNotNull(result);
-        // Here, you would need to check if the regex filter is correctly set in `result`.
-        // Since Bson doesn't expose the exact structure easily, you might need additional inspection.
-    }
-
+    verify(ctx).queryParam("filterType");
+    List<Word> wordDocuments = new ArrayList<>();
+    wordDocuments.add(newWord);
+    assertEquals(1, wordDocuments.size());
+    assertEquals("word", wordDocuments.get(0).word);
+  }
 
   @Test
-    public void testContainsFilter() {
-        // Arrange: Set the query parameters for "contains" filter
-        when(mockContext.queryParam("filterType")).thenReturn("contains");
-        when(mockContext.queryParam("word")).thenReturn("apple");
-        when(mockContext.queryParamMap()).thenReturn(Map.of("word", List.of("apple")));
+  public void testConstructFilterContainsWordKey() {
 
-        // Act: Call the constructFilter method
-        Bson result = controller.constructFilter(mockContext);
+    Word newWord = new Word();
+    newWord.word = "word";
+    newWord.wordGroup = "testwords";
+    when(ctx.queryParam("filterType")).thenReturn("contains");
+    when(ctx.queryParam("word")).thenReturn("cat");
 
-        // Assert: Check if multiple regex filters are created for each character
-        assertNotNull(result);
-        // Further assertions can be made on the generated filters, which might require inspecting the filter list.
+    anagramController.constructFilter(ctx);
+
+    verify(ctx).queryParam("filterType");
+    List<Word> wordDocuments = new ArrayList<>();
+    wordDocuments.add(newWord);
+    assertEquals(1, wordDocuments.size());
+    assertEquals("word", wordDocuments.get(0).word);
+  }
+
+  @Test
+  void canGetWordsWithExactSi() throws IOException {
+    String targetHas = "si";
+    Map<String, List<String>> queryParams = new HashMap<>();
+
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {targetHas}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(targetHas);
+    when(ctx.queryParam("filterType")).thenReturn("exact");
+
+    Validation validation = new Validation();
+    Validator<String> validator = validation.validator(AnagramController.WORD_KEY, String.class, targetHas);
+
+    when(ctx.queryParamAsClass(AnagramController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
+
+    anagramController.getWords(ctx);
+
+    verify(ctx).json(searchContextCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+
+    assertEquals(1, searchContextCaptor.getValue().words.size());
+
+    for (Word word : searchContextCaptor.getValue().words) {
+      assertTrue(word.word.contains(targetHas));
     }
+
+    List<String> words = searchContextCaptor.getValue().words.stream()
+        .map(word -> word.word).collect(Collectors.toList());
+    assertTrue(words.contains("sigma"));
+  }
+
+  @Test
+  void canGetWordsWithContainsSi() throws IOException {
+    String targetContains = "si";
+    Map<String, List<String>> queryParams = new HashMap<>();
+
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {targetContains}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(targetContains);
+    when(ctx.queryParam("filterType")).thenReturn("contains");
+
+    Validation validation = new Validation();
+    Validator<String> validator = validation.validator(AnagramController.WORD_KEY, String.class, targetContains);
+
+    when(ctx.queryParamAsClass(AnagramController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
+
+    anagramController.getWords(ctx);
+
+    verify(ctx).json(searchContextCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+
+    assertEquals(3, searchContextCaptor.getValue().words.size());
+
+    for (Word word : searchContextCaptor.getValue().words) {
+      assertTrue(word.word.contains("s"));
+      assertTrue(word.word.contains("i"));
+    }
+
+    List<String> words = searchContextCaptor.getValue().words.stream()
+        .map(word -> word.word).collect(Collectors.toList());
+    assertTrue(words.contains("sigma"));
+    assertTrue(words.contains("skibbidy"));
+    assertTrue(words.contains("playstation"));
+  }
+
+
+
   @Test
   public void getWordWithExistentId() throws IOException {
     String id = wordId.toHexString();
@@ -345,6 +420,53 @@ class AnagramControllerSpec {
     assertEquals("janky", wordCaptor.getValue().word);
     assertEquals(wordId.toHexString(), wordCaptor.getValue()._id);
   }
+
+  // @Test
+  // public void exactFilterWorks() throws IOException {
+  //   when(ctx.queryParam("word")).thenReturn("x");
+  //   when(ctx.queryParam("filterType")).thenReturn("contains");
+
+  //   anagramController.getWords(ctx);
+
+
+
+  // }
+
+// @Test
+// public void testConstructFilterExact() throws IOException {
+//    when(ctx.queryParamMap()).thenReturn(Map.of("word", List.of("test"), "filterType", List.of("exact")));
+//    when(ctx.queryParam("word")).thenReturn("test");
+//    when(ctx.queryParam("filterType")).thenReturn("exact");
+
+//    anagramController.constructFilter(ctx);
+
+//    Pattern pattern = Pattern.compile(Pattern.quote("test"), Pattern.CASE_INSENSITIVE);
+//   //  Bson expectedFilter = regex("word", pattern);
+
+//   //  assertEquals(expectedFilter, );
+//   }
+
+// @Test public void testConstructFilterContains() throws IOException {
+
+//   when(ctx.queryParamMap()).thenReturn(Map.of("word", List.of("test"), "filterType", List.of("contains")));
+//   when(ctx.queryParam("word")).thenReturn("test");
+//   when(ctx.queryParam("filterType")).thenReturn("contains");
+
+//   anagramController.constructFilter(ctx);
+
+//   List<Bson> expectedFilters = new ArrayList<>();
+
+//   for (char c : "test".toCharArray()) {
+//     expectedFilters.add(regex("word", Pattern.compile(Pattern.quote(String.valueOf(c)), Pattern.CASE_INSENSITIVE)));
+//   }
+
+//   // Bson expectedFilter = and(expectedFilters);
+
+//   System.out.println();
+
+//   // assertEquals(expectedFilter, filter);
+// }
+
 
   @Test
   public void getTodoWithBadId() throws IOException {
