@@ -6,6 +6,10 @@ export class GridPage {
   }
 
   saveGrid() {
-    return cy.get("[data-test=saveGridButton]").click();
+    return cy.get('[data-test=saveGridButton]').click();
+  }
+
+  getId() {
+    return cy.task('this.gridPackage._id');
   }
 }

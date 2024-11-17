@@ -3,10 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
+// import { AsyncPipe } from '@angular/common';
 import { GridCell } from './grid-cell';
 import { Edges } from './edges';
-
+// import { GridComponent } from '../grid/grid.component';
 
 @Component({
   selector: 'app-grid-cell',
@@ -15,7 +16,8 @@ import { Edges } from './edges';
   providers: [],
   standalone: true,
   imports: [
-    AsyncPipe,
+    // AsyncPipe,
+    // GridComponent,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -24,17 +26,13 @@ import { Edges } from './edges';
   ],
 })
 export class GridCellComponent {
-
   @Input({ required: true }) gridCell: GridCell;
   @Input({}) col: number;
   @Input({}) row: number;
   @Input({}) grid: GridCell[][];
+  @Input() currentColor: string;
+
   @Output() gridChange = new EventEmitter<void>();
-
-
-  backgroundColor: string = "black";
-
-
 
   /**
    * Constructor for GridCellComponent.
@@ -42,11 +40,11 @@ export class GridCellComponent {
    */
   constructor() {
     if (!this.gridCell) {
-      this.gridCell = new GridCell;
+      this.gridCell = new GridCell();
     }
   }
 
-   /**
+  /**
    * Handles input changes and updates the grid cell value if valid.
    * @param value - The input value to be set.
    */
@@ -78,6 +76,14 @@ export class GridCellComponent {
   }
 
   /**
+   * sets the color of the cell
+   * @param color - the color that the cell-background
+   */
+  setColor(color: string) {
+    this.gridCell.color = color;
+  }
+
+  /**
    * Sets the editable state of the grid cell.
    * @param state - The editable state to be set.
    */
@@ -85,61 +91,110 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
-  toggleEdge(edge: string) {
+  /**
+   * toggles the both this cells edge and adjacent cells edge
+   * @param edge
+   */
+  toggleEdge(edge: string, emitChange: boolean) {
     switch (edge) {
       case 'top':
         this.gridCell.edges.top = !this.gridCell.edges.top;
         if (this.grid && this.grid[this.row - 1]) {
-          this.grid[this.row - 1][this.col].edges.bottom = this.gridCell.edges.top;
+          this.grid[this.row - 1][this.col].edges.bottom =
+            this.gridCell.edges.top;
         }
         break;
       case 'right':
         this.gridCell.edges.right = !this.gridCell.edges.right;
         if (this.grid && this.grid[this.row][this.col + 1]) {
-          this.grid[this.row][this.col + 1].edges.left = this.gridCell.edges.right;
+          this.grid[this.row][this.col + 1].edges.left =
+            this.gridCell.edges.right;
         }
         break;
       case 'bottom':
         this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
         if (this.grid && this.grid[this.row + 1]) {
-          this.grid[this.row + 1][this.col].edges.top = this.gridCell.edges.bottom;
+          this.grid[this.row + 1][this.col].edges.top =
+            this.gridCell.edges.bottom;
         }
         break;
       case 'left':
         this.gridCell.edges.left = !this.gridCell.edges.left;
         if (this.grid && this.grid[this.row][this.col - 1]) {
-          this.grid[this.row][this.col - 1].edges.right = this.gridCell.edges.left;
+          this.grid[this.row][this.col - 1].edges.right =
+            this.gridCell.edges.left;
         }
         break;
       default:
         break;
     }
-    this.gridChange.emit();
+    if (emitChange) {
+      this.gridChange.emit();
+    }
   }
 
   /**
-   * Blacks out a cell and its edges with ctrl, undoes this with alt
+   * Blacks out a cell and its edges with ctrl
+   *
+   * Keeps all edges bolded, but makes the background white with alt
    * @param event - checks the key clicked
    */
-  onClick(event: MouseEvent) { // blacks out cell and edges
+  onClick(event: MouseEvent) {
     if (event.ctrlKey) {
-      if (this.gridCell.edges["top"] && this.gridCell.edges["right"] && this.gridCell.edges["bottom"] && this.gridCell.edges["left"]) {
+      if (
+        this.gridCell.edges['top'] &&
+        this.gridCell.edges['right'] &&
+        this.gridCell.edges['bottom'] &&
+        this.gridCell.edges['left']
+      ) {
         for (const edge in this.gridCell.edges) {
-            this.toggleEdge(edge);
+          this.toggleEdge(edge, false);
         }
       } else {
         for (const edge in this.gridCell.edges) {
           if (this.gridCell.edges[edge] === false) {
-            this.toggleEdge(edge);
+            this.toggleEdge(edge, false);
           }
         }
-       }
+      }
+      this.gridChange.emit();
+    }
+    else if (event.altKey) {
+      if (
+        this.gridCell.edges['top'] &&
+        this.gridCell.edges['right'] &&
+        this.gridCell.edges['bottom'] &&
+        this.gridCell.edges['left']
+      ) {
+        this.setColor('white');
+        console.log(this.gridCell.color);
+        this.gridChange.emit();
       }
     }
+  }
 
+  /**
+   * this will highlight a cell upon pressing the right click
+   *
+   * it will un-highlight if the cell you press on has the same color as the color
+   * you have selected (the selected color is from the parent)
+   * @param event - rightclick
+   */
+  onRightClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.button == 2) {
+      if (this.gridCell.color !== this.currentColor) {
+        this.setColor(this.currentColor);
+        console.log(this.currentColor);
+      } else {
+        this.setColor('');
+      }
+    }
+    this.gridChange.emit();
+  }
 
-
-   /**
+  /**
    * Handles keydown gridCell.edges.top ANDvents to toggle the bold state of the grid cell edges.
    * @param event - The keyboard event.
    */
@@ -148,16 +203,16 @@ export class GridCellComponent {
       event.preventDefault();
       switch (event.key) {
         case 'ArrowUp':
-          this.toggleEdge('top');
+          this.toggleEdge('top', true);
           break;
         case 'ArrowRight':
-          this.toggleEdge('right');
+          this.toggleEdge('right', true);
           break;
         case 'ArrowDown':
-          this.toggleEdge('bottom');
+          this.toggleEdge('bottom', true);
           break;
         case 'ArrowLeft':
-          this.toggleEdge('left');
+          this.toggleEdge('left', true);
           break;
         default:
           break;

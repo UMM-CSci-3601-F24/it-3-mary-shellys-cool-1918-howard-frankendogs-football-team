@@ -1,12 +1,19 @@
-package umm3601.grid;
+package umm3601.room;
+
 import org.mongojack.Id;
 import org.mongojack.ObjectId;
 
 @SuppressWarnings({"VisibilityModifier"})
-public class Grid {
+public class Room {
   @ObjectId @Id
   @SuppressWarnings({"memberName"})
   public String _id;
-  public String roomID;
-  public GridCell[][] grid;
+
+  public String getId() {
+    return _id;
+  }
+
+  public void setId(String id) {
+    this._id = id;
+  }
 }
