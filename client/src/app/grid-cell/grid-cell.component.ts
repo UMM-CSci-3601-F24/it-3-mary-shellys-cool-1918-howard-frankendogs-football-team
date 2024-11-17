@@ -92,16 +92,16 @@ export class GridCellComponent {
   }
 
   edgeCheck() {
-    if (this.gridCell.edges['top'] &&
-    this.gridCell.edges['right'] &&
-    this.gridCell.edges['bottom'] &&
-    this.gridCell.edges['left'])
-    {
+    if (
+      this.gridCell.edges['top'] &&
+      this.gridCell.edges['right'] &&
+      this.gridCell.edges['bottom'] &&
+      this.gridCell.edges['left']
+    ) {
       this.setColor('black');
-  } else {
+    } else {
       this.setColor('');
-  }
-
+    }
   }
 
   /**
@@ -201,28 +201,32 @@ export class GridCellComponent {
     event.preventDefault();
     event.stopPropagation();
     if (this.gridCell.color !== 'black') {
-    if (event.button == 2) {
-      if (this.gridCell.color !== this.currentColor) {
-        this.setColor(this.currentColor);
-      } else {
-        this.setColor('');
+      if (event.button == 2) {
+        if (this.gridCell.color !== this.currentColor) {
+          this.setColor(this.currentColor);
+        } else {
+          this.setColor('');
+        }
       }
+      this.gridChange.emit();
     }
-    this.gridChange.emit();
-  }
   }
 
+  /**
+   * when you hold shift with a color selected, a cell will be highlighted when your mouse leaves the cell
+   * @param event - checks that shift key is held
+   */
   onDrag(event: MouseEvent) {
     if (this.gridCell.color !== 'black') {
-    if (event.shiftKey && event.button == 0) {
-      if (this.gridCell.color !== this.currentColor) {
-        this.setColor(this.currentColor);
-      } else {
-        this.setColor('');
+      if (event.shiftKey) {
+        if (this.gridCell.color !== this.currentColor) {
+          this.setColor(this.currentColor);
+        } else {
+          this.setColor('');
+        }
       }
+      this.gridChange.emit();
     }
-    this.gridChange.emit();
-  }
   }
 
   /**
