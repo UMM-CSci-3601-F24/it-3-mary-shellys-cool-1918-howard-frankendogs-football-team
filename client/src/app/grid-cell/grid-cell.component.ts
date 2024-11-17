@@ -99,8 +99,19 @@ export class GridCellComponent {
       this.gridCell.edges['left']
     ) {
       this.setColor('black');
-    } else {
-      this.setColor('');
+    } else switch(this.gridCell.color) {
+        case 'pink':
+          this.setColor('pink');
+          break;
+        case 'yellow':
+          this.setColor('yellow');
+          break;
+        case 'green':
+          this.setColor('green');
+          break;
+        default:
+          this.setColor('');
+          break;
     }
   }
 
