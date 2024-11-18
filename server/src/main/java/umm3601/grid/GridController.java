@@ -22,6 +22,8 @@ public class GridController implements Controller {
 
   private static final String API_GRID_BY_ID = "/api/grids/{id}";
   private static final String API_GRIDS = "/api/grids";
+  private static final String API_GRID_BY_ROOM = "/api/{roomID}/grids";
+
   private final JacksonMongoCollection<Grid> gridCollection;
 
   public GridController(MongoDatabase database) {
@@ -35,7 +37,7 @@ public class GridController implements Controller {
   public void saveGrid(Context ctx) {
     String body = ctx.body();
     Grid grid = ctx.bodyValidator(Grid.class)
-        .check(td -> td.owner != null, "Owner must be non-empty")
+        .check(td -> td.roomID != null, "roomID must be non-empty")
         .check(td -> td.grid != null, "Error with grid, grid was : " + body)
         .getOrThrow(m -> new RuntimeJsonMappingException("Failed to parse body as grid: " + body));
     System.err.println(grid._id);
@@ -71,9 +73,18 @@ public class GridController implements Controller {
 
   public void getGrids(Context ctx) {
     System.out.println("entered getGrids() in grid controller.java");
-
     ArrayList<Grid> gridsList = gridCollection
         .find().into(new ArrayList<>());
+    ctx.json(gridsList);
+    ctx.status(HttpStatus.OK);
+  }
+
+  public void getGridsByRoom(Context ctx) {
+    System.out.println("entered getGridsByRoom() in grid controller.java");
+    String roomID = ctx.pathParam("roomID");
+
+    ArrayList<Grid> gridsList = gridCollection
+        .find(eq("roomID", roomID)).into(new ArrayList<>());
     ctx.json(gridsList);
     ctx.status(HttpStatus.OK);
   }
@@ -82,6 +93,7 @@ public class GridController implements Controller {
   public void addRoutes(Javalin server) {
     server.get(API_GRID_BY_ID, this::getGrid);
     server.get(API_GRIDS, this::getGrids);
+    server.get(API_GRID_BY_ROOM, this::getGridsByRoom);
     server.post(API_GRIDS, this::saveGrid);
   }
 }
