@@ -3,6 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { By } from '@angular/platform-browser';
 import { HomeComponent } from './home.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('Home', () => {
 
@@ -13,8 +15,8 @@ describe('Home', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [MatCardModule, HomeComponent],
-});
+      imports: [MatCardModule, ReactiveFormsModule, HttpClientTestingModule, HomeComponent],
+    });
 
     fixture = TestBed.createComponent(HomeComponent);
 
@@ -38,5 +40,12 @@ describe('Home', () => {
   it('should have the correct text content', () => {
     fixture.detectChanges();
     expect(el.textContent).toContain('This is a home page! It doesn\'t do anything!');
+  });
+
+  it('should create a room and display the room ID', () => {
+    component.roomForm.controls['name'].setValue('Test Room');
+    component.createRoom();
+    fixture.detectChanges();
+    expect(component.createdRoomId).toBeTruthy();
   });
 });
