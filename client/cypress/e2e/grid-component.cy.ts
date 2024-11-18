@@ -26,7 +26,7 @@ describe('Grid Component', () => {
     // like implementing the visual of previously saved grids
 
     //there should be something in the test here that looks at the actual server and checks that a new grid is there
-  });
+  // });
 
   it('should render the grid with default size', () => {
     cy.get('app-grid-component').within(() => {
