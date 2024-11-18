@@ -11,18 +11,27 @@
 </div>
 <div>
 
-<p>Height</p>
+<br>
+<div>
+<p style="margin:0">Height</p>
 <input matInput
   [(ngModel)]="gridHeight"
   type="number"
   (input)="onSizeInput()"
   placeholder="{{gridHeight}}">
-<p>Width</p>
+</div>
+
+<br>
+
+<div>
+<p style="margin:0">Width</p>
 <input matInput
   [(ngModel)]="gridWidth"
   type="number"
   (input)="onSizeInput()"
   placeholder="{{gridWidth}}">
+</div>
+<br>
 
   <div [ngStyle]="{'height': (gridHeight * cellSize) + 'px', 'width': (gridWidth * cellSize) + 'px'}"  >
     <mat-grid-list cols="{{gridWidth}}" gridHeight="1:1" gutterSize="0">
