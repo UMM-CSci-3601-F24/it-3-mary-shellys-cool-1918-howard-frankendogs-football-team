@@ -21,7 +21,6 @@ describe('Grid Component', () => {
     cy.get(':nth-child(3) > button').click(); // these buttons wouldn't show up if it saves, i promise this test actually checks for something
     // cy.url().should('contain', '/seededGrids/grid'); // if i can figure out a way to check url i will otherwise this good enough
   });
-
   it('should render the grid with default size', () => {
     cy.get('app-grid-component').within(() => {
       cy.get('mat-grid-tile').should('have.length', 100);
