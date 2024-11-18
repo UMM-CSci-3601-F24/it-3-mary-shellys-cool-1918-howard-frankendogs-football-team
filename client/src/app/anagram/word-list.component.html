@@ -1,4 +1,5 @@
 <div class="flex-row flex-wrap">
+   <!-- Search Param Entry Box -->
   <div class="flex-row flex-wrap column left">
     <mat-card class="search-card">
       <mat-card-header>
@@ -78,6 +79,7 @@
       </mat-card-content>
     </mat-card>
   </div>
+  <!-- Word List Links -->
   <div class="flex-row column right">
     <mat-card>
     <mat-card-header>Word Lists</mat-card-header>
@@ -88,6 +90,7 @@
 </div>
 <br />
 <div class="flex-row flex-wrap">
+  <!-- Words From Server -->
   <div class="flex-row column left">
     @if(serverFilteredContext()) {
     <div class="flex-1">
@@ -150,6 +153,7 @@
     }
   </div>
   <br />
+  <!-- Search History -->
   <div class="flex-row column right">
     @if(serverFilteredContext()){
     <div class="flex-1">
