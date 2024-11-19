@@ -15,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
 import { RoomService } from '../room.service';
 import {MatRadioModule} from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-grid-component',
@@ -32,6 +33,7 @@ import {MatRadioModule} from '@angular/material/radio';
     MatGridListModule,
     RouterLink,
     MatButtonModule,
+    MatCardModule
   ],
 })
 export class GridComponent {
