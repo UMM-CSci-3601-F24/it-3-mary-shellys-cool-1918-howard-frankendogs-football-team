@@ -50,7 +50,7 @@ export class WordListComponent {
   contains = signal<string|undefined>(undefined);
   group = signal<string|undefined>(undefined);
 
-  filterType = signal<string|undefined>(undefined);
+  filterType = signal<string|undefined>("exact");
 
   errMsg = signal<string|undefined>(undefined);
 
