@@ -47,6 +47,8 @@ public class GridController implements Controller {
     } else {
       gridCollection.insertOne(grid);
     }
+
+
     // ctx.json(Map.of("id", grid._id));
     System.err.println(grid._id);
 
@@ -72,7 +74,6 @@ public class GridController implements Controller {
   }
 
   public void getGrids(Context ctx) {
-    System.out.println("entered getGrids() in grid controller.java");
     ArrayList<Grid> gridsList = gridCollection
         .find().into(new ArrayList<>());
     ctx.json(gridsList);

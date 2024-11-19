@@ -46,7 +46,8 @@ export class GridComponent {
   gridPackage: GridPackage = {
     grid: [],
     _id: '',
-    roomID: ''
+    roomID: '',
+    name: 'PlaceHolderName',
   }
 
   savedGrids: GridPackage[];
@@ -128,6 +129,7 @@ export class GridComponent {
         roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id,
+        name: this.gridPackage.name,
       };
       this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
         this.loadSavedGrids();
@@ -135,7 +137,8 @@ export class GridComponent {
     } else {
       const gridData:Partial<GridPackage> = {
         roomID: this.gridPackage.roomID,
-        grid: this.gridPackage.grid
+        grid: this.gridPackage.grid,
+        name: this.gridPackage.name,
       };
       this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
         this.loadSavedGrids();

@@ -9,4 +9,5 @@ public class Grid {
   public String _id;
   public String roomID;
   public GridCell[][] grid;
+  public String name;
 }

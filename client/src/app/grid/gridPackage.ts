@@ -4,4 +4,5 @@ export interface GridPackage {
     _id: string,
     roomID: string,
     grid: GridCell[][]
+    name: string;
 }

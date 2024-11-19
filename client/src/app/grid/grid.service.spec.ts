@@ -12,6 +12,7 @@ describe('GridService', () => {
   let httpClient: HttpClient;
   let httpTestingController : HttpTestingController;
   const testGrid: GridPackage = {
+    name: "testGrid",
     _id:"hehe",
     roomID:"haha",
     grid: [

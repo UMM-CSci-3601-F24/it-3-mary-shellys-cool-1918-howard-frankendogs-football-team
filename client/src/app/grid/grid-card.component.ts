@@ -1,13 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { GridPackage } from './gridPackage';
+import { MatCardModule } from '@angular/material/card';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-grid-card',
   standalone: true,
-  imports: [],
+  imports: [
+    MatCardModule,
+    RouterLink
+  ],
   templateUrl: './grid-card.component.html',
   styleUrls: ['./grid-card.component.scss'],
 })
 export class GridCardComponent {
-  @Input() grid: GridPackage;
+  @Input({ required: true }) grid: GridPackage;
 }

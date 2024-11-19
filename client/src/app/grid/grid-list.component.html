@@ -3,9 +3,10 @@
       <h3>The saved grids for this room are:</h3>
       @for (grid of this.grids; track grid._id) {
         <div>
-          <button routerLink="/{{roomID}}/grid/{{grid._id}}"  >{{ grid._id }}</button>
-          <!-- The grid._id will be changed into a name Soon -->
+          <app-grid-card [grid] = "grid"> </app-grid-card>
         </div>
       }
     </div>
 }
+
+
