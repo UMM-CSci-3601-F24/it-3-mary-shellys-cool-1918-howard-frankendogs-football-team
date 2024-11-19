@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { GridCellComponent } from './grid-cell.component';
-
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 describe('GridCellComponent', () => {
   let component: GridCellComponent;
   let fixture: ComponentFixture<GridCellComponent>;
@@ -9,7 +10,8 @@ describe('GridCellComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [FormsModule, GridCellComponent]
+      imports: [FormsModule, GridCellComponent, BrowserModule, BrowserAnimationsModule],
+      providers: [provideAnimations()]
     })
     .compileComponents();
 
