@@ -11,6 +11,12 @@
         <!-- Filtering is done in Mongo/server side -->
         <div class="flex-row gap-8 flex-wrap">
           <mat-form-field class="input-field">
+            <mat-label>Input letters</mat-label>
+            <input matInput data-test="wordContainsInput" placeholder="Filter by contents" [(ngModel)]="contains">
+          </mat-form-field>
+          <mat-form-field class="input-field">
+            <mat-label> Input Word Group</mat-label>
+            <input matInput data-test="wordGroupInput" placeholder="Filter by wordGroup" [(ngModel)]="group">
             <mat-label>Contains</mat-label>
             <input
               matInput
@@ -28,6 +34,13 @@
               [(ngModel)]="group"
             />
           </mat-form-field>
+        </div>
+        <div>
+          <label for="filterType">Filter Type</label>
+          <mat-radio-group [(ngModel)]="filterType" aria-label="Filter Type" dataTest="filterTypeRadio">
+            <mat-radio-button checked value="exact">Exact</mat-radio-button>
+            <mat-radio-button value="contains">Contains</mat-radio-button>
+          </mat-radio-group>
         </div>
         <!-- Sorting is done on the client -->
         <mat-form-field class="input-field">
