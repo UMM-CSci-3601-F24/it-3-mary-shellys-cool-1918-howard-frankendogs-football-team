@@ -66,11 +66,18 @@ export class GridComponent {
     private gridService: GridService,
     private roomService: RoomService,
     private webSocketService: WebSocketService) {
+
     this.route.paramMap.subscribe(params => {
       this.gridPackage.roomID = params.get('roomID');
-      console.log(params.get('roomID'));
+      this.gridPackage._id = params.get('id')
     });
-    this.initializeGrid();
+
+    if (this.gridPackage._id !== null && this.gridPackage._id !== '') {
+      this.loadGrid(this.gridPackage._id);
+    } else {
+      this.initializeGrid();
+    }
+
     this.loadSavedGrids();
 
     this.webSocketService.getMessage().subscribe((message: unknown) => {
