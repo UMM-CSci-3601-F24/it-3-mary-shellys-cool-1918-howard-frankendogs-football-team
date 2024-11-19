@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SearchContext } from './searchContext';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { RoomService } from '../room.service';
 
 @Component({
   selector: 'app-word-list-component',
@@ -52,10 +53,15 @@ export class WordListComponent {
   contains = signal<string|undefined>(undefined);
   group = signal<string|undefined>(undefined);
 
+  wordGroups: string[];
+
   errMsg = signal<string | undefined>(undefined);
 
-  constructor(private wordService: WordService, private snackBar: MatSnackBar) {
-    // Nothing here – everything is in the injection parameters.
+  constructor(
+    private wordService: WordService,
+    private roomService: RoomService,
+    private snackBar: MatSnackBar) {
+      this.loadWordGroups();
   }
 
   private contains$ = toObservable(this.contains);
@@ -106,6 +112,13 @@ export class WordListComponent {
     const searches = this.serverFilteredContext().searches;
     return searches;
   })
+
+  loadWordGroups() {
+    console.log("entered loadWordGroups")
+    this.roomService.getWordGroups().subscribe(wordGroups => {
+      this.wordGroups = wordGroups
+    })
+  }
 
   /**
    * calls deleteWord and returns a snackbar

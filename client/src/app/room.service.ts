@@ -22,4 +22,9 @@ export class RoomService {
   getGridsByRoomId(roomId: string): Observable<GridPackage[]> {
     return this.http.get<GridPackage[]>(`/api/${roomId}/grids`);
   }
+
+  getWordGroups(): Observable<string[]> {
+    console.log("entered getWordGroups() in room service");
+    return this.http.get<string[]>(`/api/anagram/wordGroups`);
+  }
 }

@@ -83,8 +83,18 @@
   <div class="flex-row column right">
     <mat-card>
     <mat-card-header>Word Lists</mat-card-header>
-    <mat-card-subtitle style="visibility: hidden">In Word Group : </mat-card-subtitle>
-      <mat-card-content>This is where word list links will go - coming soon!</mat-card-content>
+    <mat-card-subtitle style="visibility: hidden">Groups from room : </mat-card-subtitle>
+      <mat-card-content>
+        @for (group of this.wordGroups; track group) {
+          <div>
+            <p>{{group}}</p>
+            <!-- <button
+              routerLink="/wordGroup/{{group}}">
+              {{ group }}
+            </button> -->
+          </div>
+        }
+      </mat-card-content>
     </mat-card>
   </div>
 </div>

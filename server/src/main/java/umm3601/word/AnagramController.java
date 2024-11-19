@@ -32,7 +32,9 @@ public class AnagramController implements Controller {
 
   private static final String API_WORDS = "/api/anagram";
   private static final String API_WORD_BY_ID = "/api/anagram/{id}";
-  private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/{wordGroup}";
+  private static final String API_WORD_GROUPS = "/api/anagram/wordGroups";
+  // private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/{wordGroup}";
+  //might need to be: "/api/anagram/wordGroups/{id}"
   private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history";
   static final String WORD_KEY = "word";
   static final String WORD_GROUP_KEY = "wordGroup";
@@ -84,6 +86,15 @@ public class AnagramController implements Controller {
     // turn array lists into SearchContext and return
     SearchContext results = new SearchContext(matchingWords, searches);
     ctx.json(results);
+    ctx.status(HttpStatus.OK);
+  }
+
+  public void getWordGroups(Context ctx) {
+    System.out.println("entered getWordGroups() in Anagram controller");
+    ArrayList<String> wordGroups = wordCollection
+      // want to find all of the word groups across the words and to add non-duplicates
+      .distinct("wordGroup", String.class).into(new ArrayList<>());
+    ctx.json(wordGroups);
     ctx.status(HttpStatus.OK);
   }
 
@@ -158,21 +169,21 @@ public class AnagramController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
-  public void deleteListWords(Context ctx) {
-    // ctx passes wordGroup as the name of the group not the ids of the elements in
-    // group
-    String deleteWordGroup = ctx.pathParam("wordGroup");
-    DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup", deleteWordGroup));
+  // public void deleteListWords(Context ctx) {
+  //   // ctx passes wordGroup as the name of the group not the ids of the elements in
+  //   // group
+  //   String deleteWordGroup = ctx.pathParam("wordGroup");
+  //   DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup", deleteWordGroup));
 
-    if (deleteResult.getDeletedCount() == 0) {
-      ctx.status(HttpStatus.NOT_FOUND);
-      throw new NotFoundResponse(
-          "Was unable to delete word group "
-              + deleteWordGroup
-              + "; perhaps illegal word group or no items found in the system?");
-    }
-    ctx.status(HttpStatus.OK);
-  }
+  //   if (deleteResult.getDeletedCount() == 0) {
+  //     ctx.status(HttpStatus.NOT_FOUND);
+  //     throw new NotFoundResponse(
+  //         "Was unable to delete word group "
+  //             + deleteWordGroup
+  //             + "; perhaps illegal word group or no items found in the system?");
+  //   }
+  //   ctx.status(HttpStatus.OK);
+  // }
 
   @Override
   public void addRoutes(Javalin server) {
@@ -181,12 +192,14 @@ public class AnagramController implements Controller {
 
     // server.get(API_WORDS_SEARCH_HISTORY, this::getSearches);
 
+    server.get(API_WORD_GROUPS, this::getWordGroups);
+
     server.delete(API_WORD_BY_ID, this::deleteWord);
 
     server.post(API_WORDS, this::addNewWord);
 
     // server.post(API_WORDS, this::addListWords);
 
-    server.delete(API_WORDS_BY_WORDGROUP, this::deleteListWords);
+    // server.delete(API_WORDS_BY_WORDGROUP, this::deleteListWords);
   }
 }
