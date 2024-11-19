@@ -73,3 +73,16 @@ describe('Grid Component', () => {
       .and('eq', 'rgb(255, 255, 255)');
   });
 });
+it('should expand and collapse panel', () => {
+  cy.visit('/grid');
+
+  cy.get('mat-expansion-panel-header').should('not.have.class', 'mat-expanded');
+
+  cy.get('mat-expansion-panel-header').click();
+
+  cy.get('mat-expansion-panel-header').should('have.class', 'mat-expanded');
+
+  cy.get('mat-expansion-panel-header').click();
+
+  cy.get('mat-expansion-panel-header').should('not.have.class', 'mat-expanded');
+})
