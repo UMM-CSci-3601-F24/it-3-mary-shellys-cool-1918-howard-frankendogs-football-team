@@ -3,9 +3,27 @@
 }
 
 .anagram-list-word {
-    padding: auto;
+  padding: auto;
 }
 
 .anagram-list-wordGroup {
-    display: none;
+  display: none;
+}
+
+.column {
+  float: left;
+  padding: 10px;
+}
+
+.column.left {
+  width: 60%;
+}
+
+.column.right{
+  width: 30%;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
 }

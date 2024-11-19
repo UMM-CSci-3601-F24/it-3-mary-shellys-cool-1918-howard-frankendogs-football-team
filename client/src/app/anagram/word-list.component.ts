@@ -18,6 +18,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SearchContext } from './searchContext';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-word-list-component',
@@ -37,6 +38,7 @@ import { SearchContext } from './searchContext';
     MatListModule,
     MatInputModule,
     MatSlideToggleModule,
+    MatExpansionModule
   ],
   templateUrl: './word-list.component.html',
   styleUrl: './word-list.component.scss'

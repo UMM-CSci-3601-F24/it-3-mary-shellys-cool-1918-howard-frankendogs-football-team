@@ -2,7 +2,7 @@ export class WordListPage {
   private readonly baseUrl = '/anagram';
   private readonly pageTitle = '.word-list-title';
   private readonly addWordButtonSelector = '[data-test=addWordButton]';
-  private readonly anagramListItemsSelectorWords = '.anagram-nav-list-words .anagram-list-item'
+  private readonly anagramListItemsSelectorWords = '.anagram-nav-list .anagram-list-word'
   private readonly anagramListItemsSelectorHistory = ".anagram-nav-list-history .anagram-list-item"
   private readonly snackBar = '.mat-mdc-simple-snack-bar';
 
