@@ -1,1 +1,11 @@
-<p>grid-list works!</p>
+@if (this.roomID !== null){
+    <div>
+      <h3>The saved grids for this room are:</h3>
+      @for (grid of this.grids; track grid._id) {
+        <div>
+          <button routerLink="/{{roomID}}/grid/{{grid._id}}"  >{{ grid._id }}</button>
+          <!-- The grid._id will be changed into a name Soon -->
+        </div>
+      }
+    </div>
+}

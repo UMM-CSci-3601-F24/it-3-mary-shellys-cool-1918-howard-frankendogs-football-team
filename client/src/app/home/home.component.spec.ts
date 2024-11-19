@@ -27,19 +27,8 @@ describe('Home', () => {
     el = de.nativeElement;
   });
 
-  it('It has the basic home page text', () => {
-    fixture.detectChanges();
-    expect(el.textContent).toContain('This is a home page! It doesn\'t do anything!');
-    expect(component).toBeTruthy();
-  });
-
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should have the correct text content', () => {
-    fixture.detectChanges();
-    expect(el.textContent).toContain('This is a home page! It doesn\'t do anything!');
   });
 
   it('should create a room and display the room ID', () => {
