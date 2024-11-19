@@ -24,8 +24,8 @@ describe('Anagram Solver', () => {
     cy.get('[data-test=wordContainsInput]').type('can',{ force: true });
     page.getAnagramListItems().each( e => {
       cy.wrap(e).find('.anagram-list-word').should('include.text', 'a');
-      cy.wrap(e).find('.anagram-list-word').should('include.text', 'a');
       cy.wrap(e).find('.anagram-list-word').should('include.text', 'n');
+      cy.wrap(e).find('.anagram-list-word').should('include.text', 'c');
     });
   });
 
