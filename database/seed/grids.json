@@ -3,7 +3,7 @@
   "_id": {
     "$oid": "67282a76702f8c628808e130"
   },
-  "owner": "seededGrid",
+  "roomID": "seededGrid",
   "grid": [
     [
       {
@@ -1031,7 +1031,7 @@
   "_id": {
     "$oid": "67282673702f8c628808e12e"
   },
-  "owner": "seededGrid",
+  "roomID": "seededGrid",
   "grid": [
     [
       {
