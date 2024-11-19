@@ -65,7 +65,7 @@
         >
           <mat-icon class="md-24" aria-label="Add Word List">add</mat-icon>
         </button>
-        <button
+        <!-- <button
           mat-fab
           class="delete-wordGroup-fab"
           matTooltip="Delete Word Group"
@@ -74,8 +74,8 @@
           routerLink="/anagram"
           data-test="deleteWordGroupButton"
         >
-          <mat-icon class="md-24" aria-label="Add Word List">delete</mat-icon>
-        </button>
+          <mat-icon class="md-24" aria-label="Delete Word List">delete</mat-icon>
+        </button> -->
       </mat-card-content>
     </mat-card>
   </div>
@@ -87,11 +87,11 @@
       <mat-card-content>
         @for (group of this.wordGroups; track group) {
           <div>
-            <p>{{group}}</p>
-            <!-- <button
-              routerLink="/wordGroup/{{group}}">
+            <!-- <p>{{group}}</p> -->
+            <button
+              routerLink="/anagram/wordGroups/{{group}}">
               {{ group }}
-            </button> -->
+            </button>
           </div>
         }
       </mat-card-content>
