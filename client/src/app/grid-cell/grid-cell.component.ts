@@ -91,27 +91,128 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
-  edgeCheck() {
-    if (
-      this.gridCell.edges['top'] &&
-      this.gridCell.edges['right'] &&
-      this.gridCell.edges['bottom'] &&
-      this.gridCell.edges['left']
-    ) {
-      this.setColor('black');
-    } else switch(this.gridCell.color) {
-        case 'pink':
-          this.setColor('pink');
-          break;
-        case 'yellow':
-          this.setColor('yellow');
-          break;
-        case 'green':
-          this.setColor('green');
-          break;
-        default:
-          this.setColor('');
-          break;
+  edgeCheckAdjacent(edge: string) {
+    switch (edge) {
+      case 'top':
+        if (
+          this.grid[this.row - 1][this.col].edges.top &&
+          this.grid[this.row - 1][this.col].edges.right &&
+          this.grid[this.row - 1][this.col].edges.bottom &&
+          this.grid[this.row - 1][this.col].edges.left
+        ) {
+          this.grid[this.row - 1][this.col].color = 'black';
+        } else
+          switch (this.grid[this.row - 1][this.col].color) {
+            case 'pink':
+              this.grid[this.row - 1][this.col].color = 'pink';
+              break;
+            case 'yellow':
+              this.grid[this.row - 1][this.col].color = 'yellow';
+              break;
+            case 'green':
+              this.grid[this.row - 1][this.col].color = 'green';
+              break;
+            default:
+              this.grid[this.row - 1][this.col].color = '';
+              break;
+          }
+        break;
+      case 'right':
+        if (
+          this.grid[this.row][this.col + 1].edges.top &&
+          this.grid[this.row][this.col + 1].edges.right &&
+          this.grid[this.row][this.col + 1].edges.bottom &&
+          this.grid[this.row][this.col + 1].edges.left
+        ) {
+          this.grid[this.row][this.col + 1].color = 'black';
+        } else
+          switch (this.grid[this.row][this.col + 1].color) {
+            case 'pink':
+              this.grid[this.row][this.col + 1].color = 'pink';
+              break;
+            case 'yellow':
+              this.grid[this.row][this.col + 1].color = 'yellow';
+              break;
+            case 'green':
+              this.grid[this.row][this.col + 1].color = 'green';
+              break;
+            default:
+              this.grid[this.row][this.col + 1].color = '';
+              break;
+          }
+        break;
+      case 'bottom':
+        if (
+          this.grid[this.row + 1][this.col].edges.top &&
+          this.grid[this.row + 1][this.col].edges.right &&
+          this.grid[this.row + 1][this.col].edges.bottom &&
+          this.grid[this.row + 1][this.col].edges.left
+        ) {
+          this.grid[this.row + 1][this.col].color = 'black';
+        } else
+          switch (this.grid[this.row + 1][this.col].color) {
+            case 'pink':
+              this.grid[this.row + 1][this.col].color = 'pink';
+              break;
+            case 'yellow':
+              this.grid[this.row + 1][this.col].color = 'yellow';
+              break;
+            case 'green':
+              this.grid[this.row + 1][this.col].color = 'green';
+              break;
+            default:
+              this.grid[this.row + 1][this.col].color = '';
+              break;
+          }
+        break;
+      case 'left':
+        if (
+          this.grid[this.row][this.col - 1].edges.top &&
+          this.grid[this.row][this.col - 1].edges.right &&
+          this.grid[this.row][this.col - 1].edges.bottom &&
+          this.grid[this.row][this.col - 1].edges.left
+        ) {
+          this.grid[this.row][this.col - 1].color = 'black';
+        } else
+          switch (this.grid[this.row][this.col - 1].color) {
+            case 'pink':
+              this.grid[this.row][this.col - 1].color = 'pink';
+              break;
+            case 'yellow':
+              this.grid[this.row][this.col - 1].color = 'yellow';
+              break;
+            case 'green':
+              this.grid[this.row][this.col - 1].color = 'green';
+              break;
+            default:
+              this.grid[this.row][this.col - 1].color = '';
+              break;
+          }
+        break;
+      default:
+        if (
+          this.grid[this.row][this.col].edges.top &&
+          this.grid[this.row][this.col].edges.right &&
+          this.grid[this.row][this.col].edges.bottom &&
+          this.grid[this.row][this.col].edges.left
+        ) {
+          this.grid[this.row][this.col].color = 'black';
+        } else
+          switch (this.gridCell.color) {
+            case 'pink':
+              this.grid[this.row][this.col].color = 'pink';
+              break;
+            case 'yellow':
+              this.grid[this.row][this.col].color = 'yellow';
+              break;
+            case 'green':
+              this.grid[this.row][this.col].color = 'green';
+              break;
+            default:
+              this.grid[this.row][this.col].color = '';
+              break;
+          }
+        break;
     }
   }
 
@@ -127,7 +228,8 @@ export class GridCellComponent {
           this.grid[this.row - 1][this.col].edges.bottom =
             this.gridCell.edges.top;
         }
-        this.edgeCheck();
+        this.edgeCheckAdjacent('top');
+        this.edgeCheckAdjacent('');
         break;
       case 'right':
         this.gridCell.edges.right = !this.gridCell.edges.right;
@@ -135,7 +237,8 @@ export class GridCellComponent {
           this.grid[this.row][this.col + 1].edges.left =
             this.gridCell.edges.right;
         }
-        this.edgeCheck();
+        this.edgeCheckAdjacent('right');
+        this.edgeCheckAdjacent('');
         break;
       case 'bottom':
         this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
@@ -143,7 +246,8 @@ export class GridCellComponent {
           this.grid[this.row + 1][this.col].edges.top =
             this.gridCell.edges.bottom;
         }
-        this.edgeCheck();
+        this.edgeCheckAdjacent('bottom');
+        this.edgeCheckAdjacent('');
         break;
       case 'left':
         this.gridCell.edges.left = !this.gridCell.edges.left;
@@ -151,7 +255,8 @@ export class GridCellComponent {
           this.grid[this.row][this.col - 1].edges.right =
             this.gridCell.edges.left;
         }
-        this.edgeCheck();
+        this.edgeCheckAdjacent('left');
+        this.edgeCheckAdjacent('');
         break;
       default:
         break;
