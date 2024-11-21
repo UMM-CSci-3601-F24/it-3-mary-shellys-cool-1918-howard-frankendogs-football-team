@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormField } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
@@ -49,7 +49,7 @@ export class WordListComponent {
   sortType = signal<string | undefined>(undefined);
   sortOrder = signal<boolean | undefined>(false);
   //server side filtering
-  contains = signal<string|undefined>(undefined);
+  contains = signal<string|undefined>('');
   group = signal<string|undefined>(undefined);
 
   filterType = signal<string|undefined>("exact");
@@ -118,15 +118,39 @@ export class WordListComponent {
    * calls deleteWord and returns a snackbar
    * @param id - id of word to be deleted
    */
+  // deleteWord(id: string) {
+  //   this.wordService.deleteWord(id).subscribe(() => {
+  //     /* this is to refresh the page eventually
+  //       also could delete from both client and sever to refresh
+  //      this.sortType.set(undefined);
+  //      this.sortType.set(tempSortType.toString()); */
+  //     this.snackBar.open(`We deleted a word!`, 'OK', {duration: 6000});
+  //   })
+  // }
+
   deleteWord(id: string) {
-    this.wordService.deleteWord(id).subscribe(() => {
-      /* this is to refresh the page eventually
-        also could delete from both client and sever to refresh
-       this.sortType.set(undefined);
-       this.sortType.set(tempSortType.toString()); */
-      this.snackBar.open(`We deleted a word!`, 'OK', {duration: 6000});
-    })
+    console.log("Trying to delete todo with id " + id)
+    this.wordService.deleteWord(id).subscribe({
+      next: () => {
+        this.snackBar.open(
+          `deleted todo`,
+          null,
+          { duration: 2000 }
+        );
+        // const contains = this.contains();
+        this.contains.set(this.contains() + ' ');
+        this.contains.set(this.contains().trim());
+      },
+      error: err => {
+        this.snackBar.open(
+          `Problem contacting the server – Error Code: ${err.status}\nMessage: ${err.message}`,
+          'OK',
+          { duration: 5000 }
+        );
+      },
+    });
   }
+
 
   /**
    * Deletes all words in the wordGroup
