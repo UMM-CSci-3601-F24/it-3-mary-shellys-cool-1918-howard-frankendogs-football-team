@@ -3,8 +3,11 @@ package umm3601.word;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.regex;
+// import static org.junit.jupiter.api.Assertions.assertNotNull;
+// import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,6 +40,7 @@ public class AnagramController implements Controller {
   static final String WORD_KEY = "word";
   static final String WORD_GROUP_KEY = "wordGroup";
   static final String SORT_ORDER_KEY = "sortOrder";
+  static final String FILTER_TYPE_KEY = "filterType";
 
   private final JacksonMongoCollection<Search> searchCollection;
   private final JacksonMongoCollection<Word> wordCollection;
@@ -87,17 +91,38 @@ public class AnagramController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
-  private Bson constructFilter(Context ctx) {
+  Bson constructFilter(Context ctx) {
     // names data to be logged
     List<Bson> filters = new ArrayList<>();
     Search newSearch = new Search();
-    // if searching for contains will enter this loop
+    String filterType = ctx.queryParam(FILTER_TYPE_KEY);
+    String searchedWord = ctx.queryParam(WORD_KEY);
+    Map<Character, Integer> charCountMap = new HashMap<>();
+
+  // if searching for contains will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
-      Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
-      filters.add(regex(WORD_KEY, pattern));
-      newSearch.setContains(ctx.queryParam(WORD_KEY));
+      if ("exact".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
+        //if filter type is exact it runs following code
+          String exactWord = ctx.queryParam(WORD_KEY).replace('_', '.');
+          //Because . are wildcards, replaces underscores with periods
+          Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); //makes a pattern
+          filters.add(regex(WORD_KEY, pattern)); //adds a regex with
+          newSearch.setContains(ctx.queryParam(WORD_KEY));
+        } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
+            for (char c : searchedWord.toCharArray()) {
+              charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
+          }
+          for (Map.Entry<Character, Integer> entry : charCountMap.entrySet()) {
+            char c = entry.getKey();
+            int count = entry.getValue();
+            String regexPattern = "(?i)(.*" + Pattern.quote(String.valueOf(c)) + ".*){" + count + "}";
+            filters.add(regex("word", Pattern.compile(regexPattern)));
+        }
     }
+  }
+
     // if searching by word group will enter this loop
+
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(WORD_GROUP_KEY, pattern));
