@@ -2,6 +2,7 @@ package umm3601.word;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 // import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -430,6 +431,38 @@ class AnagramControllerSpec {
     assertTrue(words.contains("playstation"));
   }
 
+  @Test
+  void canGetWordsWithDuplicateO() throws IOException {
+    String targetContains = "oo";
+    Map<String, List<String>> queryParams = new HashMap<>();
+
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {targetContains}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(targetContains);
+    when(ctx.queryParam("filterType")).thenReturn("contains");
+
+    Validation validation = new Validation();
+    Validator<String> validator = validation.validator(AnagramController.WORD_KEY, String.class, targetContains);
+
+    when(ctx.queryParamAsClass(AnagramController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
+
+    anagramController.getWords(ctx);
+
+    verify(ctx).json(searchContextCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+
+    assertEquals(1, searchContextCaptor.getValue().words.size());
+
+    for (Word word : searchContextCaptor.getValue().words) {
+      assertTrue(word.word.contains("oo"));
+    }
+
+    List<String> words = searchContextCaptor.getValue().words.stream()
+        .map(word -> word.word).collect(Collectors.toList());
+    assertTrue(words.contains("cooked"));
+    assertFalse(words.contains("xbox"));
+    assertFalse(words.contains("playstation"));
+  }
 
 
   @Test
