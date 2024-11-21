@@ -36,6 +36,11 @@ export class WordService {
     });
   }
 
+  getWordsByWordGroup(wordGroup: string): Observable<Word[]> {
+    return this.httpClient.get<Word[]>(`${this.wordUrl}/${wordGroup}`)
+    // goes to ".../anagram/wordGroup"
+  }
+
   sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean}): Word[] {
     const filteredWords = words;
     //let filteredWords = words;

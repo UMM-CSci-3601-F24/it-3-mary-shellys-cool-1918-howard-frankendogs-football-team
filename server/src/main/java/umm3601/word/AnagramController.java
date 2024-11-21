@@ -35,8 +35,8 @@ public class AnagramController implements Controller {
   private static final String API_WORDS = "/api/anagram";
   private static final String API_WORD_BY_ID = "/api/anagram/{id}";
   private static final String API_WORD_GROUPS = "/api/anagram/wordGroups";
-  // private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/{wordGroup}";
-  //might need to be: "/api/anagram/wordGroups/{id}"
+  private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/wordGroup/{wordGroup}";
+  // might need to be: "/api/anagram/wordGroups/{id}"
   private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history";
   static final String WORD_KEY = "word";
   static final String WORD_GROUP_KEY = "wordGroup";
@@ -92,11 +92,20 @@ public class AnagramController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
+  public void getWordsByWordGroup(Context ctx) {
+    // used in word group profiles, does not save a search to db
+    Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
+    ArrayList<Word> matchingWords = wordCollection.find(regex(WORD_GROUP_KEY, pattern)).into(new ArrayList<>());
+    ctx.json(matchingWords);
+    ctx.status(HttpStatus.OK);
+  }
+
   public void getWordGroups(Context ctx) {
     System.out.println("entered getWordGroups() in Anagram controller");
     ArrayList<String> wordGroups = wordCollection
-      // want to find all of the word groups across the words and to add non-duplicates
-      .distinct("wordGroup", String.class).into(new ArrayList<>());
+        // want to find all of the word groups across the words and to add
+        // non-duplicates
+        .distinct("wordGroup", String.class).into(new ArrayList<>());
     ctx.json(wordGroups);
     ctx.status(HttpStatus.OK);
   }
@@ -108,28 +117,26 @@ public class AnagramController implements Controller {
     String filterType = ctx.queryParam(FILTER_TYPE_KEY);
     String searchedWord = ctx.queryParam(WORD_KEY);
 
-  // if searching for contains will enter this loop
+    // if searching for contains will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
       if ("exact".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
-          Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
-          filters.add(regex(WORD_KEY, pattern));
-          newSearch.setContains(ctx.queryParam(WORD_KEY));
-        } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
-            for (char c : searchedWord.toCharArray()) {
-              filters.add(regex("word", Pattern.compile(Pattern.quote(String.valueOf(c)), Pattern.CASE_INSENSITIVE)));
-          }
+        Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
+        filters.add(regex(WORD_KEY, pattern));
+      } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
+        for (char c : searchedWord.toCharArray()) {
+          filters.add(regex("word", Pattern.compile(Pattern.quote(String.valueOf(c)), Pattern.CASE_INSENSITIVE)));
+        }
+      }
+      newSearch.setContains(ctx.queryParam(WORD_KEY));
     }
-  }
-
     // if searching by word group will enter this loop
-
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(WORD_GROUP_KEY, pattern));
       newSearch.setWordGroup(ctx.queryParam(WORD_GROUP_KEY));
     }
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
-    // log into database
+    // log search into database
     if ((ctx.queryParam(WORD_KEY) != null && ctx.queryParam(WORD_KEY) != "")
         || (ctx.queryParam(WORD_GROUP_KEY) != null && ctx.queryParam(WORD_GROUP_KEY) != "")) {
       searchCollection.insertOne(newSearch);
@@ -139,11 +146,12 @@ public class AnagramController implements Controller {
     return combinedFilter;
   }
 
-  //used for debugging setting up db, might be used again for debugging limiting saved searches
+  // used for debugging setting up db, might be used again for debugging limiting
+  // saved searches
   // public void getSearches(Context ctx) {
-  //   ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
-  //   ctx.json(searches);
-  //   ctx.status(HttpStatus.OK);
+  // ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
+  // ctx.json(searches);
+  // ctx.status(HttpStatus.OK);
   // }
 
   private Bson constructSortingOrder(Context ctx) {
@@ -152,7 +160,7 @@ public class AnagramController implements Controller {
 
     Bson sortingOrder = sortOrder.equals("desc") ? Sorts.descending(sortBy) : Sorts.ascending(sortBy);
     return sortingOrder;
-}
+  }
 
   public void addNewWord(Context ctx) {
 
@@ -184,19 +192,21 @@ public class AnagramController implements Controller {
   }
 
   // public void deleteListWords(Context ctx) {
-  //   // ctx passes wordGroup as the name of the group not the ids of the elements in
-  //   // group
-  //   String deleteWordGroup = ctx.pathParam("wordGroup");
-  //   DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup", deleteWordGroup));
+  // // ctx passes wordGroup as the name of the group not the ids of the elements
+  // in
+  // // group
+  // String deleteWordGroup = ctx.pathParam("wordGroup");
+  // DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup",
+  // deleteWordGroup));
 
-  //   if (deleteResult.getDeletedCount() == 0) {
-  //     ctx.status(HttpStatus.NOT_FOUND);
-  //     throw new NotFoundResponse(
-  //         "Was unable to delete word group "
-  //             + deleteWordGroup
-  //             + "; perhaps illegal word group or no items found in the system?");
-  //   }
-  //   ctx.status(HttpStatus.OK);
+  // if (deleteResult.getDeletedCount() == 0) {
+  // ctx.status(HttpStatus.NOT_FOUND);
+  // throw new NotFoundResponse(
+  // "Was unable to delete word group "
+  // + deleteWordGroup
+  // + "; perhaps illegal word group or no items found in the system?");
+  // }
+  // ctx.status(HttpStatus.OK);
   // }
 
   @Override
@@ -215,5 +225,7 @@ public class AnagramController implements Controller {
     // server.post(API_WORDS, this::addListWords);
 
     // server.delete(API_WORDS_BY_WORDGROUP, this::deleteListWords);
+
+    server.get(API_WORDS_BY_WORDGROUP, this::getWordsByWordGroup);
   }
 }
