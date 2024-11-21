@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { GridCellComponent } from './grid-cell.component';
+import { GridCell } from './grid-cell';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 describe('GridCellComponent', () => {
