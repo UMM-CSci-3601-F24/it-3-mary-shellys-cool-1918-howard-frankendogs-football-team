@@ -13,11 +13,11 @@ export class WordService {
 
   private readonly groupKey = 'wordGroup';
   private readonly containsKey = 'word';
-
+  private readonly filterTypeKey = 'filterType';
 
   constructor(private httpClient: HttpClient) { }
 
-  getWords(filters?: {word?: string; wordGroup?: string}): Observable<SearchContext> {
+  getWords(filters?: {word?: string; wordGroup?: string; filterType?: string}): Observable<SearchContext> {
 
     let httpParams: HttpParams = new HttpParams();
     if(filters) {
@@ -26,6 +26,9 @@ export class WordService {
       }
       if(filters.wordGroup) {
         httpParams = httpParams.set(this.groupKey, filters.wordGroup);
+      }
+      if(filters.filterType) {
+        httpParams = httpParams.set(this.filterTypeKey, filters.filterType);
       }
     }
     return this.httpClient.get<SearchContext>(this.wordUrl, {
