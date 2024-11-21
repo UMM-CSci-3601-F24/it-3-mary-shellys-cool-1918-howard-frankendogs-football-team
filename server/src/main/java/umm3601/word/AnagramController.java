@@ -101,8 +101,10 @@ public class AnagramController implements Controller {
 
   // if searching for contains will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
-      if ("exact".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) { //if filter type is exact it runs following code
-          String exactWord = ctx.queryParam(WORD_KEY).replace('_', '.'); //Because . are wildcards, replaces underscores with periods
+      if ("exact".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
+        //if filter type is exact it runs following code
+          String exactWord = ctx.queryParam(WORD_KEY).replace('_', '.');
+          //Because . are wildcards, replaces underscores with periods
           Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); //makes a pattern
           filters.add(regex(WORD_KEY, pattern)); //adds a regex with
           newSearch.setContains(ctx.queryParam(WORD_KEY));
