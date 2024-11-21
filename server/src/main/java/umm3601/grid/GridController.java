@@ -3,6 +3,7 @@ package umm3601.grid;
 import static com.mongodb.client.model.Filters.eq;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.bson.UuidRepresentation;
 import org.bson.types.ObjectId;
@@ -40,18 +41,14 @@ public class GridController implements Controller {
         .check(td -> td.roomID != null, "roomID must be non-empty")
         .check(td -> td.grid != null, "Error with grid, grid was : " + body)
         .getOrThrow(m -> new RuntimeJsonMappingException("Failed to parse body as grid: " + body));
-    System.err.println(grid._id);
-    // System.err.println(grid.toString());
+
+    grid.lastSaved = new Date();
+
     if (grid._id != null) {
       gridCollection.replaceOneById(grid._id, grid);
     } else {
       gridCollection.insertOne(grid);
     }
-
-
-    // ctx.json(Map.of("id", grid._id));
-    System.err.println(grid._id);
-
     ctx.json(grid);
     ctx.status(HttpStatus.CREATED);
   }

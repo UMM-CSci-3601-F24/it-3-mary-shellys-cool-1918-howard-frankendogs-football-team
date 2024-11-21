@@ -1,15 +1,22 @@
-<!-- <p>Grid ID: {{ grid._id }}</p>
-<p>Room ID: {{ grid.roomID }}</p> -->
-
-
+@if (grid) {
 <mat-card routerLink="/{{grid.roomID}}/grid/{{grid._id}}">
     <mat-card-header>
         <mat-card-title>
             {{ grid.name }}
         </mat-card-title>
-        <mat-card-subtitle>
-            Last Saved
+        <mat-card-subtitle style="margin-bottom: 0px">
+            Last Saved:
         </mat-card-subtitle>
-      </mat-card-header>
+        <mat-card-subtitle>
+            {{ grid.lastSaved | date:'h:mm a \'on\' MMM d yyyy' }}
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <br>
+        <div class="grid-info">
+            <p>Grid Size: {{ grid.grid.length }} x {{ grid.grid[0].length }}</p>
+            <button class="delete-button">Delete This Grid</button>
+        </div>
+    </mat-card-content>
 </mat-card>
-<!-- Add more details as needed -->
+}

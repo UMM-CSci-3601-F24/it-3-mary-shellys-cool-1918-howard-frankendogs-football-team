@@ -5,4 +5,5 @@ export interface GridPackage {
     roomID: string,
     grid: GridCell[][]
     name: string;
+    lastSaved: Date;
 }

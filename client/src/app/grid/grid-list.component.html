@@ -1,12 +1,10 @@
 @if (this.roomID !== null){
-    <div>
-      <h3>The saved grids for this room are:</h3>
-      @for (grid of this.grids; track grid._id) {
-        <div>
-          <app-grid-card [grid] = "grid"> </app-grid-card>
-        </div>
-      }
-    </div>
+<div>
+  <h3>The saved grids for this room are:</h3>
+  <div class="card-container">
+    @for (grid of this.grids; track grid._id) {
+    <app-grid-card [grid]="grid"></app-grid-card>
+    }
+  </div>
+</div>
 }
-
-

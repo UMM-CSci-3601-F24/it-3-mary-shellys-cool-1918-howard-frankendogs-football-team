@@ -47,7 +47,8 @@ export class GridComponent {
     grid: [],
     _id: '',
     roomID: '',
-    name: 'PlaceHolderName',
+    name: 'PlaceHolderNameLmaoWhat',
+    lastSaved: new Date()
   }
 
   savedGrids: GridPackage[];
@@ -130,6 +131,7 @@ export class GridComponent {
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id,
         name: this.gridPackage.name,
+        lastSaved: this.gridPackage.lastSaved
       };
       this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
         this.loadSavedGrids();
@@ -139,6 +141,7 @@ export class GridComponent {
         roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid,
         name: this.gridPackage.name,
+        lastSaved: this.gridPackage.lastSaved
       };
       this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
         this.loadSavedGrids();

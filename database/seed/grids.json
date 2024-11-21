@@ -4,6 +4,8 @@
     "$oid": "67282a76702f8c628808e130"
   },
   "roomID": "seededGrid",
+  "name": "testGrid1",
+  "lastSaved": { "$date": "2023-10-01T00:00:00Z" },
   "grid": [
     [
       {
@@ -1032,6 +1034,8 @@
     "$oid": "67282673702f8c628808e12e"
   },
   "roomID": "seededGrid",
+  "name": "testGrid2",
+  "lastSaved": { "$date": "2023-10-01T00:00:00Z" },
   "grid": [
     [
       {
