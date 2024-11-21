@@ -4,6 +4,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
 import umm3601.grid.GridController;
+import umm3601.room.RoomController;
 import umm3601.word.AnagramController;
 
 public class Main {
@@ -58,6 +59,7 @@ public class Main {
         Controller[] controllers = new Controller[] {
             new AnagramController(database),
             new GridController(database),
+            new RoomController(database)
         };
         return controllers;
     }
