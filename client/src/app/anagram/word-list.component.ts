@@ -18,6 +18,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SearchContext } from './searchContext';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-word-list-component',
@@ -37,6 +38,7 @@ import { SearchContext } from './searchContext';
     MatListModule,
     MatInputModule,
     MatSlideToggleModule,
+    MatExpansionModule
   ],
   templateUrl: './word-list.component.html',
   styleUrl: './word-list.component.scss'
@@ -50,7 +52,9 @@ export class WordListComponent {
   contains = signal<string|undefined>(undefined);
   group = signal<string|undefined>(undefined);
 
-  errMsg = signal<string | undefined>(undefined);
+  filterType = signal<string|undefined>("exact");
+
+  errMsg = signal<string|undefined>(undefined);
 
   constructor(private wordService: WordService, private snackBar: MatSnackBar) {
     // Nothing here – everything is in the injection parameters.
@@ -58,14 +62,16 @@ export class WordListComponent {
 
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
+  private filterType$ = toObservable(this.filterType);
 
   serverFilteredContext =
     toSignal(
-      combineLatest([this.contains$, this.group$]).pipe(
-        switchMap(([word, wordGroup]) =>
+      combineLatest([this.contains$, this.group$, this.filterType$]).pipe(
+        switchMap(([word, wordGroup, filterType]) =>
           this.wordService.getWords({
             word,
             wordGroup,
+            filterType,
           })
         ),
         catchError((err) => {
@@ -86,6 +92,9 @@ export class WordListComponent {
         })
       )
     );
+
+  // serverFilterType =
+  //   toSignal(this.filterType$);
 
   filteredWords = computed(() => {
     // takes list of words returned by server

@@ -1,69 +1,147 @@
-@if (this.gridPackage.roomID !== null){
-  <div>
-    <button class = "save-button" data-test="saveGridButton" (click)="saveGrid()">Save Grid</button>
+<!-- Top Row -->
+<div class="flex-row flex-wrap">
+  <!-- Left Side: Control Dropdown Room Info -->
+  <div class="column">
+    <!-- Control Instructions Drop down panel -->
     <div>
-      <h3>Saved Grids</h3>
-      @for (grid of this.savedGrids; track grid._id) {
-        <div>
-          <button routerLink="/{{gridPackage.roomID}}/grid/{{grid._id}}" (click)="loadGrid(grid._id)"  >{{ grid._id }}</button>
-        </div>
-      }
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Controls Key</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          Coming soon!
+          <!-- Put grid control guide dropdown here -->
+        </mat-card-content>
+      </mat-card>
     </div>
-  </div>
-}
-
-<div>
-<p>Height</p>
-<input matInput
-  [(ngModel)]="gridHeight"
-  type="number"
-  (input)="onSizeInput()"
-  placeholder="{{gridHeight}}">
-<p>Width</p>
-<input matInput
-  [(ngModel)]="gridWidth"
-  type="number"
-  (input)="onSizeInput()"
-  placeholder="{{gridWidth}}">
-
-  <div [ngStyle]="{'height': (gridHeight * cellSize) + 'px', 'width': (gridWidth * cellSize) + 'px'}"  >
-    <mat-grid-list cols="{{gridWidth}}" gridHeight="1:1" gutterSize="0">
-      @for (row of gridPackage.grid; track row; let rowIndex = $index) {
-        @for (cell of row; track cell; let colIndex = $index) {
-          <mat-grid-tile Rowspan="1" Colspan="1">
-            <app-grid-cell
-            tabindex= "0"
-            [gridCell]= "gridPackage.grid[rowIndex][colIndex]"
-            (keydown)= "onKeydown($event, currentCol, currentRow)"
-            (click)="onClick($event, colIndex, rowIndex)"
-            [attr.row]="rowIndex"
-            [attr.col]="colIndex"
-            [row]="rowIndex"
-            [col]="colIndex"
-            [grid]="gridPackage.grid"
-            [currentColor]="currentColor"
-            [ngStyle]="{'height': cellSize + 'px', 'width': cellSize + 'px'}"
-            (gridChange)="onGridChange()"
-            ></app-grid-cell>
-          </mat-grid-tile>
+    <!-- Room Information -->
+    <br />
+    @if (this.gridPackage.roomID !== null){
+    <div>
+      <button
+        class="save-button"
+        data-test="saveGridButton"
+        (click)="saveGrid()"
+      >
+        Save Grid
+      </button>
+      <div>
+        <h3>Saved Grids</h3>
+        @for (grid of this.savedGrids; track grid._id) {
+        <div>
+          <button
+            routerLink="/{{ gridPackage.roomID }}/grid/{{ grid._id }}"
+            (click)="loadGrid(grid._id)"
+          >
+            {{ grid._id }}
+          </button>
+        </div>
         }
-      }
+      </div>
+    </div>
+    } @else {
+    <div>
+      <mat-card>
+        <mat-card-content>Rooms Coming Soon!</mat-card-content>
+      </mat-card>
+    </div>
+    }
+  </div>
+  <!-- Right Side: Control Inputs -->
+  <div class="flex-row flex-wrap column">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Controls</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex-row flex-wrap">
+          <!-- height and width -->
+          <div>
+            <p style="margin: 0">Height</p>
+            <input
+              matInput
+              [(ngModel)]="gridHeight"
+              type="number"
+              (input)="onSizeInput()"
+              placeholder="{{ gridHeight }}"
+            />
+            <p style="margin: 0">Width</p>
+            <input
+              matInput
+              [(ngModel)]="gridWidth"
+              type="number"
+              (input)="onSizeInput()"
+              placeholder="{{ gridWidth }}"
+            />
+          </div>
+          <!-- Cell Size -->
+          <div style="margin-left: 10px;">
+            Cell Size:<br />
+            <input
+              matInput
+              [(ngModel)]="cellSize"
+              type="number"
+              placeholder="{{ cellSize }}"
+            />
+          </div>
+        </div>
+        <!-- Highlight Colors -->
+        <div>
+          <br />
+          Highlight color:
+          <mat-radio-group
+            aria-labelledby="example-radio-group-label"
+            class="example-radio-group"
+            [(ngModel)]="currentColor"
+          >
+            @for (highlight of highlight; track highlight) {
+            <mat-radio-button
+              class="example-radio-button"
+              [value]="highlight"
+              >{{ highlight }}</mat-radio-button
+            >
+            }
+          </mat-radio-group>
+        </div>
+        <!-- Typing Direction -->
+        <div>
+          <button mat-button (click)="cycleTypingDirection()">
+            Cycle Typing Direction
+          </button>
+          <p>Current Typing Direction is {{ typeDirection }}</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<!-- Grid -->
+<div class="flex-row">
+  <div
+    [ngStyle]="{
+      height: gridHeight * cellSize + 'px',
+      width: gridWidth * cellSize + 'px'
+    }"
+  >
+    <mat-grid-list cols="{{ gridWidth }}" gridHeight="1:1" gutterSize="0">
+      @for (row of gridPackage.grid; track row; let rowIndex = $index) { @for
+      (cell of row; track cell; let colIndex = $index) {
+      <mat-grid-tile Rowspan="1" Colspan="1">
+        <app-grid-cell
+          tabindex="0"
+          [gridCell]="gridPackage.grid[rowIndex][colIndex]"
+          (keydown)="onKeydown($event, currentCol, currentRow)"
+          (click)="onClick($event, colIndex, rowIndex)"
+          [attr.row]="rowIndex"
+          [attr.col]="colIndex"
+          [row]="rowIndex"
+          [col]="colIndex"
+          [grid]="gridPackage.grid"
+          [currentColor]="currentColor"
+          [ngStyle]="{ height: cellSize + 'px', width: cellSize + 'px' }"
+          (gridChange)="onGridChange()"
+        ></app-grid-cell>
+      </mat-grid-tile>
+      } }
     </mat-grid-list>
   </div>
-
-<mat-radio-group
-  aria-labelledby="example-radio-group-label"
-  class="example-radio-group"
-  [(ngModel)]="currentColor">
-  @for (highlight of highlight; track highlight) {
-    <mat-radio-button class="example-radio-button" [value]="highlight">{{highlight}}</mat-radio-button>
-  }
-</mat-radio-group>
-
-  <input matInput
-  [(ngModel)]="cellSize"
-  type="number"
-  placeholder="{{cellSize}}">
-
-<button mat-button (click)="cycleTypingDirection()">Cycle Typing Direction</button>
-<p>Current Typing Direction is {{typeDirection}}</p>
+</div>
