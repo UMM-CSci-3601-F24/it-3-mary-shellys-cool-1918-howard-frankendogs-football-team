@@ -25,8 +25,9 @@ public class RoomController implements Controller {
   public void addRoom(Context ctx) {
     Room room = ctx.bodyAsClass(Room.class);
     roomCollection.insert(room);
-    ctx.status(HttpStatus.CREATED);
     ctx.json(room);
+    ctx.status(HttpStatus.CREATED);
+
   }
 
   @Override

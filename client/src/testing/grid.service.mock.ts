@@ -12,6 +12,8 @@ export class MockGridService extends GridService {
     {
       _id: 'testGridId',
       roomID: 'testOwner',
+      name: 'teastGrid',
+      lastSaved: new Date(),
       grid: [
         [
           { editable: true, value: '1', edges: { top: false, right: false, bottom: false, left: false }, color: '' },
