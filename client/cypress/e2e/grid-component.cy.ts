@@ -17,6 +17,7 @@ describe('Grid Component', () => {
 
   it('should save a grid to server', () => {
     page.saveGrid();
+    cy.wait(30000);
     cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click();
     cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click(); // these buttons wouldn't show up if it saves, i promise this test actually checks for something
 
