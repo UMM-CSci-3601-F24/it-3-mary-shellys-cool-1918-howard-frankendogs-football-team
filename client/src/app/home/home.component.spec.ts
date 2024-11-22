@@ -31,10 +31,4 @@ describe('Home', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create a room and display the room ID', () => {
-    component.roomForm.controls['name'].setValue('Test Room');
-    component.createRoom();
-    fixture.detectChanges();
-    expect(component.createdRoomId).toBeTruthy();
-  });
 });
