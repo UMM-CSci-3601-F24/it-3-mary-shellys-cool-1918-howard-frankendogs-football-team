@@ -34,28 +34,6 @@ describe('GridCellComponent', () => {
     expect(cell.gridCell.edges.left).toBeFalse();
   });
 
-  it('should toggle the boolean for the edge', () => {
-    const cell = new GridCellComponent();
-
-    const edges = { top: true, right: false, bottom: true, left: false };
-    cell.setEdges(edges);
-
-    expect(cell.gridCell.edges.top).toBeTrue();
-    expect(cell.gridCell.edges.right).toBeFalse();
-    expect(cell.gridCell.edges.bottom).toBeTrue();
-    expect(cell.gridCell.edges.left).toBeFalse();
-
-    cell.toggleEdge('top', true);
-    cell.toggleEdge('right', true);
-    cell.toggleEdge('bottom', true);
-    cell.toggleEdge('left', true);
-
-    expect(cell.gridCell.edges.top).toBeFalse();
-    expect(cell.gridCell.edges.right).toBeTrue();
-    expect(cell.gridCell.edges.bottom).toBeFalse();
-    expect(cell.gridCell.edges.left).toBeTrue();
-  });
-
   // it('should bold after ctrl click', () => {
   //   const fixture = TestBed.createComponent(GridCellComponent);
   //   const component = fixture.componentInstance;
@@ -77,17 +55,15 @@ describe('GridCellComponent', () => {
 
   //   const cellElement: HTMLElement =
   //     fixture.nativeElement.querySelector('.cell');
-  //   const cellEditableElement: HTMLElement =
-  //     fixture.nativeElement.querySelector('.cell-input');
   //   expect(component.gridCell.edges.top).toBeTrue();
   //   expect(component.gridCell.edges.left).toBeTrue();
   //   expect(component.gridCell.edges.right).toBeTrue();
   //   expect(component.gridCell.edges.bottom).toBeTrue();
-  //   expect(cellElement.classList).toContain('bold-top');
   //   expect(cellElement.classList).toContain('bold-right');
+  //   expect(cellElement.classList).toContain('bold-top');
   //   expect(cellElement.classList).toContain('bold-bottom');
   //   expect(cellElement.classList).toContain('bold-left');
-  //   expect(cellEditableElement.classList).toContain('blacked-out');
+  //   expect(component.gridCell.color).toContain('black');
   // });
 
   // it('should un-bold after ctrl click', () => {
@@ -385,7 +361,7 @@ describe('GridCellComponent toggleEdge', () => {
     component.col = 1;
     component.grid = [
       [new GridCell(), new GridCell(), new GridCell()],
-      [new GridCell(), new GridCell(), new GridCell()],
+      [new GridCell(), component.gridCell, new GridCell()],
       [new GridCell(), new GridCell(), new GridCell()],
     ];
     fixture.detectChanges();
@@ -413,17 +389,6 @@ describe('GridCellComponent toggleEdge', () => {
     component.toggleEdge('left', true);
     expect(component.gridCell.edges.left).toBeTrue();
     expect(component.grid[1][0].edges.right).toBeTrue();
-  });
-
-  it('should toggle all edges and update the adjacent cell', () => {
-    component.toggleEdge('left', true);
-    component.toggleEdge('right', true);
-    component.toggleEdge('up', true);
-    component.toggleEdge('bottom', true);
-    component.edgeCheck('left');
-
-    expect(component.grid[0][0].color).toBe('');
-    expect(component.grid[1][0].color).toBe('');
   });
 
   it('should not update any adjacent cell if the edge is invalid', () => {

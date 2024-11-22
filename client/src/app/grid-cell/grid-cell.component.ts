@@ -91,18 +91,27 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
+  sameEdges (rowOffset: number, colOffset: number) {
+    if (
+      this.grid[this.row + rowOffset][this.col + colOffset].edges.top &&
+      this.grid[this.row + rowOffset][this.col + colOffset].edges.right &&
+      this.grid[this.row + rowOffset][this.col + colOffset].edges.bottom &&
+      this.grid[this.row + rowOffset][this.col + colOffset].edges.left
+    )
+      return true;
+    else {
+      return false;
+    }
+  }
+
   /**
-   *
+   * checks this & an adjacent cell to see if it should be blacked-out or not
+   * the else statement un blacks out a cell if all edges are not bolded
    * @param rowOffset number to check adj row
    * @param colOffset number to check adj col
    */
   adjacentCheck(rowOffset: number, colOffset: number) {
-  if (
-    this.grid[this.row + rowOffset][this.col + colOffset].edges.top &&
-    this.grid[this.row + rowOffset][this.col + colOffset].edges.right &&
-    this.grid[this.row + rowOffset][this.col + colOffset].edges.bottom &&
-    this.grid[this.row + rowOffset][this.col + colOffset].edges.left
-  ) {
+  if (this.sameEdges(rowOffset, colOffset)) {
     this.grid[this.row + rowOffset][this.col + colOffset].color = 'black';
   } else {
     if (this.grid[this.row + rowOffset][this.col + colOffset].color === 'black') {
@@ -112,8 +121,8 @@ export class GridCellComponent {
   }
 
   /**
-   * S
-   * @param edge
+   * decides what adjacent cell to check
+   * @param edge the edge to check
    */
   edgeCheck(edge: string) {
     switch (edge) {
@@ -146,40 +155,37 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row - 1]) {
           this.grid[this.row - 1][this.col].edges.bottom =
             this.gridCell.edges.top;
+            this.edgeCheck('top');
         }
-        this.edgeCheck('top');
-        this.edgeCheck('');
         break;
       case 'right':
         this.gridCell.edges.right = !this.gridCell.edges.right;
         if (this.grid && this.grid[this.row][this.col + 1]) {
           this.grid[this.row][this.col + 1].edges.left =
             this.gridCell.edges.right;
+            this.edgeCheck('right');
         }
-        this.edgeCheck('right');
-        this.edgeCheck('');
         break;
       case 'bottom':
         this.gridCell.edges.bottom = !this.gridCell.edges.bottom;
         if (this.grid && this.grid[this.row + 1]) {
           this.grid[this.row + 1][this.col].edges.top =
             this.gridCell.edges.bottom;
+            this.edgeCheck('bottom');
         }
-        this.edgeCheck('bottom');
-        this.edgeCheck('');
         break;
       case 'left':
         this.gridCell.edges.left = !this.gridCell.edges.left;
         if (this.grid && this.grid[this.row][this.col - 1]) {
           this.grid[this.row][this.col - 1].edges.right =
             this.gridCell.edges.left;
+            this.edgeCheck('left');
         }
-        this.edgeCheck('left');
-        this.edgeCheck('');
         break;
       default:
         break;
     }
+    this.edgeCheck('');
     if (emitChange) {
       this.gridChange.emit();
     }
@@ -192,14 +198,8 @@ export class GridCellComponent {
    * @param event - checks the key clicked
    */
   onClick(event: MouseEvent) {
-    console.log(this.gridCell.color);
     if (event.ctrlKey) {
-      if (
-        this.gridCell.edges['top'] &&
-        this.gridCell.edges['right'] &&
-        this.gridCell.edges['bottom'] &&
-        this.gridCell.edges['left']
-      ) {
+      if (this.sameEdges(0,0)) {
         for (const edge in this.gridCell.edges) {
           this.toggleEdge(edge, false);
         }
@@ -212,14 +212,8 @@ export class GridCellComponent {
       }
       this.gridChange.emit();
     } else if (event.altKey) {
-      if (
-        this.gridCell.edges['top'] &&
-        this.gridCell.edges['right'] &&
-        this.gridCell.edges['bottom'] &&
-        this.gridCell.edges['left']
-      ) {
+      if (this.sameEdges(0,0)) {
         this.setColor('white');
-        console.log(this.gridCell.color);
         this.gridChange.emit();
       }
     }
