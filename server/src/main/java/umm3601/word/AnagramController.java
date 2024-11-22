@@ -35,7 +35,7 @@ public class AnagramController implements Controller {
   private static final String API_WORDS = "/api/anagram";
   private static final String API_WORD_BY_ID = "/api/anagram/{id}";
   private static final String API_WORD_GROUPS = "/api/anagram/wordGroups";
-  private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/wordGroup/{wordGroup}";
+  private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/wordGroup/{id}";
   // might need to be: "/api/anagram/wordGroups/{id}"
   private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history";
   static final String WORD_KEY = "word";
@@ -93,15 +93,13 @@ public class AnagramController implements Controller {
   }
 
   public void getWordsByWordGroup(Context ctx) {
-    // used in word group profiles, does not save a search to db
-    Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
-    ArrayList<Word> matchingWords = wordCollection.find(regex(WORD_GROUP_KEY, pattern)).into(new ArrayList<>());
+    String wordGroup = ctx.pathParam("id");
+    ArrayList<Word> matchingWords = wordCollection.find(regex(WORD_GROUP_KEY, wordGroup)).into(new ArrayList<>());
     ctx.json(matchingWords);
     ctx.status(HttpStatus.OK);
   }
 
   public void getWordGroups(Context ctx) {
-    System.out.println("entered getWordGroups() in Anagram controller");
     ArrayList<String> wordGroups = wordCollection
         // want to find all of the word groups across the words and to add
         // non-duplicates

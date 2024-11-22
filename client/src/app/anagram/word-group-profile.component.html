@@ -1,10 +1,30 @@
-<p>word-group-profile works!</p>
-
-<!-- <div>
-  <mat-card>
-    <mat-card-header class="word-group-title">
-      <mat-card-title>Group Name: {{wordGroup}}</mat-card-title>
-      <mat-card-subtitle>Number of words: {{wordGroup.toString}}</mat-card-subtitle>
-    </mat-card-header>
-  </mat-card>
-</div> -->
+<div>
+  @if(words()){
+    <mat-card>
+      <mat-card-header class="word-group-title">
+        <mat-card-title>Group Name: {{wordGroup()}}</mat-card-title>
+         <!-- <mat-card-title>Temp Title</mat-card-title> -->
+        <mat-card-subtitle>Number of words: {{words().length}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-list>
+        @if(words().length === 0 ){
+          <p>No Words in Word Group</p>
+        } @for(word of words(); track word._id) {
+          <div>
+            <span>{{word.word}}</span>
+          </div>
+        }
+      </mat-list>
+    </mat-card>
+  } @else {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Loading words...</mat-card-title>
+      </mat-card-header>
+      <mat-card-actions>
+        <!-- button to return to home page -->
+         <p>button to return to anagram coming soon!</p>
+      </mat-card-actions>
+    </mat-card>
+  }
+</div>

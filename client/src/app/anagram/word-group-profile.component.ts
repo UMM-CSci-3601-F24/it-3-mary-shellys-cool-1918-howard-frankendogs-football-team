@@ -1,34 +1,48 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute} from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { ActivatedRoute, ParamMap} from '@angular/router';
 import { WordService } from './word.service';
-// import { RoomService } from '../room.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { map, switchMap, catchError, of, Subject } from 'rxjs';
 import { Word } from './word';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-word-group-profile',
   standalone: true,
-  imports: [MatCardModule],
+  imports: [MatCardModule,
+    MatListModule
+  ],
   templateUrl: './word-group-profile.component.html',
   styleUrl: './word-group-profile.component.scss'
 })
 export class WordGroupProfileComponent {
-  private route = inject(ActivatedRoute);
+  wordGroup = toSignal(this.route.paramMap.pipe(
+    map((paramMap: ParamMap) => paramMap.get("id"))));
 
-  words: Word[];
-  // wordGroup: string = this.route.paramMap("id")//look into user profiles from lab 4
+  constructor(
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private wordService: WordService
+  ) {}
 
-  // constructor(
-  //   private wordService: WordService,
-  //   // private roomService: RoomService,
-  //   private snackBar: MatSnackBar) {
-  //     this.loadWordsByWordGroup(this.wordGroup);
-  // }
+  words = toSignal(
+    this.route.paramMap.pipe(
+      // Map the paramMap into the id
+      map((paramMap: ParamMap) => paramMap.get('id')),
+      switchMap((wordGroup: string) => this.wordService.getWordsByWordGroup(wordGroup)),
+      catchError((_err) => {
+        this.error.set({
+          help: 'There was a problem loading the word group – try again.',
+          httpResponse: _err.message,
+          message: _err.error?.title,
+        });
+        return of<Word[]>();
+      })
+    )
+  );
+  error = signal({ help: '', httpResponse: '', message: '' });
 
-  // loadWordsByWordGroup(wordGroup) {
-  //   this.wordService.getWordsByWordGroup(wordGroup).subscribe(word => {
-  //     this.words = word
-  //   })
-  // }
+  private ngUnsubscribe = new Subject<void>();
 }
