@@ -40,6 +40,7 @@ describe('GridCellComponent', () => {
   //   const edges = { top: false, right: false, bottom: false, left: false };
   //   component.setEdges(edges);
   //   fixture.detectChanges();
+  //   expect(component.checkEdges(0,0)).toBeFalse()
 
   //   const inputElement: HTMLInputElement =
   //     fixture.nativeElement.querySelector('input');
@@ -64,6 +65,7 @@ describe('GridCellComponent', () => {
   //   expect(cellElement.classList).toContain('bold-bottom');
   //   expect(cellElement.classList).toContain('bold-left');
   //   expect(component.gridCell.color).toContain('black');
+  //   expect(component.checkEdges(0,0)).toBeTrue()
   // });
 
   // it('should un-bold after ctrl click', () => {

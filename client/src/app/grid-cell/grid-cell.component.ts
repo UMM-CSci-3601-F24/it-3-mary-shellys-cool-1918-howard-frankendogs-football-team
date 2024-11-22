@@ -91,17 +91,19 @@ export class GridCellComponent {
     this.gridCell.editable = state;
   }
 
-  sameEdges (rowOffset: number, colOffset: number) {
-    if (
+  /**
+   * checks all edges to see if there all the same
+   * @param rowOffset number to check adj row
+   * @param colOffset number to check adj col
+   * @returns returns the boolean true or false
+   */
+  sameEdges(rowOffset: number, colOffset: number) {
+    return (
       this.grid[this.row + rowOffset][this.col + colOffset].edges.top &&
       this.grid[this.row + rowOffset][this.col + colOffset].edges.right &&
       this.grid[this.row + rowOffset][this.col + colOffset].edges.bottom &&
       this.grid[this.row + rowOffset][this.col + colOffset].edges.left
     )
-      return true;
-    else {
-      return false;
-    }
   }
 
   /**
@@ -111,11 +113,13 @@ export class GridCellComponent {
    * @param colOffset number to check adj col
    */
   adjacentCheck(rowOffset: number, colOffset: number) {
-  if (this.sameEdges(rowOffset, colOffset)) {
-    this.grid[this.row + rowOffset][this.col + colOffset].color = 'black';
-  } else {
-    if (this.grid[this.row + rowOffset][this.col + colOffset].color === 'black') {
-      this.grid[this.row + rowOffset][this.col + colOffset].color = ''
+    if (this.sameEdges(rowOffset, colOffset)) {
+      this.grid[this.row + rowOffset][this.col + colOffset].color = 'black';
+    } else {
+      if (
+        this.grid[this.row + rowOffset][this.col + colOffset].color === 'black'
+      ) {
+        this.grid[this.row + rowOffset][this.col + colOffset].color = '';
       }
     }
   }
@@ -127,21 +131,21 @@ export class GridCellComponent {
   edgeCheck(edge: string) {
     switch (edge) {
       case 'top':
-        this.adjacentCheck(-1,0);
+        this.adjacentCheck(-1, 0);
         break;
       case 'right':
-        this.adjacentCheck(0,1);
+        this.adjacentCheck(0, 1);
         break;
       case 'bottom':
-        this.adjacentCheck(1,0);
+        this.adjacentCheck(1, 0);
         break;
       case 'left':
-        this.adjacentCheck(0,-1);
+        this.adjacentCheck(0, -1);
         break;
       default:
-        this.adjacentCheck(0,0);
         break;
     }
+    this.adjacentCheck(0, 0);
   }
 
   /**
@@ -155,7 +159,7 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row - 1]) {
           this.grid[this.row - 1][this.col].edges.bottom =
             this.gridCell.edges.top;
-            this.edgeCheck('top');
+          this.edgeCheck('top');
         }
         break;
       case 'right':
@@ -163,7 +167,7 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row][this.col + 1]) {
           this.grid[this.row][this.col + 1].edges.left =
             this.gridCell.edges.right;
-            this.edgeCheck('right');
+          this.edgeCheck('right');
         }
         break;
       case 'bottom':
@@ -171,7 +175,7 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row + 1]) {
           this.grid[this.row + 1][this.col].edges.top =
             this.gridCell.edges.bottom;
-            this.edgeCheck('bottom');
+          this.edgeCheck('bottom');
         }
         break;
       case 'left':
@@ -179,13 +183,12 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row][this.col - 1]) {
           this.grid[this.row][this.col - 1].edges.right =
             this.gridCell.edges.left;
-            this.edgeCheck('left');
+          this.edgeCheck('left');
         }
         break;
       default:
         break;
     }
-    this.edgeCheck('');
     if (emitChange) {
       this.gridChange.emit();
     }
@@ -199,7 +202,7 @@ export class GridCellComponent {
    */
   onClick(event: MouseEvent) {
     if (event.ctrlKey) {
-      if (this.sameEdges(0,0)) {
+      if (this.sameEdges(0, 0)) {
         for (const edge in this.gridCell.edges) {
           this.toggleEdge(edge, false);
         }
@@ -212,7 +215,7 @@ export class GridCellComponent {
       }
       this.gridChange.emit();
     } else if (event.altKey) {
-      if (this.sameEdges(0,0)) {
+      if (this.sameEdges(0, 0)) {
         this.setColor('white');
         this.gridChange.emit();
       }
