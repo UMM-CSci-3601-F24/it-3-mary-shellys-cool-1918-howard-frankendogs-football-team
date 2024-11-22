@@ -34,114 +34,6 @@ describe('GridCellComponent', () => {
     expect(cell.gridCell.edges.left).toBeFalse();
   });
 
-  // it('should bold after ctrl click', () => {
-  //   const fixture = TestBed.createComponent(GridCellComponent);
-  //   const component = fixture.componentInstance;
-  //   const edges = { top: false, right: false, bottom: false, left: false };
-  //   component.setEdges(edges);
-  //   fixture.detectChanges();
-  //   expect(component.checkEdges(0,0)).toBeFalse()
-
-  //   const inputElement: HTMLInputElement =
-  //     fixture.nativeElement.querySelector('input');
-
-  //   inputElement.focus();
-  //   fixture.detectChanges();
-
-  //   expect(document.activeElement).toBe(inputElement);
-
-  //   const event = new MouseEvent('click', { ctrlKey: true });
-  //   inputElement.dispatchEvent(event);
-  //   fixture.detectChanges();
-
-  //   const cellElement: HTMLElement =
-  //     fixture.nativeElement.querySelector('.cell');
-  //   expect(component.gridCell.edges.top).toBeTrue();
-  //   expect(component.gridCell.edges.left).toBeTrue();
-  //   expect(component.gridCell.edges.right).toBeTrue();
-  //   expect(component.gridCell.edges.bottom).toBeTrue();
-  //   expect(cellElement.classList).toContain('bold-right');
-  //   expect(cellElement.classList).toContain('bold-top');
-  //   expect(cellElement.classList).toContain('bold-bottom');
-  //   expect(cellElement.classList).toContain('bold-left');
-  //   expect(component.gridCell.color).toContain('black');
-  //   expect(component.checkEdges(0,0)).toBeTrue()
-  // });
-
-  // it('should un-bold after ctrl click', () => {
-  //   const fixture = TestBed.createComponent(GridCellComponent);
-  //   const component = fixture.componentInstance;
-  //   const edges = { top: true, right: true, bottom: true, left: true };
-  //   component.setEdges(edges);
-  //   fixture.detectChanges();
-
-  //   const inputElement: HTMLInputElement =
-  //     fixture.nativeElement.querySelector('input');
-
-  //   inputElement.focus();
-  //   fixture.detectChanges();
-
-  //   expect(document.activeElement).toBe(inputElement);
-
-  //   const event = new MouseEvent('click', { ctrlKey: true });
-  //   inputElement.dispatchEvent(event);
-  //   fixture.detectChanges();
-
-  //   const cellElement: HTMLElement =
-  //     fixture.nativeElement.querySelector('.cell');
-  //   const cellEditableElement: HTMLElement =
-  //     fixture.nativeElement.querySelector('.cell-input');
-
-  //   expect(component.gridCell.edges.top).toBeFalse();
-  //   expect(component.gridCell.edges.left).toBeFalse();
-  //   expect(component.gridCell.edges.right).toBeFalse();
-  //   expect(component.gridCell.edges.bottom).toBeFalse();
-  //   expect(cellElement.classList).not.toContain('bold-top');
-  //   expect(cellElement.classList).not.toContain('bold-right');
-  //   expect(cellElement.classList).not.toContain('bold-bottom');
-  //   expect(cellElement.classList).not.toContain('bold-left');
-  //   expect(cellEditableElement.classList).not.toContain('blacked-out');
-  // });
-
-    // it('should keep bold edges but un-bold background on alt click', () => {
-    //   const fixture = TestBed.createComponent(GridCellComponent);
-    //   const component = fixture.componentInstance;
-    //   const edges = { top: false, right: false, bottom: false, left: false };
-    //   component.setEdges(edges);
-    //   fixture.detectChanges();
-
-    //   const inputElement: HTMLInputElement =
-    //     fixture.nativeElement.querySelector('input');
-
-    //   inputElement.focus();
-    //   fixture.detectChanges();
-
-    //   expect(document.activeElement).toBe(inputElement);
-
-    //   const event = new MouseEvent('click', { ctrlKey: true });
-    //   inputElement.dispatchEvent(event);
-    //   fixture.detectChanges();
-
-    //   const eventAlt = new MouseEvent('click', { altKey: true });
-    //   inputElement.dispatchEvent(eventAlt);
-    //   fixture.detectChanges();
-
-    //   const cellElement: HTMLElement =
-    //     fixture.nativeElement.querySelector('.cell');
-    //   const cellEditableElement: HTMLElement =
-    //     fixture.nativeElement.querySelector('.cell-input');
-    //   expect(component.gridCell.edges.top).toBeTrue();
-    //   expect(component.gridCell.edges.left).toBeTrue();
-    //   expect(component.gridCell.edges.right).toBeTrue();
-    //   expect(component.gridCell.edges.bottom).toBeTrue();
-    //   expect(component.gridCell.color).toContain('white');
-    //   expect(cellElement.classList).toContain('bold-top');
-    //   expect(cellElement.classList).toContain('bold-right');
-    //   expect(cellElement.classList).toContain('bold-bottom');
-    //   expect(cellElement.classList).toContain('bold-left');
-    //   expect(cellEditableElement.classList).not.toContain('blacked-out');
-    // });
-
   it('should disallow input into the cell', () => {
     const fixture = TestBed.createComponent(GridCellComponent);
     const component = fixture.componentInstance;
@@ -369,8 +261,75 @@ describe('GridCellComponent toggleEdge', () => {
     fixture.detectChanges();
   });
 
+  it('should return true when all edges are true', () => {
+    component.toggleEdge('top', true);
+    component.toggleEdge('left', true);
+    component.toggleEdge('right', true);
+    component.toggleEdge('bottom', true);
+    expect(component.allEdgeCheck(0,0)).toBeTrue()
+  });
+
+  it('should bold all on ctrl click', () => {
+    const inputElement: HTMLInputElement =
+      fixture.nativeElement.querySelector('input');
+
+    inputElement.focus();
+    fixture.detectChanges();
+
+    expect(document.activeElement).toBe(inputElement);
+
+    const event = new MouseEvent('click', { ctrlKey: true });
+    inputElement.dispatchEvent(event);
+    fixture.detectChanges();
+
+    expect(component.allEdgeCheck(0,0)).toBeTrue()
+    expect(component.gridCell.color).toContain('black');
+  });
+
+  it('should bold all on ctrl click', () => {
+    const inputElement: HTMLInputElement =
+      fixture.nativeElement.querySelector('input');
+
+    inputElement.focus();
+    fixture.detectChanges();
+
+    expect(document.activeElement).toBe(inputElement);
+
+    const event = new MouseEvent('click', { ctrlKey: true });
+    inputElement.dispatchEvent(event);
+    fixture.detectChanges();
+
+    inputElement.dispatchEvent(event);
+    fixture.detectChanges();
+
+    expect(component.allEdgeCheck(0,0)).toBeFalse();
+    expect(component.gridCell.color).toBe('');
+  });
+
+  it('should make cell white on alt click', () => {
+    const inputElement: HTMLInputElement =
+      fixture.nativeElement.querySelector('input');
+
+    inputElement.focus();
+    fixture.detectChanges();
+
+    expect(document.activeElement).toBe(inputElement);
+
+    const event = new MouseEvent('click', { ctrlKey: true });
+    inputElement.dispatchEvent(event);
+    fixture.detectChanges();
+
+    const event2 = new MouseEvent('click', { altKey: true });
+    inputElement.dispatchEvent(event2);
+    fixture.detectChanges();
+
+    expect(component.allEdgeCheck(0,0)).toBeTrue();
+    expect(component.gridCell.color).toContain('white');
+  });
+
   it('should toggle the top edge and update the adjacent cell', () => {
     component.toggleEdge('top', true);
+    expect(component.allEdgeCheck(0,0)).toBeFalse();
     expect(component.gridCell.edges.top).toBeTrue();
     expect(component.grid[0][1].edges.bottom).toBeTrue();
   });

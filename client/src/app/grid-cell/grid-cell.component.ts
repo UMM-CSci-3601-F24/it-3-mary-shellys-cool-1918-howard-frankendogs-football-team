@@ -97,7 +97,7 @@ export class GridCellComponent {
    * @param colOffset number to check adj col
    * @returns returns the boolean true or false
    */
-  sameEdges(rowOffset: number, colOffset: number) {
+  allEdgeCheck(rowOffset: number, colOffset: number) {
     return (
       this.grid[this.row + rowOffset][this.col + colOffset].edges.top &&
       this.grid[this.row + rowOffset][this.col + colOffset].edges.right &&
@@ -112,8 +112,8 @@ export class GridCellComponent {
    * @param rowOffset number to check adj row
    * @param colOffset number to check adj col
    */
-  adjacentCheck(rowOffset: number, colOffset: number) {
-    if (this.sameEdges(rowOffset, colOffset)) {
+  adjacentCellCheck(rowOffset: number, colOffset: number) {
+    if (this.allEdgeCheck(rowOffset, colOffset)) {
       this.grid[this.row + rowOffset][this.col + colOffset].color = 'black';
     } else {
       if (
@@ -128,24 +128,24 @@ export class GridCellComponent {
    * decides what adjacent cell to check
    * @param edge the edge to check
    */
-  edgeCheck(edge: string) {
+  cellCheck(edge: string) {
     switch (edge) {
       case 'top':
-        this.adjacentCheck(-1, 0);
+        this.adjacentCellCheck(-1, 0);
         break;
       case 'right':
-        this.adjacentCheck(0, 1);
+        this.adjacentCellCheck(0, 1);
         break;
       case 'bottom':
-        this.adjacentCheck(1, 0);
+        this.adjacentCellCheck(1, 0);
         break;
       case 'left':
-        this.adjacentCheck(0, -1);
+        this.adjacentCellCheck(0, -1);
         break;
       default:
+        this.adjacentCellCheck(0, 0);
         break;
     }
-    this.adjacentCheck(0, 0);
   }
 
   /**
@@ -159,7 +159,7 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row - 1]) {
           this.grid[this.row - 1][this.col].edges.bottom =
             this.gridCell.edges.top;
-          this.edgeCheck('top');
+          this.cellCheck('top');
         }
         break;
       case 'right':
@@ -167,7 +167,7 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row][this.col + 1]) {
           this.grid[this.row][this.col + 1].edges.left =
             this.gridCell.edges.right;
-          this.edgeCheck('right');
+          this.cellCheck('right');
         }
         break;
       case 'bottom':
@@ -175,7 +175,7 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row + 1]) {
           this.grid[this.row + 1][this.col].edges.top =
             this.gridCell.edges.bottom;
-          this.edgeCheck('bottom');
+          this.cellCheck('bottom');
         }
         break;
       case 'left':
@@ -183,12 +183,13 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row][this.col - 1]) {
           this.grid[this.row][this.col - 1].edges.right =
             this.gridCell.edges.left;
-          this.edgeCheck('left');
+          this.cellCheck('left');
         }
         break;
       default:
         break;
     }
+    this.cellCheck('');
     if (emitChange) {
       this.gridChange.emit();
     }
@@ -202,7 +203,7 @@ export class GridCellComponent {
    */
   onClick(event: MouseEvent) {
     if (event.ctrlKey) {
-      if (this.sameEdges(0, 0)) {
+      if (this.allEdgeCheck(0, 0)) {
         for (const edge in this.gridCell.edges) {
           this.toggleEdge(edge, false);
         }
@@ -215,7 +216,7 @@ export class GridCellComponent {
       }
       this.gridChange.emit();
     } else if (event.altKey) {
-      if (this.sameEdges(0, 0)) {
+      if (this.allEdgeCheck(0, 0)) {
         this.setColor('white');
         this.gridChange.emit();
       }

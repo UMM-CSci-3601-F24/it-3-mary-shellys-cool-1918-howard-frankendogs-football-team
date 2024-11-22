@@ -9,18 +9,19 @@ describe('Grid Component', () => {
   });
 
   it('should open saved grid to server', () => {
-    cy.get(':nth-child(1) > :nth-child(2) > :nth-child(2) > button').click();
-    cy.get(':nth-child(1) > :nth-child(2) > :nth-child(2) > button').click();
+    cy.get(':nth-child(2) > .ng-star-inserted > button').click();
+    cy.get(':nth-child(2) > .ng-star-inserted > button').click();
     cy.intercept('api/grid').as('saveGrids');
     cy.url().should('contain', '/seededGrids/grid/673ba3a31e6a570b74f9a310');
   });
 
   it('should save a grid to server', () => {
     page.saveGrid();
-    cy.get(':nth-child(3) > button').click();
-    cy.get(':nth-child(3) > button').click(); // these buttons wouldn't show up if it saves, i promise this test actually checks for something
-    // cy.url().should('contain', '/seededGrids/grid'); // if i can figure out a way to check url i will otherwise this good enough
+    cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click();
+    cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click(); // these buttons wouldn't show up if it saves, i promise this test actually checks for something
+
   });
+
   it('should render the grid with default size', () => {
     cy.get('app-grid-component').within(() => {
       cy.get('mat-grid-tile').should('have.length', 100);
