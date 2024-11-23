@@ -1,115 +1,104 @@
 <div class="flex-row flex-wrap">
-   <!-- Search Param Entry Box -->
-  <div class="flex-row flex-wrap column left">
-    <mat-card class="search-card">
-      <mat-card-header>
-        <mat-card-title class="word-list-title"
-          >Anagram Generator</mat-card-title
-        >
-      </mat-card-header>
-      <mat-card-content>
-        <!-- Filtering is done in Mongo/server side -->
-        <div class="flex-row gap-8 flex-wrap">
-          <mat-form-field class="input-field">
-            <mat-label>Input letters</mat-label>
-            <input matInput data-test="wordContainsInput" placeholder="Filter by contents" [(ngModel)]="contains">
-          </mat-form-field>
-          <mat-form-field class="input-field">
-            <mat-label> Input Word Group</mat-label>
-            <input matInput data-test="wordGroupInput" placeholder="Filter by wordGroup" [(ngModel)]="group">
-            <mat-label>Contains</mat-label>
-            <input
-              matInput
-              data-test="wordContainsInput"
-              placeholder="Filter by contents"
-              [(ngModel)]="contains"
-            />
-          </mat-form-field>
-          <mat-form-field class="input-field">
-            <mat-label>Word Group</mat-label>
-            <input
-              matInput
-              data-test="wordGroupInput"
-              placeholder="Filter by wordGroup"
-              [(ngModel)]="group"
-            />
-          </mat-form-field>
-        </div>
-        <div>
-          <label for="filterType">Filter Type</label>
-          <mat-radio-group [(ngModel)]="filterType" aria-label="Filter Type" dataTest="filterTypeRadio">
-            <mat-radio-button checked value="exact">Exact</mat-radio-button>
-            <mat-radio-button value="contains">Contains</mat-radio-button>
-          </mat-radio-group>
-        </div>
-        <!-- Sorting is done on the client -->
-        <mat-form-field class="input-field">
-          <mat-label>Sort</mat-label>
-          <mat-select [(ngModel)]="sortType" data-test="sortTypeSelect">
-            <mat-option value="null">--</mat-option>
-            <mat-option value="alphabetical">Alphabetical</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <div>
-          <!-- This is going to be kept here till we get the toggle confirmed working
-          <label for="sortOrder">Sort Order</label>
-          <mat-radio-group aria-label="Sort Order" [(ngModel)]="sortOrder" data-test="sortOrderRadio">
-            <mat-radio-button value="increasing">Increasing</mat-radio-button>
-            <mat-radio-button value="decreasing">Decreasing</mat-radio-button>
-          </mat-radio-group> -->
-          <p>
-            <mat-slide-toggle
-              class="sortOrder"
-              [(ngModel)]="sortOrder"
-              data-test="sortOrderToggle"
-              aria-label="Change sort order"
-            >
-              Change Sort Order
-            </mat-slide-toggle>
-          </p>
-        </div>
-        <button
-          mat-fab
-          class="add-word-fab"
-          matTooltip="Add New Word Group"
-          matTooltipPosition="right"
-          routerLink="/anagram/new"
-          data-test="addWordButton"
-        >
-          <mat-icon class="md-24" aria-label="Add Word List">add</mat-icon>
-        </button>
-        <!-- <button
-          mat-fab
-          class="delete-wordGroup-fab"
-          matTooltip="Delete Word Group"
-          matTooltipPosition="right"
-          (click)="deleteWordGroup(group.toString())"
-          routerLink="/anagram"
-          data-test="deleteWordGroupButton"
-        >
-          <mat-icon class="md-24" aria-label="Delete Word List">delete</mat-icon>
-        </button> -->
-      </mat-card-content>
-    </mat-card>
-  </div>
-  <!-- Word List Links -->
-  <div class="flex-row column right">
-    <mat-card>
-    <mat-card-header>Word Lists</mat-card-header>
-    <mat-card-subtitle style="visibility: hidden">Groups from room : </mat-card-subtitle>
-      <mat-card-content>
-        @for (group of this.wordGroups; track group) {
-          <div>
-            <!-- <p>{{group}}</p> -->
-            <button
-              routerLink="/anagram/wordGroup/{{group}}" data-test="wordGroupProfileButton">
-              {{ group }}
-            </button>
-          </div>
-        }
-      </mat-card-content>
-    </mat-card>
-  </div>
+  <!-- Search Param Entry Box -->
+ <div class="flex-row flex-wrap column left">
+   <mat-card class="search-card">
+     <mat-card-header>
+       <mat-card-title class="word-list-title"
+         >Anagram Generator</mat-card-title
+       >
+     </mat-card-header>
+     <mat-card-content>
+       <!-- Filtering is done in Mongo/server side -->
+       <div class="flex-row gap-8 flex-wrap">
+         <mat-form-field class="input-field">
+           <mat-label>Input letters</mat-label>
+           <input matInput data-test="wordContainsInput" placeholder="Filter by contents" [(ngModel)]="contains">
+         </mat-form-field>
+         <mat-form-field class="input-field">
+           <mat-label>Word Group</mat-label>
+           <input
+             matInput
+             data-test="wordGroupInput"
+             placeholder="Filter by wordGroup"
+             [(ngModel)]="group"
+           />
+         </mat-form-field>
+       </div>
+       <div>
+         <label for="filterType">Filter Type</label>
+         <mat-radio-group [(ngModel)]="filterType" aria-label="Filter Type" dataTest="filterTypeRadio">
+           <mat-radio-button checked value="exact">Exact</mat-radio-button>
+           <mat-radio-button value="contains">Contains</mat-radio-button>
+         </mat-radio-group>
+       </div>
+       <!-- Sorting is done on the client -->
+       <mat-form-field class="input-field">
+         <mat-label>Sort</mat-label>
+         <mat-select [(ngModel)]="sortType" data-test="sortTypeSelect">
+           <mat-option value="null">--</mat-option>
+           <mat-option value="alphabetical">Alphabetical</mat-option>
+         </mat-select>
+       </mat-form-field>
+       <div>
+         <!-- This is going to be kept here till we get the toggle confirmed working
+         <label for="sortOrder">Sort Order</label>
+         <mat-radio-group aria-label="Sort Order" [(ngModel)]="sortOrder" data-test="sortOrderRadio">
+           <mat-radio-button value="increasing">Increasing</mat-radio-button>
+           <mat-radio-button value="decreasing">Decreasing</mat-radio-button>
+         </mat-radio-group> -->
+         <p>
+           <mat-slide-toggle
+             class="sortOrder"
+             [(ngModel)]="sortOrder"
+             data-test="sortOrderToggle"
+             aria-label="Change sort order"
+           >
+             Change Sort Order
+           </mat-slide-toggle>
+         </p>
+       </div>
+       <button
+         mat-fab
+         class="add-word-fab"
+         matTooltip="Add New Word Group"
+         matTooltipPosition="right"
+         routerLink="/anagram/new"
+         data-test="addWordButton"
+       >
+         <mat-icon class="md-24" aria-label="Add Word List">add</mat-icon>
+       </button>
+       <!-- <button
+         mat-fab
+         class="delete-wordGroup-fab"
+         matTooltip="Delete Word Group"
+         matTooltipPosition="right"
+         (click)="deleteWordGroup(group.toString())"
+         routerLink="/anagram"
+         data-test="deleteWordGroupButton"
+       >
+         <mat-icon class="md-24" aria-label="Delete Word List">delete</mat-icon>
+       </button> -->
+     </mat-card-content>
+   </mat-card>
+ </div>
+ <!-- Word List Links -->
+ <div class="flex-row column right">
+   <mat-card>
+   <mat-card-header>Word Lists</mat-card-header>
+   <mat-card-subtitle style="visibility: hidden">Groups from room : </mat-card-subtitle>
+     <mat-card-content>
+       @for (group of this.wordGroups; track group) {
+         <div>
+           <!-- <p>{{group}}</p> -->
+           <button
+             routerLink="/anagram/wordGroup/{{group}}" data-test="wordGroupProfileButton">
+             {{ group }}
+           </button>
+         </div>
+       }
+     </mat-card-content>
+   </mat-card>
+ </div>
 </div>
 <br />
 <div class="flex-row flex-wrap">

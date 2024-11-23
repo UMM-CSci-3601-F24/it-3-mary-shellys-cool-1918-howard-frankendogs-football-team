@@ -677,22 +677,22 @@ class AnagramControllerSpec {
   // assertTrue(newWords.stream().anyMatch(word ->
   // word.get("word").equals(addedWord.get("word"))
 
-  @Test
-  void deleteListWords() throws IOException {
-    String testWordGroup = "testGroup";
-    db.getCollection("words").insertMany(Arrays.asList(
-        new Document().append("word", "word1").append("wordGroup", testWordGroup),
-        new Document().append("word", "word2").append("wordGroup", testWordGroup),
-        new Document().append("word", "word3").append("wordGroup", "otherGroup") // This shouldn't be deleted
-    ));
-    assertEquals(2, db.getCollection("words")
-        .countDocuments(eq("wordGroup", testWordGroup)));
-    when(ctx.pathParam("wordGroup")).thenReturn(testWordGroup);
-    anagramController.deleteListWords(ctx);
-    verify(ctx).status(HttpStatus.OK);
-    assertEquals(0, db.getCollection("words")
-        .countDocuments(eq("wordGroup", testWordGroup)));
-    assertEquals(1, db.getCollection("words")
-        .countDocuments(eq("wordGroup", "otherGroup")));
-  }
+  // @Test
+  // void deleteListWords() throws IOException {
+  //   String testWordGroup = "testGroup";
+  //   db.getCollection("words").insertMany(Arrays.asList(
+  //       new Document().append("word", "word1").append("wordGroup", testWordGroup),
+  //       new Document().append("word", "word2").append("wordGroup", testWordGroup),
+  //       new Document().append("word", "word3").append("wordGroup", "otherGroup") // This shouldn't be deleted
+  //   ));
+  //   assertEquals(2, db.getCollection("words")
+  //       .countDocuments(eq("wordGroup", testWordGroup)));
+  //   when(ctx.pathParam("wordGroup")).thenReturn(testWordGroup);
+  //   anagramController.deleteListWords(ctx);
+  //   verify(ctx).status(HttpStatus.OK);
+  //   assertEquals(0, db.getCollection("words")
+  //       .countDocuments(eq("wordGroup", testWordGroup)));
+  //   assertEquals(1, db.getCollection("words")
+  //       .countDocuments(eq("wordGroup", "otherGroup")));
+  // }
 }

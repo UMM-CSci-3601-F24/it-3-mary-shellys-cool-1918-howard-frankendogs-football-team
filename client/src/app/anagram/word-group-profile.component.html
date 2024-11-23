@@ -8,10 +8,10 @@
       </mat-card-header>
       <mat-list>
         @if(words().length === 0 ){
-          <p>No Words in Word Group</p>
+          <mat-list-item>No Words in Word Group</mat-list-item>
         } @for(word of words(); track word._id) {
           <div>
-            <span>{{word.word}}</span>
+            <mat-list-item>{{word.word}}</mat-list-item>
           </div>
         }
       </mat-list>
@@ -19,12 +19,8 @@
   } @else {
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Loading words...</mat-card-title>
+        <mat-card-title>Loading Words:</mat-card-title>
       </mat-card-header>
-      <mat-card-actions>
-        <!-- button to return to home page -->
-         <p>button to return to anagram coming soon!</p>
-      </mat-card-actions>
     </mat-card>
   }
 </div>
