@@ -5,7 +5,7 @@ describe('add word list', () => {
 
   beforeEach(() => {
     page.navigateTo();
-    cy.wait(30000);
+    cy.wait(3000);
   });
 
   it('Should have the correct title', () => {
