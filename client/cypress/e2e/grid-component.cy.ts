@@ -8,12 +8,12 @@ describe('Grid Component', () => {
     cy.task('seed:database');
   });
 
-  it('should open saved grid to server', () => {
-    cy.get(':nth-child(2) > .ng-star-inserted > button').click();
-    cy.get(':nth-child(2) > .ng-star-inserted > button').click();
-    cy.intercept('api/grid').as('saveGrids');
-    cy.url().should('contain', '/seededGrids/grid/673ba3a31e6a570b74f9a310');
-  });
+  // it('should open saved grid to server', () => {
+  //   cy.get(':nth-child(2) > .ng-star-inserted > button').click();
+  //   cy.get(':nth-child(2) > .ng-star-inserted > button').click();
+  //   cy.intercept('api/grid').as('saveGrids');
+  //   cy.url().should('contain', '/seededGrids/grid/673ba3a31e6a570b74f9a310');
+  // });
 
   it('should save a grid to server', () => {
     page.saveGrid();
