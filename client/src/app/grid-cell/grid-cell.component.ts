@@ -108,7 +108,7 @@ export class GridCellComponent {
 
   /**
    * checks this & an adjacent cell to see if it should be blacked-out or not
-   * the else statement un blacks out a cell if all edges are not bolded
+   * the else statement un-blacks out a cell if all edges are not bolded
    * @param rowOffset number to check adj row
    * @param colOffset number to check adj col
    */
