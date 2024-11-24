@@ -40,19 +40,13 @@
           </mat-select>
         </mat-form-field>
         <div>
-          <!-- This is going to be kept here till we get the toggle confirmed working
           <label for="sortOrder">Sort Order</label>
-          <mat-radio-group aria-label="Sort Order" [(ngModel)]="sortOrder" data-test="sortOrderRadio">
-            <mat-radio-button value="increasing">Increasing</mat-radio-button>
-            <mat-radio-button value="decreasing">Decreasing</mat-radio-button>
-          </mat-radio-group> -->
+          <mat-radio-group aria-label="Sort Order" [(ngModel)]="sortByWordOrGroup" data-test="sortOrderRadio">
+            <mat-radio-button checked value="word">word</mat-radio-button>
+            <mat-radio-button value="wordGroup">wordGroup</mat-radio-button>
+          </mat-radio-group>
           <p>
-            <mat-slide-toggle
-              class="sortOrder"
-              [(ngModel)]="sortOrder"
-              data-test="sortOrderToggle"
-              aria-label="Change sort order"
-            >
+            <mat-slide-toggle class="sortOrder" [(ngModel)]="sortOrder" data-test="sortOrderToggle" aria-label="Change sort order">
               Change Sort Order
             </mat-slide-toggle>
           </p>
