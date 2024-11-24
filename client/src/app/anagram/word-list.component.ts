@@ -54,7 +54,7 @@ export class WordListComponent {
   group = signal<string|undefined>(undefined);
 
   filterType = signal<string|undefined>("exact");
-  
+
   wordGroups: string[];
 
   errMsg = signal<string | undefined>(undefined);
@@ -121,7 +121,6 @@ export class WordListComponent {
   })
 
   loadWordGroups() {
-    console.log("entered loadWordGroups")
     this.roomService.getWordGroups().subscribe(wordGroups => {
       this.wordGroups = wordGroups
     })

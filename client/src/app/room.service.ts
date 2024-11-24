@@ -24,7 +24,6 @@ export class RoomService {
   }
 
   getWordGroups(): Observable<string[]> {
-    console.log("entered getWordGroups() in room service");
     return this.http.get<string[]>(`/api/anagram/wordGroups`);
   }
 }

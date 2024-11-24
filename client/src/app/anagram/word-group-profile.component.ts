@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap} from '@angular/router';
 import { WordService } from './word.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { map, switchMap, catchError, of, Subject } from 'rxjs';
 import { Word } from './word';
 import { MatListModule } from '@angular/material/list';
