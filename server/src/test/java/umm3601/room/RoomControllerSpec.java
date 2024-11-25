@@ -101,4 +101,20 @@ public class RoomControllerSpec {
 
     assertEquals(capturedRoom.getId(), addedRoom.getObjectId("_id").toHexString());
   }
+
+  @Test
+  public void canGetRoomById() throws IOException {
+    MongoCollection<Document> roomDocuments = db.getCollection("rooms");
+    Document testRoom = new Document().append("name", "Test Room");
+    roomDocuments.insertOne(testRoom);
+    String roomId = testRoom.getObjectId("_id").toHexString();
+
+    when(ctx.pathParam("id")).thenReturn(roomId);
+
+    roomController.getRoomById(ctx);
+
+    verify(ctx).json(roomCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(roomId, roomCaptor.getValue().getId());
+  }
 }
