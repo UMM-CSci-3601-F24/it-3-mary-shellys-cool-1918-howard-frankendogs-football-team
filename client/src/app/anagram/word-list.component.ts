@@ -48,6 +48,7 @@ export class WordListComponent {
   // client side sorting
   sortType = signal<string | undefined>(undefined);
   sortOrder = signal<boolean | undefined>(false);
+  sortByWordOrGroup = signal<string | undefined>(undefined);
   //server side filtering
   contains = signal<string|undefined>(undefined);
   group = signal<string|undefined>(undefined);
@@ -103,6 +104,7 @@ export class WordListComponent {
     return this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
+      sortByWordOrGroup: this.sortByWordOrGroup(),
     });
   });
 
