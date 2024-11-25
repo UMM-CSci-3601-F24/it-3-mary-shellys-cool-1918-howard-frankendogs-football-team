@@ -153,7 +153,7 @@ describe('AddWordComponent', () => {
       fixture.ngZone.run(() => {
         const addWordSpy = spyOn(wordService, 'addWord').and.returnValue(of(''));
         component.submitForm();
-        expect(addWordSpy).toHaveBeenCalledWith(component.addWordForm.value);
+        expect(addWordSpy).toHaveBeenCalledWith({word: 'pizza', wordGroup: 'Foods'});
         tick();
         expect(location.path()).toBe('/anagram');
         flush();

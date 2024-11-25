@@ -5,6 +5,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.regex;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -112,18 +113,27 @@ public class AnagramController implements Controller {
     Search newSearch = new Search();
     String filterType = ctx.queryParam(FILTER_TYPE_KEY);
     String searchedWord = ctx.queryParam(WORD_KEY);
+    Map<Character, Integer> charCountMap = new HashMap<>();
 
     // if searching for contains will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
       if ("exact".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
-        Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_KEY)), Pattern.CASE_INSENSITIVE);
-        filters.add(regex(WORD_KEY, pattern));
-      } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
-        for (char c : searchedWord.toCharArray()) {
-          filters.add(regex("word", Pattern.compile(Pattern.quote(String.valueOf(c)), Pattern.CASE_INSENSITIVE)));
+        //if filter type is exact it runs following code
+          String exactWord = ctx.queryParam(WORD_KEY).replace('_', '.');
+          //Because . are wildcards, replaces underscores with periods
+          Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); //makes a pattern
+          filters.add(regex(WORD_KEY, pattern)); //adds a regex with
+          newSearch.setContains(ctx.queryParam(WORD_KEY));
+        } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
+            for (char c : searchedWord.toCharArray()) {
+              charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
+          }
+          for (Map.Entry<Character, Integer> entry : charCountMap.entrySet()) {
+            char c = entry.getKey();
+            int count = entry.getValue();
+            String regexPattern = "(?i)(.*" + Pattern.quote(String.valueOf(c)) + ".*){" + count + "}";
+            filters.add(regex("word", Pattern.compile(regexPattern)));
         }
-      }
-      newSearch.setContains(ctx.queryParam(WORD_KEY));
     }
     // if searching by word group will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {

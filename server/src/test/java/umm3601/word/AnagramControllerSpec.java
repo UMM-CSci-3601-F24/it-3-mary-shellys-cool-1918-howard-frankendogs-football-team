@@ -2,6 +2,7 @@ package umm3601.word;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -372,6 +373,36 @@ class AnagramControllerSpec {
   }
 
   @Test
+  void canGetWordsWithUnderscores() throws IOException {
+    String targetHas = "_y";
+    Map<String, List<String>> queryParams = new HashMap<>();
+
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {targetHas}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(targetHas);
+    when(ctx.queryParam("filterType")).thenReturn("exact");
+
+    Validation validation = new Validation();
+    Validator<String> validator = validation.validator(AnagramController.WORD_KEY, String.class, targetHas);
+
+    when(ctx.queryParamAsClass(AnagramController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
+
+    anagramController.getWords(ctx);
+
+    verify(ctx).json(searchContextCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+
+    assertEquals(3, searchContextCaptor.getValue().words.size());
+    System.out.println(searchContextCaptor.getValue().words);
+
+    List<String> words = searchContextCaptor.getValue().words.stream()
+        .map(word -> word.word).collect(Collectors.toList());
+    assertTrue(words.contains("playstation"));
+    assertTrue(words.contains("skibbidy"));
+    assertTrue(words.contains("janky"));
+  }
+
+  @Test
   void canGetWordsWithContainsSi() throws IOException {
     String targetContains = "si";
     Map<String, List<String>> queryParams = new HashMap<>();
@@ -406,6 +437,39 @@ class AnagramControllerSpec {
   }
 
   @Test
+  void canGetWordsWithDuplicateO() throws IOException {
+    String targetContains = "oo";
+    Map<String, List<String>> queryParams = new HashMap<>();
+
+    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {targetContains}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn(targetContains);
+    when(ctx.queryParam("filterType")).thenReturn("contains");
+
+    Validation validation = new Validation();
+    Validator<String> validator = validation.validator(AnagramController.WORD_KEY, String.class, targetContains);
+
+    when(ctx.queryParamAsClass(AnagramController.WORD_GROUP_KEY, String.class)).thenReturn(validator);
+
+    anagramController.getWords(ctx);
+
+    verify(ctx).json(searchContextCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+
+    assertEquals(1, searchContextCaptor.getValue().words.size());
+
+    for (Word word : searchContextCaptor.getValue().words) {
+      assertTrue(word.word.contains("oo"));
+    }
+
+    List<String> words = searchContextCaptor.getValue().words.stream()
+        .map(word -> word.word).collect(Collectors.toList());
+    assertTrue(words.contains("cooked"));
+    assertFalse(words.contains("xbox"));
+    assertFalse(words.contains("playstation"));
+  }
+
+  @Test
   public void getWordWithExistentId() throws IOException {
     String id = wordId.toHexString();
     when(ctx.pathParam("id")).thenReturn(id);
@@ -417,51 +481,6 @@ class AnagramControllerSpec {
     assertEquals("janky", wordCaptor.getValue().word);
     assertEquals(wordId.toHexString(), wordCaptor.getValue()._id);
   }
-
-  // @Test
-  // public void exactFilterWorks() throws IOException {
-  //   when(ctx.queryParam("word")).thenReturn("x");
-  //   when(ctx.queryParam("filterType")).thenReturn("contains");
-
-  //   anagramController.getWords(ctx);
-  // }
-
-/*
-  @Test
-  public void testConstructFilterExact() throws IOException {
-    when(ctx.queryParamMap()).thenReturn(Map.of("word", List.of("test"), "filterType", List.of("exact")));
-    when(ctx.queryParam("word")).thenReturn("test");
-    when(ctx.queryParam("filterType")).thenReturn("exact");
-
-    anagramController.constructFilter(ctx);
-
-    Pattern pattern = Pattern.compile(Pattern.quote("test"), Pattern.CASE_INSENSITIVE);
-    //  Bson expectedFilter = regex("word", pattern);
-
-    //  assertEquals(expectedFilter, );
-    }
-*/
-
-/*
-  @Test public void testConstructFilterContains() throws IOException {
-
-    when(ctx.queryParamMap()).thenReturn(Map.of("word", List.of("test"), "filterType", List.of("contains")));
-    when(ctx.queryParam("word")).thenReturn("test");
-    when(ctx.queryParam("filterType")).thenReturn("contains");
-
-    anagramController.constructFilter(ctx);
-
-    List<Bson> expectedFilters = new ArrayList<>();
-
-    for (char c : "test".toCharArray()) {
-      expectedFilters.add(regex("word", Pattern.compile(Pattern.quote(String.valueOf(c)), Pattern.CASE_INSENSITIVE)));
-    }
-
-    // Bson expectedFilter = and(expectedFilters);
-    // assertEquals(expectedFilter, filter);
-  }
-*/
-
 
   @Test
   public void getWordWithBadId() throws IOException {

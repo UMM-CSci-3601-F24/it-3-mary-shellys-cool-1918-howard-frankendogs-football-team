@@ -9,6 +9,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { GridPackage } from './gridPackage';
 import { of } from 'rxjs';
 import { GridCell } from '../grid-cell/grid-cell';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('GridComponent', () => {
   let component: GridComponent;
@@ -17,7 +18,7 @@ describe('GridComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [FormsModule, GridComponent, RouterTestingModule, HttpClientTestingModule],
+      imports: [FormsModule, GridComponent, BrowserAnimationsModule, RouterTestingModule, HttpClientTestingModule],
       providers: [
         { provide: GridService, useValue: new MockGridService() },
         RoomService

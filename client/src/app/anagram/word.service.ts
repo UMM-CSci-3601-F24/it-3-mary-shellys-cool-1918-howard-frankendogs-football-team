@@ -40,14 +40,19 @@ export class WordService {
     const tempURL: string = this.wordUrl+"/wordGroup/"+wordGroup;
     return this.httpClient.get<Word[]>(tempURL);
   }
-
-  sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean}): Word[] {
+  
+  sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean; sortByWordOrGroup?: string}): Word[] {
     const filteredWords = words;
     //let filteredWords = words;
 
     if(filters.sortType) {
       if(filters.sortType === "alphabetical"){
-        filteredWords.map(w => w.word).sort();
+        if(filters.sortByWordOrGroup =="word") {
+          filteredWords.sort((a, b) => a.word.localeCompare(b.word));
+        }
+        else {
+          filteredWords.sort((a, b) => a.wordGroup.localeCompare(b.wordGroup));
+        }
       }
     }
     if(filters.sortOrder) {
