@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { GridCardComponent } from "./grid-card.component";
 import { ActivatedRoute, RouterLink, RouterModule } from '@angular/router';
 import { GridPackage } from './gridPackage';
@@ -13,12 +13,12 @@ import { HttpClientModule } from '@angular/common/http';
   templateUrl: './grid-list.component.html',
   styleUrl: './grid-list.component.scss'
 })
-export class GridListComponent {
+export class GridListComponent implements OnInit{
   @Input() grids: GridPackage[];
   @Input() roomID: string;
 
 
-  constructor(
+  constructor (
     private route: ActivatedRoute,
     private gridService: GridService,
     private roomService: RoomService
