@@ -76,20 +76,18 @@
     </mat-card>
   </div>
  <!-- Word List Links -->
-   <mat-card>
  <div class="flex-row column right">
+  <mat-card>
    <mat-card-header>Word Lists</mat-card-header>
    <mat-card-subtitle style="visibility: hidden">Groups from room : </mat-card-subtitle>
      <mat-card-content>
        @for (group of this.wordGroups; track group) {
          <div>
-           <button
-           <!-- <p>{{group}}</p> -->
-             routerLink="/anagram/wordGroup/{{group}}" data-test="wordGroupProfileButton">
+           <button routerLink="/anagram/wordGroup/{{group}}" data-test="wordGroupProfileButton">
              {{ group }}
            </button>
-       }
          </div>
+       }
      </mat-card-content>
    </mat-card>
  </div>

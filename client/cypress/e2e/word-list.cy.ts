@@ -57,8 +57,10 @@ describe('Anagram Solver', () => {
 
   it("should click button for word group and go to right url", () => {
     page.wordGroupProfileButton().first().click();
-    cy.url().should(url => expect(url.includes('/anagram/wordGroup/:id')).to.be.true); //expect this to fail, look back at lab tests
-    cy.get('.word-group-title').should('have.text', 'Group Name:');
+    cy.url().should(url => expect(url.includes('/anagram/wordGroup/10000%20Common%20Words')).to.be.true);
+    // This is objectively a bad url to work with,
+    // but I know that this is going to change when we add word groups to rooms
+    cy.get('.word-group-title mat-card-title').should('contain.text', 'Group Name:');
   })
 
   it('should open the expansion panel for a word and then delete it', () => {
@@ -71,7 +73,6 @@ describe('Anagram Solver', () => {
 
     cy.get('simple-snack-bar').contains('We deleted a word!', { matchCase: false });
   });
-
 
   it('should expand the panel when clicked', () => {
     cy.get('#mat-expansion-panel-header-0 > .mat-expansion-indicator');

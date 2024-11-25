@@ -6,11 +6,11 @@
          <!-- <mat-card-title>Temp Title</mat-card-title> -->
         <mat-card-subtitle>Number of words: {{words().length}}</mat-card-subtitle>
       </mat-card-header>
-      <mat-list>
+      <mat-list class = "word-group-list">
         @if(words().length === 0 ){
           <mat-list-item>No Words in Word Group</mat-list-item>
         } @for(word of words(); track word._id) {
-          <div>
+          <div class="word-group-list-item">
             <mat-list-item>{{word.word}}</mat-list-item>
           </div>
         }

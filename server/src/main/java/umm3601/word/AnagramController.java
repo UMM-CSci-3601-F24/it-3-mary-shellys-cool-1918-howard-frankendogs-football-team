@@ -134,6 +134,7 @@ public class AnagramController implements Controller {
             String regexPattern = "(?i)(.*" + Pattern.quote(String.valueOf(c)) + ".*){" + count + "}";
             filters.add(regex("word", Pattern.compile(regexPattern)));
         }
+      }
     }
     // if searching by word group will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
