@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
   standalone: true
 })
 export class RoomGridsComponent {
+
   roomID: string;
 
   constructor(

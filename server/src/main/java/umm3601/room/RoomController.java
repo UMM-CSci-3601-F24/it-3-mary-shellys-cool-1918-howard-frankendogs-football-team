@@ -1,7 +1,6 @@
 package umm3601.room;
 
 import org.bson.UuidRepresentation;
-import org.bson.types.ObjectId;
 import org.mongojack.JacksonMongoCollection;
 
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;

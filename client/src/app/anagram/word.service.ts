@@ -13,11 +13,11 @@ export class WordService {
 
   private readonly groupKey = 'wordGroup';
   private readonly containsKey = 'word';
-
+  private readonly filterTypeKey = 'filterType';
 
   constructor(private httpClient: HttpClient) { }
 
-  getWords(filters?: {word?: string; wordGroup?: string}): Observable<SearchContext> {
+  getWords(filters?: {word?: string; wordGroup?: string; filterType?: string}): Observable<SearchContext> {
 
     let httpParams: HttpParams = new HttpParams();
     if(filters) {
@@ -27,19 +27,27 @@ export class WordService {
       if(filters.wordGroup) {
         httpParams = httpParams.set(this.groupKey, filters.wordGroup);
       }
+      if(filters.filterType) {
+        httpParams = httpParams.set(this.filterTypeKey, filters.filterType);
+      }
     }
     return this.httpClient.get<SearchContext>(this.wordUrl, {
       params: httpParams,
     });
   }
 
-  sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean}): Word[] {
+  sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean; sortByWordOrGroup?: string}): Word[] {
     const filteredWords = words;
     //let filteredWords = words;
 
     if(filters.sortType) {
       if(filters.sortType === "alphabetical"){
-        filteredWords.map(w => w.word).sort();
+        if(filters.sortByWordOrGroup =="word") {
+          filteredWords.sort((a, b) => a.word.localeCompare(b.word));
+        }
+        else {
+          filteredWords.sort((a, b) => a.wordGroup.localeCompare(b.wordGroup));
+        }
       }
     }
     if(filters.sortOrder) {
