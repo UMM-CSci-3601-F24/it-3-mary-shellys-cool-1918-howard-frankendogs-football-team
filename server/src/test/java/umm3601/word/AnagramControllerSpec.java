@@ -687,7 +687,7 @@ class AnagramControllerSpec {
   }
 
   @Test
-  void canGetWordGroups() throws IOException{
+  void canGetWordGroups() throws IOException {
     // call method
     anagramController.getWordGroups(ctx);
     //make sure everything is okay superficially
