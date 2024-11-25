@@ -10,10 +10,9 @@
         @if(words().length === 0 ){
           <mat-list-item>No Words in Word Group</mat-list-item>
         } @for(word of words(); track word._id) {
-
-          <mat-grid-tile class="word-group-list-item">
-            <div style="display: flex; align-items: center; text-align: left; width: 100%;">
-              <span style="margin-left: 10px; margin-right: 10px;">{{word.word}}</span>
+          <mat-grid-tile >
+            <div class="word-group-list-item">
+              <span>{{word.word}}</span>
               <button
                 class="delete-button"
                 (click)="deleteWord(word._id)"
@@ -30,7 +29,7 @@
     <mat-card>
       <mat-card-header>
         <mat-card-title>Loading Words: </mat-card-title>
-        <br>
+        <mat-card-subtitle>  </mat-card-subtitle>
       </mat-card-header>
     </mat-card>
   }

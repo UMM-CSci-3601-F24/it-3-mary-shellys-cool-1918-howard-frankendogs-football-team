@@ -1,24 +1,26 @@
-mat-card {
-  .delete-button {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: none;
-    border-radius: 0.25rem;
-    padding: 0.3125rem 0.625rem;
-    cursor: pointer;
-  }
+.delete-button {
+  visibility: hidden;
+  margin-left: 15px;
+  margin-right: 10px;
+}
 
-  .delete-button:hover {
-    background-color: #f5c6cb;
-  }
-
-  .delete-button:active {
-    background-color: #f44336;
-  }
-
-  .mat-grid-tile-content {
-    width: 100%;
+mat-grid-tile {
+  .word-group-list-item {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    text-align: left;
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  &:hover {
+    background-color: white;
+    font-weight: bolder;
+    color: black;
+  }
+
+  &:hover  .delete-button {
+    visibility: visible;
   }
 }
