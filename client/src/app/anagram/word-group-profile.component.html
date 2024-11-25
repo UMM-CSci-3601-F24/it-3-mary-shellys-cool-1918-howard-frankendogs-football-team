@@ -6,20 +6,31 @@
          <!-- <mat-card-title>Temp Title</mat-card-title> -->
         <mat-card-subtitle>Number of words: {{words().length}}</mat-card-subtitle>
       </mat-card-header>
-      <mat-list class = "word-group-list">
+      <mat-grid-list cols="4" rowHeight="30px" class="word-group-list" >
         @if(words().length === 0 ){
           <mat-list-item>No Words in Word Group</mat-list-item>
         } @for(word of words(); track word._id) {
-          <div class="word-group-list-item">
-            <mat-list-item>{{word.word}}</mat-list-item>
-          </div>
+
+          <mat-grid-tile class="word-group-list-item">
+            <div style="display: flex; align-items: center; text-align: left; width: 100%;">
+              <span style="margin-left: 10px; margin-right: 10px;">{{word.word}}</span>
+              <button
+                class="delete-button"
+                (click)="deleteWord(word._id)"
+                data-test="deleteWordButton"
+                >
+                Delete Word
+              </button>
+            </div>
+          </mat-grid-tile>
         }
-      </mat-list>
+      </mat-grid-list>
     </mat-card>
   } @else {
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Loading Words:</mat-card-title>
+        <mat-card-title>Loading Words: </mat-card-title>
+        <br>
       </mat-card-header>
     </mat-card>
   }

@@ -1,0 +1,24 @@
+mat-card {
+  .delete-button {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.3125rem 0.625rem;
+    cursor: pointer;
+  }
+
+  .delete-button:hover {
+    background-color: #f5c6cb;
+  }
+
+  .delete-button:active {
+    background-color: #f44336;
+  }
+
+  .mat-grid-tile-content {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+  }
+}

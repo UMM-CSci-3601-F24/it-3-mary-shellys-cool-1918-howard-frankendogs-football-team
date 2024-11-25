@@ -93,7 +93,8 @@ public class AnagramController implements Controller {
 
   public void getWordsByWordGroup(Context ctx) {
     String wordGroup = ctx.pathParam("id");
-    ArrayList<Word> matchingWords = wordCollection.find(regex(WORD_GROUP_KEY, wordGroup)).into(new ArrayList<>());
+    Bson sortOrder = Sorts.ascending("word");
+    ArrayList<Word> matchingWords = wordCollection.find(regex(WORD_GROUP_KEY, wordGroup)).sort(sortOrder).into(new ArrayList<>());
     ctx.json(matchingWords);
     ctx.status(HttpStatus.OK);
   }

@@ -134,11 +134,7 @@ export class WordListComponent {
    */
   deleteWord(id: string) {
     this.wordService.deleteWord(id).subscribe(() => {
-      /* this is to refresh the page eventually
-        also could delete from both client and sever to refresh
-       this.sortType.set(undefined);
-       this.sortType.set(tempSortType.toString()); */
-      this.snackBar.open(`We deleted a word!`, 'OK', {duration: 6000});
+      this.snackBar.open(`We deleted a word! \n Please refresh your page.`, 'OK', {duration: 6000});
     })
   }
 
