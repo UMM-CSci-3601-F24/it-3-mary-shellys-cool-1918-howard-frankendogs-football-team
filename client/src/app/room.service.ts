@@ -16,7 +16,7 @@ export class RoomService {
   }
 
   addRoom(room: string): Observable<string> {
-    return this.http.post<string>(this.apiUrl, { name: room });
+    return this.http.post<string>(this.apiUrl, { id: '', name: room });
   }
 
   getGridsByRoomId(roomId: string): Observable<GridPackage[]> {

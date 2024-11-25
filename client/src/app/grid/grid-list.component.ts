@@ -13,12 +13,11 @@ import { HttpClientModule } from '@angular/common/http';
   templateUrl: './grid-list.component.html',
   styleUrl: './grid-list.component.scss'
 })
-export class GridListComponent implements OnInit{
-  @Input() grids: GridPackage[];
+export class GridListComponent implements OnInit {
+  @Input() grids: GridPackage[] = [];
   @Input() roomID: string;
 
-
-  constructor (
+  constructor(
     private route: ActivatedRoute,
     private gridService: GridService,
     private roomService: RoomService
@@ -45,4 +44,8 @@ export class GridListComponent implements OnInit{
     }
   }
 
+  onGridDeleted(deletedId: string) {
+    console.log("entered onGridDeleted")
+    this.grids = this.grids.filter(grid => grid._id !== deletedId);
+  }
 }

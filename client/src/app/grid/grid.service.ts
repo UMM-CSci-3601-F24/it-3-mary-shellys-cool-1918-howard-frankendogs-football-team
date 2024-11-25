@@ -29,4 +29,8 @@ export class GridService {
   getGridById(id: string) {
     return this.httpClient.get<GridPackage>(environment.apiUrl + `grids/${id}`);
   }
+
+  deleteGrid(id: string): Observable<{ deletedId: string }> {
+    return this.httpClient.delete<{ deletedId: string }>(`${environment.apiUrl}grids/${id}`);
+  }
 }

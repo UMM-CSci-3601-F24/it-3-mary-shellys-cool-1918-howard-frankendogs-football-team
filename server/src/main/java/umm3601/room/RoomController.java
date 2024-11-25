@@ -1,8 +1,10 @@
 package umm3601.room;
 
 import org.bson.UuidRepresentation;
+import org.bson.types.ObjectId;
 import org.mongojack.JacksonMongoCollection;
 
+import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import com.mongodb.client.MongoDatabase;
 
 import io.javalin.Javalin;
@@ -23,11 +25,14 @@ public class RoomController implements Controller {
   }
 
   public void addRoom(Context ctx) {
-    Room room = ctx.bodyAsClass(Room.class);
-    roomCollection.insert(room);
+    String body = ctx.body();
+    Room room = ctx.bodyValidator(Room.class)
+        .check(r -> r.name != null && !r.name.isEmpty(), "Room name must be non-empty")
+        .getOrThrow(m -> new RuntimeJsonMappingException("Failed to parse body as grid: " + body));
+    roomCollection.insertOne(room);
+
     ctx.json(room);
     ctx.status(HttpStatus.CREATED);
-
   }
 
   @Override
