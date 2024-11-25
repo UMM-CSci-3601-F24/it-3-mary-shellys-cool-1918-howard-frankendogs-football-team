@@ -23,6 +23,10 @@
               [(ngModel)]="group"
             />
           </mat-form-field>
+          <mat-form-field class="imput-field">
+            <mat-label>Input length</mat-label>
+            <input matInput data-test="wordContainsInput" type="number" placeholder="Filter by length" [(ngModel)]="contains">
+          </mat-form-field>
         </div>
         <div>
           <label for="filterType">Filter Type</label>
