@@ -63,7 +63,9 @@ export class GridComponent {
     grid: [],
     _id: '',
     roomID: '',
-  };
+    name: 'PlaceHolderNameLmaoWhat',
+    lastSaved: new Date()
+  }
 
   savedGrids: GridPackage[];
 
@@ -81,13 +83,19 @@ export class GridComponent {
     public elRef: ElementRef,
     private gridService: GridService,
     private roomService: RoomService,
-    private webSocketService: WebSocketService
-  ) {
-    this.route.paramMap.subscribe((params) => {
+    private webSocketService: WebSocketService) {
+
+    this.route.paramMap.subscribe(params => {
       this.gridPackage.roomID = params.get('roomID');
-      console.log(params.get('roomID'));
+      this.gridPackage._id = params.get('id')
     });
-    this.initializeGrid();
+
+    if (this.gridPackage._id !== null && this.gridPackage._id !== '') {
+      this.loadGrid(this.gridPackage._id);
+    } else {
+      this.initializeGrid();
+    }
+
     this.loadSavedGrids();
 
     this.webSocketService.getMessage().subscribe((message: unknown) => {
@@ -144,6 +152,8 @@ export class GridComponent {
         roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id,
+        name: this.gridPackage.name,
+        lastSaved: this.gridPackage.lastSaved
       };
       this.gridService
         .saveGridWithRoomId(this.gridPackage.roomID, gridData)
@@ -154,6 +164,8 @@ export class GridComponent {
       const gridData: Partial<GridPackage> = {
         roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid,
+        name: this.gridPackage.name,
+        lastSaved: this.gridPackage.lastSaved
       };
       this.gridService
         .saveGridWithRoomId(this.gridPackage.roomID, gridData)

@@ -3,11 +3,22 @@
     <mat-card class="home-card">
       <mat-card-header>
         <mat-card-title>
-          Home
+          Create Room
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        This is a home page! It doesn't do anything!
+        <form [formGroup]="roomForm" (ngSubmit)="createRoom()">
+          <label for="name">Room Name:</label>
+          <input mat-input id="name" formControlName="name" />
+          <button mat-raised-button type="submit">Create Room</button>
+        </form>
+        @if (createdRoomId) {
+          Created Room ID: {{ createdRoomId }}
+          <br>
+          <button mat-button (click)="copyLink()">Copy Link</button>
+          <br>
+          <button mat-button routerLink="/{{this.createdRoomId}}/grids">Go to Room Grids</button>
+        }
       </mat-card-content>
     </mat-card>
   </div>

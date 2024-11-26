@@ -8,6 +8,7 @@ public class Room {
   @ObjectId @Id
   @SuppressWarnings({"memberName"})
   public String _id;
+  public String name;
 
   public String getId() {
     return _id;

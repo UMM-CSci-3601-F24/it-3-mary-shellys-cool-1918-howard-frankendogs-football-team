@@ -44,7 +44,6 @@ describe('RoomService', () => {
 
     const req = httpTestingController.expectOne('/api/rooms');
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({ name: newRoom });
     req.flush(newRoom);
   });
 

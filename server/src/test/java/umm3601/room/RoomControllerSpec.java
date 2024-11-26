@@ -1,6 +1,7 @@
 package umm3601.room;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,6 +31,7 @@ import com.mongodb.client.MongoDatabase;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import io.javalin.validation.BodyValidator;
 
 public class RoomControllerSpec {
   private static MongoClient mongoClient;
@@ -78,9 +80,13 @@ public class RoomControllerSpec {
   @Test
   public void canAddRoom() throws IOException {
     Room room = new Room();
-    room.setId(new ObjectId().toHexString());
+    room.setId("");
+    room.name = "Test Room";
 
-    when(ctx.bodyAsClass(Room.class)).thenReturn(room);
+    String roomJson = "{ \"name\": \"Test Room\" }";
+
+    when(ctx.body()).thenReturn(roomJson);
+    when(ctx.bodyValidator(Room.class)).thenReturn(new BodyValidator<>(roomJson, Room.class, () -> room));
 
     roomController.addRoom(ctx);
 
@@ -88,10 +94,27 @@ public class RoomControllerSpec {
     verify(ctx).json(roomCaptor.capture());
 
     Room capturedRoom = roomCaptor.getValue();
-    assertEquals(room.getId(), capturedRoom.getId());
+    assertNotNull(capturedRoom.getId());
 
     Document addedRoom = db.getCollection("rooms")
         .find(new Document("_id", new ObjectId(capturedRoom.getId()))).first();
-    assertEquals(room.getId(), addedRoom.getObjectId("_id").toHexString());
+
+    assertEquals(capturedRoom.getId(), addedRoom.getObjectId("_id").toHexString());
+  }
+
+  @Test
+  public void canGetRoomById() throws IOException {
+    MongoCollection<Document> roomDocuments = db.getCollection("rooms");
+    Document testRoom = new Document().append("name", "Test Room");
+    roomDocuments.insertOne(testRoom);
+    String roomId = testRoom.getObjectId("_id").toHexString();
+
+    when(ctx.pathParam("id")).thenReturn(roomId);
+
+    roomController.getRoomById(ctx);
+
+    verify(ctx).json(roomCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(roomId, roomCaptor.getValue().getId());
   }
 }

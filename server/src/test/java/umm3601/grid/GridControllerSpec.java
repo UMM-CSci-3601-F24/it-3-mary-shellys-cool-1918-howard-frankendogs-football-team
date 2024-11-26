@@ -1,9 +1,8 @@
 package umm3601.grid;
 
-// import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-// import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,11 +10,12 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
-// import org.bson.types.ObjectId;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,10 +37,11 @@ import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-// import io.javalin.validation.BodyValidator;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.json.JavalinJackson;
+import io.javalin.validation.BodyValidator;
 
+@SuppressWarnings({ "MagicNumber" })
 public class GridControllerSpec {
   private static MongoClient mongoClient;
   private static MongoDatabase db;
@@ -150,5 +151,30 @@ public class GridControllerSpec {
     assertEquals("The requested grid was not found", exception.getMessage());
   }
 
+   @Test
+  public void canSaveGrid() throws IOException {
+    Grid newGrid = new Grid();
+
+    newGrid.name = "Test Name";
+    newGrid.roomID = "Test Room";
+    newGrid.grid = new GridCell[2][2];
+    newGrid.lastSaved = new Date();
+
+    String newGridJson = javalinJackson.toJsonString(newGrid, Grid.class);
+
+    when(ctx.bodyValidator(Grid.class)).thenReturn(new BodyValidator<>(newGridJson, Grid.class, () -> newGrid));
+
+    gridController.saveGrid(ctx);
+
+    verify(ctx).status(HttpStatus.CREATED);
+    verify(ctx).json(gridCaptor.capture());
+
+    Grid capturedGrid = gridCaptor.getValue();
+    assertNotNull(capturedGrid._id);
+    System.out.println(capturedGrid._id);
+
+    Document addedGrid = db.getCollection("rooms")
+        .find(new Document("_id", new ObjectId(capturedGrid._id))).first();
+  }
 
 }
