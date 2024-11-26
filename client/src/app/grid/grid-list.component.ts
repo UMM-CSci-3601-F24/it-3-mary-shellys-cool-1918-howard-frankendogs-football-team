@@ -9,7 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-grid-list',
   standalone: true,
-  imports: [GridCardComponent, RouterLink, RouterModule, HttpClientModule, MatCardModule],
+  imports: [GridCardComponent, RouterLink, RouterModule, HttpClientModule],
   templateUrl: './grid-list.component.html',
   styleUrl: './grid-list.component.scss'
 })
@@ -49,4 +49,3 @@ export class GridListComponent implements OnInit {
     this.grids = this.grids.filter(grid => grid._id !== deletedId);
   }
 }
-import { MatCard, MatCardModule } from '@angular/material/card';
