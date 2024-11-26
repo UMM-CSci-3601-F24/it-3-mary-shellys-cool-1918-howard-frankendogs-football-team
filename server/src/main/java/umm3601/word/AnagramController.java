@@ -38,6 +38,7 @@ public class AnagramController implements Controller {
   private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/{wordGroup}";
   private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history";
   static final String WORD_KEY = "word";
+  static final String LENGTH_KEY = "length";
   static final String WORD_GROUP_KEY = "wordGroup";
   static final String SORT_ORDER_KEY = "sortOrder";
   static final String FILTER_TYPE_KEY = "filterType";
@@ -99,27 +100,27 @@ public class AnagramController implements Controller {
     String searchedWord = ctx.queryParam(WORD_KEY);
     Map<Character, Integer> charCountMap = new HashMap<>();
 
-  // if searching for contains will enter this loop
+    // if searching for contains will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
       if ("exact".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
-        //if filter type is exact it runs following code
-          String exactWord = ctx.queryParam(WORD_KEY).replace('_', '.');
-          //Because . are wildcards, replaces underscores with periods
-          Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); //makes a pattern
-          filters.add(regex(WORD_KEY, pattern)); //adds a regex with
-          newSearch.setContains(ctx.queryParam(WORD_KEY));
-        } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
-            for (char c : searchedWord.toCharArray()) {
-              charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
-          }
-          for (Map.Entry<Character, Integer> entry : charCountMap.entrySet()) {
-            char c = entry.getKey();
-            int count = entry.getValue();
-            String regexPattern = "(?i)(.*" + Pattern.quote(String.valueOf(c)) + ".*){" + count + "}";
-            filters.add(regex("word", Pattern.compile(regexPattern)));
+        // if filter type is exact it runs following code
+        String exactWord = ctx.queryParam(WORD_KEY).replace('_', '.');
+        // Because . are wildcards, replaces underscores with periods
+        Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); // makes a pattern
+        filters.add(regex(WORD_KEY, pattern)); // adds a regex with
+        newSearch.setContains(ctx.queryParam(WORD_KEY));
+      } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
+        for (char c : searchedWord.toCharArray()) {
+          charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
         }
+        for (Map.Entry<Character, Integer> entry : charCountMap.entrySet()) {
+          char c = entry.getKey();
+          int count = entry.getValue();
+          String regexPattern = "(?i)(.*" + Pattern.quote(String.valueOf(c)) + ".*){" + count + "}";
+          filters.add(regex("word", Pattern.compile(regexPattern)));
+        }
+      }
     }
-  }
 
     // if searching by word group will enter this loop
 
@@ -135,15 +136,23 @@ public class AnagramController implements Controller {
       searchCollection.insertOne(newSearch);
       System.err.println("search added to db with params: " + combinedFilter.toString());
     }
+
+    if (ctx.queryParamMap().containsKey(LENGTH_KEY)){
+      int targetLength = ctx.queryParamAsClass(LENGTH_KEY, Integer.class)
+      .check(it -> it >0, "Word length must be greater than zero; you provided " + ctx.queryParam(LENGTH_KEY)).get();
+      Document query = new Document(WORD_KEY, new Document("$strLenCP", targetLength));
+      filters.add(query);
+    }
     // return filter to be applied to db in getWords()
     return combinedFilter;
   }
 
-  //used for debugging setting up db, might be used again for debugging limiting saved searches
+  // used for debugging setting up db, might be used again for debugging limiting
+  // saved searches
   // public void getSearches(Context ctx) {
-  //   ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
-  //   ctx.json(searches);
-  //   ctx.status(HttpStatus.OK);
+  // ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
+  // ctx.json(searches);
+  // ctx.status(HttpStatus.OK);
   // }
 
   private Bson constructSortingOrder(Context ctx) {
@@ -152,7 +161,7 @@ public class AnagramController implements Controller {
 
     Bson sortingOrder = sortOrder.equals("desc") ? Sorts.descending(sortBy) : Sorts.ascending(sortBy);
     return sortingOrder;
-}
+  }
 
   public void addNewWord(Context ctx) {
 

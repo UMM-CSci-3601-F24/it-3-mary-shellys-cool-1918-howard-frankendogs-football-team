@@ -335,7 +335,19 @@ class AnagramControllerSpec {
     assertEquals(1, wordDocuments.size());
     assertEquals("word", wordDocuments.get(0).word);
   }
-
+  @Test
+  void testConstructFilterByLengthKey() {
+    Integer targetAge = 5;
+    String targetAgeString = targetAge.toString();
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put(AnagramController.LENGTH_KEY, Arrays.asList(new String[] {targetAgeString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.LENGTH_KEY)).thenReturn(targetAgeString);
+    Validation validation = new Validation();
+    Validator<Integer> validator = validation.validator(AnagramController.LENGTH_KEY, Integer.class, targetAgeString);
+    when(ctx.queryParamAsClass(AnagramController.LENGTH_KEY, Integer.class)).thenReturn(validator);
+    anagramController.getWords(ctx);
+  }
   @Test
   void canGetWordsWithExactSi() throws IOException {
     String targetHas = "si";
