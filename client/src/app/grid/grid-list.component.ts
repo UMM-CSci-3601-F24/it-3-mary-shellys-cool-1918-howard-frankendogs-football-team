@@ -4,12 +4,12 @@ import { ActivatedRoute, RouterLink, RouterModule } from '@angular/router';
 import { GridPackage } from './gridPackage';
 import { GridService } from './grid.service';
 import { RoomService } from '../room.service';
-import { HttpClientModule } from '@angular/common/http';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-grid-list',
   standalone: true,
-  imports: [GridCardComponent, RouterLink, RouterModule, HttpClientModule],
+  imports: [GridCardComponent, RouterLink, RouterModule, MatCardModule],
   templateUrl: './grid-list.component.html',
   styleUrl: './grid-list.component.scss'
 })
