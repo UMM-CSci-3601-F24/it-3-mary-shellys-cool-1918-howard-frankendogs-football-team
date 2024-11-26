@@ -53,6 +53,14 @@ export class WordService {
           filteredWords.sort((a, b) => a.wordGroup.localeCompare(b.wordGroup));
         }
       }
+      if(filters.sortType === "length") {
+        if(filters.sortByWordOrGroup =="word") {
+          filteredWords.sort((a, b) => a.word.length - b.word.length);
+        }
+        else {
+          filteredWords.sort((a, b) => a.wordGroup.length - b.wordGroup.length);
+        }
+      }
     }
     if(filters.sortOrder) {
       filteredWords.reverse();
