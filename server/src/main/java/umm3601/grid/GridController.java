@@ -3,13 +3,16 @@ package umm3601.grid;
 import static com.mongodb.client.model.Filters.eq;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import org.bson.Document;
 import org.bson.UuidRepresentation;
 import org.bson.types.ObjectId;
 import org.mongojack.JacksonMongoCollection;
 
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
@@ -40,16 +43,14 @@ public class GridController implements Controller {
         .check(td -> td.roomID != null, "roomID must be non-empty")
         .check(td -> td.grid != null, "Error with grid, grid was : " + body)
         .getOrThrow(m -> new RuntimeJsonMappingException("Failed to parse body as grid: " + body));
-    System.err.println(grid._id);
-    // System.err.println(grid.toString());
+
+    grid.lastSaved = new Date();
+
     if (grid._id != null) {
       gridCollection.replaceOneById(grid._id, grid);
     } else {
       gridCollection.insertOne(grid);
     }
-    // ctx.json(Map.of("id", grid._id));
-    System.err.println(grid._id);
-
     ctx.json(grid);
     ctx.status(HttpStatus.CREATED);
   }
@@ -72,7 +73,6 @@ public class GridController implements Controller {
   }
 
   public void getGrids(Context ctx) {
-    System.out.println("entered getGrids() in grid controller.java");
     ArrayList<Grid> gridsList = gridCollection
         .find().into(new ArrayList<>());
     ctx.json(gridsList);
@@ -89,11 +89,32 @@ public class GridController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
+   public void deleteGrid(Context ctx) {
+    String id = ctx.pathParam("id");
+    ObjectId objectId;
+
+    try {
+      objectId = new ObjectId(id);
+    } catch (IllegalArgumentException e) {
+      throw new BadRequestResponse("The requested grid id wasn't a legal Mongo Object ID");
+    }
+
+    DeleteResult deleteResult = gridCollection.deleteOne(eq("_id", objectId));
+
+    if (deleteResult.getDeletedCount() == 0) {
+      throw new NotFoundResponse("The requested grid was not found");
+    } else {
+      ctx.json(new Document("deletedId", id));
+      ctx.status(HttpStatus.OK);
+    }
+  }
+
   @Override
   public void addRoutes(Javalin server) {
     server.get(API_GRID_BY_ID, this::getGrid);
     server.get(API_GRIDS, this::getGrids);
     server.get(API_GRID_BY_ROOM, this::getGridsByRoom);
     server.post(API_GRIDS, this::saveGrid);
+    server.delete(API_GRID_BY_ID, this::deleteGrid);
   }
 }

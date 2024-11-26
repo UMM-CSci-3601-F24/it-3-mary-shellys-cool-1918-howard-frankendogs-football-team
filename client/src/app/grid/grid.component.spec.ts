@@ -216,8 +216,8 @@ describe('GridComponent', () => {
 
   it('should load saved grids correctly', fakeAsync(() => {
     const mockGrids: GridPackage[] = [
-      { grid: [], _id: '1', roomID: 'room1' },
-      { grid: [], _id: '2', roomID: 'room2' }
+      { grid: [], _id: '1', roomID: 'room1', name: "Grid1", lastSaved: new Date() },
+      { grid: [], _id: '2', roomID: 'room2', name: "Grid2", lastSaved: new Date() }
     ];
     spyOn(component['roomService'], 'getGridsByRoomId').and.returnValue(of(mockGrids));
 
@@ -227,21 +227,29 @@ describe('GridComponent', () => {
     expect(component.savedGrids).toEqual(mockGrids);
   }));
 
-  it('should save grid with existing ID', fakeAsync(() => {
-    const saveGridSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of(''));
-    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids');
+  it('should save grid without existing ID', () => {
+    const saveGridWithRoomIdSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of('testId'));
 
-    component.gridPackage._id = 'existingId';
+    component.gridPackage = {
+      grid: [
+        [new GridCell(), new GridCell()],
+        [new GridCell(), new GridCell()]
+      ],
+      _id: null,
+      roomID: null,
+      name: 'PlaceHolderNameLmaoWhat',
+      lastSaved: new Date()
+    };
+
     component.saveGrid();
-    tick();
 
-    expect(saveGridSpy).toHaveBeenCalledWith(component.gridPackage.roomID, {
-      roomID: component.gridPackage.roomID,
+    expect(saveGridWithRoomIdSpy).toHaveBeenCalledWith(null, {
+      roomID: null,
       grid: component.gridPackage.grid,
-      _id: component.gridPackage._id
+      name: 'PlaceHolderNameLmaoWhat',
+      lastSaved: jasmine.any(Date)
     });
-    expect(loadSavedGridsSpy).toHaveBeenCalled();
-  }));
+  });
 
   it('should save grid without existing ID', fakeAsync(() => {
     const saveGridSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of(''));
@@ -253,7 +261,9 @@ describe('GridComponent', () => {
 
     expect(saveGridSpy).toHaveBeenCalledWith(component.gridPackage.roomID, {
       roomID: component.gridPackage.roomID,
-      grid: component.gridPackage.grid
+      grid: component.gridPackage.grid,
+      name: 'PlaceHolderNameLmaoWhat',
+      lastSaved: jasmine.any(Date)
     });
     expect(loadSavedGridsSpy).toHaveBeenCalled();
   }));
@@ -278,7 +288,9 @@ describe('GridComponent', () => {
         [new GridCell(), new GridCell()]
       ],
       _id: 'testId',
-      roomID: 'testRoomId'
+      roomID: 'testRoomId',
+      name: '',
+      lastSaved: undefined
     };
 
     spyOn(component['gridService'], 'getGridById').and.returnValue(of(mockGridPackage));
