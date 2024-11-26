@@ -88,6 +88,9 @@ export class MockWordService extends WordService {
     const searchContext: SearchContext = { words: this.testWords, searches: MockWordService.testSearches };
     return of(searchContext);
   }
+  getWordsByWordGroup(wordGroup: string): Observable<Word[]> {
+    return of(MockWordService.wordsInGroup);
+  }
   deleteWord(id: string): Observable<void> {
     const temp: Word[] = [];
     for (let i = 0; i < this.testWords.length; i++){
