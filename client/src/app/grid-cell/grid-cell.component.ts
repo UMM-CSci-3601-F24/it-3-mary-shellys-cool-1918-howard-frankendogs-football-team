@@ -92,6 +92,63 @@ export class GridCellComponent {
   }
 
   /**
+   * checks all edges to see if there all the same
+   * @param rowOffset number to check adj row
+   * @param colOffset number to check adj col
+   * @returns returns the boolean true or false
+   */
+  allEdgeCheck(rowOffset: number, colOffset: number) {
+    return (
+      this.grid[this.row + rowOffset][this.col + colOffset].edges.top &&
+      this.grid[this.row + rowOffset][this.col + colOffset].edges.right &&
+      this.grid[this.row + rowOffset][this.col + colOffset].edges.bottom &&
+      this.grid[this.row + rowOffset][this.col + colOffset].edges.left
+    )
+  }
+
+  /**
+   * checks this & an adjacent cell to see if it should be blacked-out or not
+   * the else statement un-blacks out a cell if all edges are not bolded
+   * @param rowOffset number to check adj row
+   * @param colOffset number to check adj col
+   */
+  adjacentCellCheck(rowOffset: number, colOffset: number) {
+    if (this.allEdgeCheck(rowOffset, colOffset)) {
+      this.grid[this.row + rowOffset][this.col + colOffset].color = 'black';
+    } else {
+      if (
+        this.grid[this.row + rowOffset][this.col + colOffset].color === 'black'
+      ) {
+        this.grid[this.row + rowOffset][this.col + colOffset].color = '';
+      }
+    }
+  }
+
+  /**
+   * decides what adjacent cell to check
+   * @param edge the edge to check
+   */
+  cellCheck(edge: string) {
+    switch (edge) {
+      case 'top':
+        this.adjacentCellCheck(-1, 0);
+        break;
+      case 'right':
+        this.adjacentCellCheck(0, 1);
+        break;
+      case 'bottom':
+        this.adjacentCellCheck(1, 0);
+        break;
+      case 'left':
+        this.adjacentCellCheck(0, -1);
+        break;
+      default:
+        this.adjacentCellCheck(0, 0);
+        break;
+    }
+  }
+
+  /**
    * toggles the both this cells edge and adjacent cells edge
    * @param edge
    */
@@ -102,6 +159,7 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row - 1]) {
           this.grid[this.row - 1][this.col].edges.bottom =
             this.gridCell.edges.top;
+          this.cellCheck('top');
         }
         break;
       case 'right':
@@ -109,6 +167,7 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row][this.col + 1]) {
           this.grid[this.row][this.col + 1].edges.left =
             this.gridCell.edges.right;
+          this.cellCheck('right');
         }
         break;
       case 'bottom':
@@ -116,6 +175,7 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row + 1]) {
           this.grid[this.row + 1][this.col].edges.top =
             this.gridCell.edges.bottom;
+          this.cellCheck('bottom');
         }
         break;
       case 'left':
@@ -123,11 +183,13 @@ export class GridCellComponent {
         if (this.grid && this.grid[this.row][this.col - 1]) {
           this.grid[this.row][this.col - 1].edges.right =
             this.gridCell.edges.left;
+          this.cellCheck('left');
         }
         break;
       default:
         break;
     }
+    this.cellCheck('');
     if (emitChange) {
       this.gridChange.emit();
     }
@@ -141,12 +203,7 @@ export class GridCellComponent {
    */
   onClick(event: MouseEvent) {
     if (event.ctrlKey) {
-      if (
-        this.gridCell.edges['top'] &&
-        this.gridCell.edges['right'] &&
-        this.gridCell.edges['bottom'] &&
-        this.gridCell.edges['left']
-      ) {
+      if (this.allEdgeCheck(0, 0)) {
         for (const edge in this.gridCell.edges) {
           this.toggleEdge(edge, false);
         }
@@ -158,16 +215,9 @@ export class GridCellComponent {
         }
       }
       this.gridChange.emit();
-    }
-    else if (event.altKey) {
-      if (
-        this.gridCell.edges['top'] &&
-        this.gridCell.edges['right'] &&
-        this.gridCell.edges['bottom'] &&
-        this.gridCell.edges['left']
-      ) {
+    } else if (event.altKey) {
+      if (this.allEdgeCheck(0, 0)) {
         this.setColor('white');
-        console.log(this.gridCell.color);
         this.gridChange.emit();
       }
     }
@@ -183,15 +233,33 @@ export class GridCellComponent {
   onRightClick(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
-    if (event.button == 2) {
-      if (this.gridCell.color !== this.currentColor) {
-        this.setColor(this.currentColor);
-        console.log(this.currentColor);
-      } else {
-        this.setColor('');
+    if (this.gridCell.color !== 'black') {
+      if (event.button == 2) {
+        if (this.gridCell.color !== this.currentColor) {
+          this.setColor(this.currentColor);
+        } else {
+          this.setColor('');
+        }
       }
+      this.gridChange.emit();
     }
-    this.gridChange.emit();
+  }
+
+  /**
+   * when you hold shift with a color selected, a cell will be highlighted when your mouse leaves the cell
+   * @param event - checks that shift key is held
+   */
+  onDrag(event: MouseEvent) {
+    if (this.gridCell.color !== 'black') {
+      if (event.shiftKey) {
+        if (this.gridCell.color !== this.currentColor) {
+          this.setColor(this.currentColor);
+        } else {
+          this.setColor('');
+        }
+      }
+      this.gridChange.emit();
+    }
   }
 
   /**
