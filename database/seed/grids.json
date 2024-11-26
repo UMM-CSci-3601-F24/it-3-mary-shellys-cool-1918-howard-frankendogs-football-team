@@ -1,132 +1,36 @@
 [
-{
-  "_id": {
-    "$oid": "67282a76702f8c628808e130"
-  },
-  "owner": "seededGrid",
-  "grid": [
-    [
+  {
+    "_id": {
+      "$oid": "67282a76702f8c628808e131"
+    },
+    "roomID": "seededGrid",
+    "name": "testGrid2",
+    "lastSaved": {
+      "$date": "2023-10-01T00:00:00Z"
+    },
+    "grid": [
+      [
+        {
+          "editable": true,
+          "value": "",
+          "edges": {
+            "top": false,
+            "bottom": false,
+            "right": false,
+            "left": false
+          },
+          "color": "black"
+        },
       {
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
+          "top": true,
           "bottom": true,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": true,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "I",
-        "edges": {
-          "top": false,
-          "bottom": false,
           "right": true,
-          "left": false
-        }
+          "left": true
+        },
+        "color": "black"
       },
       {
         "editable": true,
@@ -136,27 +40,8 @@
           "bottom": true,
           "right": true,
           "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "a",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "m",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": true,
-          "left": false
-        }
+        },
+        "color": "black"
       },
       {
         "editable": true,
@@ -166,47 +51,74 @@
           "bottom": true,
           "right": true,
           "left": true
-        }
+        },
+        "color": "black"
       },
       {
         "editable": true,
-        "value": "a",
+        "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
+          "top": true,
+          "bottom": true,
+          "right": true,
           "left": true
-        }
+        },
+        "color": "black"
       },
       {
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
       },
       {
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
       },
       {
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
       }
     ],
     [
@@ -214,51 +126,313 @@
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "T",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": false,
+          "left": true
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "h",
+        "edges": {
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": false
-        }
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "i",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": false,
+          "left": false
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "s",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": false,
+          "left": false
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": false,
+          "left": false
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "i",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": false,
+          "left": false
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "s",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": false
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "a",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": false,
+          "left": true
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": false,
+          "left": false
+        },
+        "color": ""
       },
       {
         "editable": true,
         "value": "t",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
         "value": "e",
         "edges": {
           "top": true,
-          "bottom": false,
+          "bottom": true,
           "right": false,
           "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
         "value": "s",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
         "value": "t",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
+          "right": false,
+          "left": false
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
           "right": true,
           "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
@@ -268,47 +442,825 @@
           "bottom": true,
           "right": true,
           "left": true
-        }
+        },
+        "color": "black"
       },
       {
         "editable": true,
-        "value": "g",
+        "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+        {
+          "editable": true,
+          "value": "",
+          "edges": {
+            "top": false,
+            "bottom": false,
+            "right": false,
+            "left": false
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "67282a76702f8c628808e130"
+    },
+    "roomID": "seededGrid",
+    "name": "testGrid1",
+    "lastSaved": {
+      "$date": "2023-10-01T00:00:00Z"
+    },
+    "grid": [
+      [
+        {
+          "editable": true,
+          "value": "",
+          "edges": {
+            "top": false,
+            "bottom": false,
+            "right": false,
+            "left": false
+          },
+          "color": "black"
+        },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "T",
+        "edges": {
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": true
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
-        "value": "r",
+        "value": "h",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
         "value": "i",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
-        "value": "d",
+        "value": "s",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": false
-        }
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": false,
+          "left": false
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "i",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": false,
+          "left": false
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "s",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": false
+        },
+        "color": ""
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
       }
     ],
     [
@@ -316,101 +1268,111 @@
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
       },
       {
         "editable": true,
         "value": "",
         "edges": {
           "top": true,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
       },
       {
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
       },
       {
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
       },
       {
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
       },
       {
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
       }
     ],
     [
@@ -418,895 +1380,23 @@
         "editable": true,
         "value": "",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": true,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": true,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": true,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
           "top": true,
           "bottom": true,
           "right": true,
           "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": true,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": true,
-          "right": true,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": true,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": true,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": true,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": true,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": true,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": true,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": true,
-          "right": true,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": false,
-          "right": true,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": true,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": true,
-          "right": true,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": false,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ]
-  ]
-},
-{
-  "_id": {
-    "$oid": "67282673702f8c628808e12e"
-  },
-  "owner": "seededGrid",
-  "grid": [
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": true,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": true,
-          "right": true,
-          "left": true
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "I",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+        },
+        "color": "black"
       },
       {
         "editable": true,
         "value": "a",
         "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "m",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "a",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
+          "top": true,
           "bottom": true,
           "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": true,
-          "left": false
-        }
+          "left": true
+        },
+        "color": ""
       },
       {
         "editable": true,
@@ -1314,509 +1404,65 @@
         "edges": {
           "top": true,
           "bottom": true,
-          "right": true,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
           "right": false,
           "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
         "value": "t",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
         "value": "e",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
         "value": "s",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
         "value": "t",
         "edges": {
-          "top": false,
-          "bottom": false,
+          "top": true,
+          "bottom": true,
           "right": false,
           "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
         "value": "",
         "edges": {
           "top": true,
-          "bottom": false,
-          "right": true,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": true,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "g",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "r",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "i",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "d",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": true,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
           "bottom": true,
           "right": true,
           "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": false,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": true,
-          "left": false
-        }
+        },
+        "color": ""
       },
       {
         "editable": true,
@@ -1826,221 +1472,8 @@
           "bottom": true,
           "right": true,
           "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": true
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": true,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": true,
-          "right": false,
-          "left": false
-        }
-      }
-    ],
-    [
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": false,
-          "left": false
-        }
-      },
-      {
-        "editable": true,
-        "value": "",
-        "edges": {
-          "top": false,
-          "bottom": false,
-          "right": true,
-          "left": false
-        }
+        },
+        "color": "black"
       },
       {
         "editable": true,
@@ -2050,9 +1483,580 @@
           "bottom": true,
           "right": true,
           "left": true
-        }
+        },
+        "color": "black"
       }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      }
+    ],
+    [
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "green"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+      {
+        "editable": true,
+        "value": "",
+        "edges": {
+          "top": true,
+          "bottom": true,
+          "right": true,
+          "left": true
+        },
+        "color": "black"
+      },
+        {
+          "editable": true,
+          "value": "",
+          "edges": {
+            "top": false,
+            "bottom": false,
+            "right": false,
+            "left": false
+          }
+        }
+      ]
     ]
-  ]
-}
+  }
 ]

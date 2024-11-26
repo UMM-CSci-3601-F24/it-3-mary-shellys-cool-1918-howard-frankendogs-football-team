@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SearchContext } from './searchContext';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { RoomService } from '../room.service';
 
 @Component({
   selector: 'app-word-list-component',
@@ -48,6 +49,7 @@ export class WordListComponent {
   // client side sorting
   sortType = signal<string | undefined>(undefined);
   sortOrder = signal<boolean | undefined>(false);
+  sortByWordOrGroup = signal<string | undefined>(undefined);
   //server side filtering
   contains = signal<string|undefined>('');
   group = signal<string|undefined>(undefined);
@@ -55,10 +57,15 @@ export class WordListComponent {
 
   filterType = signal<string|undefined>("exact");
 
-  errMsg = signal<string|undefined>(undefined);
+  wordGroups: string[];
 
-  constructor(private wordService: WordService, private snackBar: MatSnackBar) {
-    // Nothing here – everything is in the injection parameters.
+  errMsg = signal<string | undefined>(undefined);
+
+  constructor(
+    private wordService: WordService,
+    private roomService: RoomService,
+    private snackBar: MatSnackBar) {
+      this.loadWordGroups();
   }
 
   private contains$ = toObservable(this.contains);
@@ -107,6 +114,7 @@ export class WordListComponent {
     return this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
+      sortByWordOrGroup: this.sortByWordOrGroup(),
     });
   });
 
@@ -117,6 +125,12 @@ export class WordListComponent {
     const searches = this.serverFilteredContext().searches;
     return searches;
   })
+
+  loadWordGroups() {
+    this.roomService.getWordGroups().subscribe(wordGroups => {
+      this.wordGroups = wordGroups
+    })
+  }
 
   /**
    * calls deleteWord and returns a snackbar

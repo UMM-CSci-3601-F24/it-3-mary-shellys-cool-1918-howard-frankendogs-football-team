@@ -9,24 +9,19 @@ describe('Grid Component', () => {
   });
 
   // it('should open saved grid to server', () => {
-  //   cy.get(':nth-child(3) > button').click();
-  //   cy.get(':nth-child(3) > button').click();
-  //   cy.intercept('api/grid').as('saveGrid');
-  //   cy.url().should('match', /\/grid\/67282673702f8c628808e12e$/);
-  //   cy.get('#mat-input-233')
-  //     .should('have.css', 'background-color')
-  //     .and('eq', 'rgb(0, 0, 0)');
+  //   cy.get(':nth-child(2) > .ng-star-inserted > button').click();
+  //   cy.get(':nth-child(2) > .ng-star-inserted > button').click();
+  //   cy.intercept('api/grid').as('saveGrids');
+  //   cy.url().should('contain', '/seededGrids/grid/673ba3a31e6a570b74f9a310');
   // });
 
-  // it('should save a grid to server', () => {
-  //   page.saveGrid();
-  //   cy.intercept('api/grid').as('saveGrid');
-  //   cy.url({ timeout: 30000 }).should('match', /\/grid$/);
-  //   //ideally would also have some sort of visual indication it was saved
-  //   // like implementing the visual of previously saved grids
+  it('should save a grid to server', () => {
+    page.saveGrid();
+    cy.wait(3000);
+    cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click();
+    cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click(); // these buttons wouldn't show up if it saves, i promise this test actually checks for something
 
-  //   //there should be something in the test here that looks at the actual server and checks that a new grid is there
-  // }); this test is freaked on my box, ill get it to work on a box with mongo
+  });
 
   it('should render the grid with default size', () => {
     cy.get('app-grid-component').within(() => {
@@ -72,4 +67,27 @@ describe('Grid Component', () => {
       .should('have.css', 'background-color')
       .and('eq', 'rgb(255, 255, 255)');
   });
+
+  it('should highlight cell on mouseleave', () => {
+    cy.get('#mat-radio-2-input').click();
+    cy.get('#mat-input-3').trigger('mouseleave', {shiftKey: true});
+    cy.get('#mat-input-103')
+      .should('have.css', 'background-color')
+      .and('eq', 'rgb(255, 192, 203)');
+  });
 });
+
+
+it('should expand and collapse panel', () => {
+  cy.visit('/grid');
+
+  cy.get('mat-expansion-panel-header').should('not.have.class', 'mat-expanded');
+
+  cy.get('mat-expansion-panel-header').click();
+
+  cy.get('mat-expansion-panel-header').should('have.class', 'mat-expanded');
+
+  cy.get('mat-expansion-panel-header').click();
+
+  cy.get('mat-expansion-panel-header').should('not.have.class', 'mat-expanded');
+})

@@ -114,17 +114,43 @@ describe('WordService', () => {
   });
 
   describe('sorting on the client (alphabetical, by length)', () => {
-    it('calls sortWords with proper params', () => {
-      // const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testWords));
-      wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false});
-      expect()
+    it('returns the list in the correct way when sorting by word', () => {
+      const filteredWords = wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false, sortByWordOrGroup: "word"});
+      expect(filteredWords[0].word).toBe('El');
+      expect(filteredWords[1].word).toBe('Jakob');
+      expect(filteredWords[2].word).toBe('Kennan');
+      expect(filteredWords[3].word).toBe('Mac');
+      expect(filteredWords[4].word).toBe('Nic');
     })
-
-    it('returns a list of 5 words after calling sort function', () => {
-      const filteredWords = wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false});
-      expect(filteredWords.length).toBe(5);
+    it('returns the list in the correct way when sorting by wordGroup', () => {
+      const filteredWords = wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false, sortByWordOrGroup: "wordGroup"});
+      expect(filteredWords[0].wordGroup).toBe('teachers');
+      expect(filteredWords[1].wordGroup).toBe('team member');
+      expect(filteredWords[2].wordGroup).toBe('team member');
+      expect(filteredWords[3].wordGroup).toBe('team member');
+      expect(filteredWords[4].wordGroup).toBe('team members');
     })
   })
+
+  describe('sorting on the client (by length)', () => {
+    it('returns the list in the correct order when sorting by word', () => {
+      const filteredWords = wordService.sortWords(testWords, {sortType: "length", sortOrder: false, sortByWordOrGroup: "word"});
+      expect(filteredWords[0].word).toBe('El');
+      expect(filteredWords[1].word).toBe('Nic');
+      expect(filteredWords[2].word).toBe('Mac');
+      expect(filteredWords[3].word).toBe('Jakob');
+      expect(filteredWords[4].word).toBe('Kennan');
+    })
+
+    it('returns the list in the correct order when sorting by wordGroup', () => {
+      const filteredWords = wordService.sortWords(testWords, {sortType: "length", sortOrder: false, sortByWordOrGroup: "wordGroup"});
+      expect(filteredWords[0].wordGroup).toBe('teachers');
+      expect(filteredWords[1].wordGroup).toBe('team member');
+      expect(filteredWords[2].wordGroup).toBe('team member');
+      expect(filteredWords[3].wordGroup).toBe('team member');
+      expect(filteredWords[4].wordGroup).toBe('team members');
+    })
+})
 
   describe('Adding a word using `addWord()`', () => {
     it('talks to the right endpoint and is called once', waitForAsync(() => {
@@ -182,4 +208,16 @@ describe('WordService', () => {
   //   }))
   // })
 
+  describe("Word Group Profiles", () => {
+    it('calls api/wordGroup/id where id is `team member`', waitForAsync(() => {
+      const targetGroup = "team member"
+      const mockedMethod = spyOn(httpClient, "get").and.returnValue(of(testWords.slice(1,3)));
+      wordService.getWordsByWordGroup(targetGroup).subscribe(() => {
+        expect(mockedMethod).withContext("one call").toHaveBeenCalledTimes(1);
+        expect(mockedMethod)
+          .withContext("talks to correct endpoint")
+          .toHaveBeenCalledWith(wordService.wordUrl + "/wordGroup/" + targetGroup);
+      })
+    }))
+  })
 });

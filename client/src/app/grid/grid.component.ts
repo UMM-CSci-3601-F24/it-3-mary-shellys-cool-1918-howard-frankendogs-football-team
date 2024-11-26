@@ -14,8 +14,15 @@ import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
 import { RoomService } from '../room.service';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-grid-component',
@@ -33,13 +40,19 @@ import { MatCardModule } from '@angular/material/card';
     MatGridListModule,
     RouterLink,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatIcon,
   ],
 })
 export class GridComponent {
   currentColor: string;
   highlight: string[] = ['pink', 'yellow', 'green'];
 
+  deleteDirectionBool: boolean = false;
 
   gridHeight: number = 10;
   gridWidth: number = 10;
@@ -48,7 +61,9 @@ export class GridComponent {
   gridPackage: GridPackage = {
     grid: [],
     _id: '',
-    roomID: ''
+    roomID: '',
+    name: 'PlaceHolderNameLmaoWhat',
+    lastSaved: new Date()
   }
 
   savedGrids: GridPackage[];
@@ -68,22 +83,35 @@ export class GridComponent {
     private gridService: GridService,
     private roomService: RoomService,
     private webSocketService: WebSocketService) {
+
     this.route.paramMap.subscribe(params => {
       this.gridPackage.roomID = params.get('roomID');
-      console.log(params.get('roomID'));
+      this.gridPackage._id = params.get('id')
     });
-    this.initializeGrid();
+
+    if (this.gridPackage._id !== null && this.gridPackage._id !== '') {
+      this.loadGrid(this.gridPackage._id);
+    } else {
+      this.initializeGrid();
+    }
+
     this.loadSavedGrids();
 
     this.webSocketService.getMessage().subscribe((message: unknown) => {
-      const msg = message as { type?: string; grid?: GridCell[][]; id?: string };
+      const msg = message as {
+        type?: string;
+        grid?: GridCell[][];
+        id?: string;
+      };
       // all of these are optional to allow heartbeat messages to pass through
       if (
         // checks that message was a grid update
         msg.type === 'GRID_UPDATE' &&
         // checks that grid you have open is the same as the one that was updated
         this.gridPackage._id == (message as { id: string }).id
-      ) { this.applyGridUpdate(msg.grid); }
+      ) {
+        this.applyGridUpdate(msg.grid);
+      }
     });
   }
 
@@ -123,36 +151,45 @@ export class GridComponent {
         roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id,
+        name: this.gridPackage.name,
+        lastSaved: this.gridPackage.lastSaved
       };
-      this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
-        this.loadSavedGrids();
-      });
+      this.gridService
+        .saveGridWithRoomId(this.gridPackage.roomID, gridData)
+        .subscribe(() => {
+          this.loadSavedGrids();
+        });
     } else {
-      const gridData:Partial<GridPackage> = {
+      const gridData: Partial<GridPackage> = {
         roomID: this.gridPackage.roomID,
-        grid: this.gridPackage.grid
+        grid: this.gridPackage.grid,
+        name: this.gridPackage.name,
+        lastSaved: this.gridPackage.lastSaved
       };
-      this.gridService.saveGridWithRoomId(this.gridPackage.roomID, gridData).subscribe(() => {
-        this.loadSavedGrids();
-      });
+      this.gridService
+        .saveGridWithRoomId(this.gridPackage.roomID, gridData)
+        .subscribe(() => {
+          this.loadSavedGrids();
+        });
     }
   }
 
   loadSavedGrids() {
-    this.roomService.getGridsByRoomId(this.gridPackage.roomID).subscribe(grids => {
-      this.savedGrids = grids;
-    });
+    this.roomService
+      .getGridsByRoomId(this.gridPackage.roomID)
+      .subscribe((grids) => {
+        this.savedGrids = grids;
+      });
   }
 
   loadGrid(id: string) {
     this.gridService.getGridById(id).subscribe((activeGrid) => {
       console.log(activeGrid._id);
 
-        this.gridPackage._id = activeGrid._id;
-        this.gridPackage.roomID = activeGrid.roomID;
-        this.applyGridUpdate(activeGrid.grid);
-      },
-    );
+      this.gridPackage._id = activeGrid._id;
+      this.gridPackage.roomID = activeGrid.roomID;
+      this.applyGridUpdate(activeGrid.grid);
+    });
   }
 
   onGridChange() {
@@ -160,9 +197,8 @@ export class GridComponent {
       type: 'GRID_UPDATE',
       grid: this.gridPackage.grid,
       roomID: this.gridPackage.roomID,
-      id: this.gridPackage._id
+      id: this.gridPackage._id,
     };
-    console.log(message + "\n Inside onGridChange() in grid.component.ts" );
     this.webSocketService.sendMessage(message);
   }
 
@@ -216,27 +252,33 @@ export class GridComponent {
             this.moveFocus(col + 1, row);
             break;
           case 'Backspace':
-            if (inputElement) {
-              cell.value = '';
-            }
-            if (this.typeDirection === 'right') {
+            if (this.deleteDirectionBool) {
+              if (inputElement) {
+                cell.value = '';
+              }
+              if (this.typeDirection === 'right') {
+                if (cell.edges.left === false) {
+                  this.moveFocus(col - 1, row);
+                }
+              }
+              if (this.typeDirection === 'left') {
+                if (cell.edges.right === false) {
+                  this.moveFocus(col + 1, row);
+                }
+              }
+              if (this.typeDirection === 'up') {
+                if (cell.edges.bottom === false) {
+                  this.moveFocus(col, row + 1);
+                }
+              }
+              if (this.typeDirection === 'down') {
+                if (cell.edges.top === false) {
+                  this.moveFocus(col, row - 1);
+                }
+              }
+            } else {
               if (cell.edges.left === false) {
                 this.moveFocus(col - 1, row);
-              }
-            }
-            if (this.typeDirection === 'left') {
-              if (cell.edges.right === false) {
-                this.moveFocus(col + 1, row);
-              }
-            }
-            if (this.typeDirection === 'up') {
-              if (cell.edges.bottom === false) {
-                this.moveFocus(col, row + 1);
-              }
-            }
-            if (this.typeDirection === 'down') {
-              if (cell.edges.top === false) {
-                this.moveFocus(col, row - 1);
               }
             }
             break;
@@ -281,7 +323,6 @@ export class GridComponent {
     });
   }
 
-
   /**
    * Moves the focus to the specified cell.
    *
@@ -323,4 +364,8 @@ export class GridComponent {
     console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
 
+  deleteDirectionToggle() {
+    this.deleteDirectionBool = !this.deleteDirectionBool;
+    console.log(this.deleteDirectionBool);
+  }
 }

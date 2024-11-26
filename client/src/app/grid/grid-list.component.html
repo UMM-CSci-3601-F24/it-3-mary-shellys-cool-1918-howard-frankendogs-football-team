@@ -1,0 +1,11 @@
+@if (this.roomID !== null){
+<mat-card>
+  <div style="max-height: 800px; overflow-y: auto;">
+    <div class="card-container">
+      @for (grid of this.grids; track grid._id) {
+      <app-grid-card [gridPackage]="grid" (gridDeleted)="onGridDeleted($event)"></app-grid-card>
+      }
+    </div>
+  </div>
+</mat-card>
+}

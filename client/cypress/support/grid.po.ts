@@ -1,5 +1,5 @@
 export class GridPage {
-  private readonly url = '/grid';
+  private readonly url = '/seededGrid/grid';
 
   navigateTo(){
     return cy.visit(this.url);

@@ -8,10 +8,36 @@
         <mat-card-header>
           <mat-card-title>Controls Key</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
-          Coming soon!
-          <!-- Put grid control guide dropdown here -->
-        </mat-card-content>
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-description>
+              <mat-icon> tips_and_updates
+              </mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <p> Typing/Letters types directly into the grid and move in the direction specified.
+          </p>
+          <p>
+            Backspace alone deletes current cell value and moves opposite of direction specified.
+          </p>
+          <p>
+            Ctrl + Backspace deletes current cell value without moving.
+          </p>
+          <p>
+            Arrow keys alone navigate the array in the respective direction.
+          </p>
+          <p>
+            Ctrl + Arrow keys bold the edge in the respective direction.
+          </p>
+          <p>
+            Clicking on a cell will focus onto that cell.
+          </p>
+          <p>
+            The left number input changes the number of cells in each row.
+          </p>
+         <p>
+            The right number input changes the pixel size of each cell. </p>
+        </mat-expansion-panel>
       </mat-card>
     </div>
     <!-- Room Information -->
@@ -102,6 +128,7 @@
             >
             }
           </mat-radio-group>
+
         </div>
         <!-- Typing Direction -->
         <div>
@@ -110,6 +137,13 @@
           </button>
           <p>Current Typing Direction is {{ typeDirection }}</p>
         </div>
+        <div>
+        <!-- Delete Direction Toggle -->
+        <button mat-button (click)="deleteDirectionToggle()">
+          Delete Direction
+        </button>
+        <p>Delete Direction Linked To Type Direction: {{ deleteDirectionBool }}</p>
+      </div>
       </mat-card-content>
     </mat-card>
   </div>
@@ -145,3 +179,6 @@
     </mat-grid-list>
   </div>
 </div>
+
+
+

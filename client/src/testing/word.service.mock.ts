@@ -37,6 +37,28 @@ export class MockWordService extends WordService {
       wordGroup: "teachers",
     },
   ];
+  static wordsInGroup: Word[] = [
+    {
+      _id:"burger_id",
+      word: "burger",
+      wordGroup: "Foods",
+    },
+    {
+      _id:"fries_id",
+      word: "fries",
+      wordGroup: "Foods",
+    },
+    {
+      _id:"apple_id",
+      word: "apple",
+      wordGroup: "Foods",
+    },
+    {
+      _id:"orange_id",
+      word: "orange",
+      wordGroup: "Foods",
+    }
+  ]
   static testSearches: Search[] = [
     {
       _id: "sigma_id",

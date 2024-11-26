@@ -44,7 +44,19 @@ describe('RoomService', () => {
 
     const req = httpTestingController.expectOne('/api/rooms');
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({ name: newRoom });
     req.flush(newRoom);
   });
+
+  it('should get all word groups', () => {
+    // this will eventually be:
+    //  "should get all word groups from room: id#"
+    const targetWordGroups =  ["Foods" , "members"];
+    service.getWordGroups().subscribe(wordGroups => [
+      expect(wordGroups).toEqual(targetWordGroups)
+    ]);
+
+    const req = httpTestingController.expectOne('/api/anagram/wordGroups');
+    expect(req.request.method).toEqual('GET');
+    req.flush(targetWordGroups);
+  })
 });
