@@ -175,6 +175,10 @@ describe('GridComponent', () => {
     const inputElement = document.createElement('input');
     spyOn(component.elRef.nativeElement, 'querySelector').and.returnValue(inputElement);
 
+    const initialDirection = component.deleteDirectionBool;
+    component.deleteDirectionToggle();
+    expect(component.deleteDirectionBool).not.toBe(initialDirection);
+
     component.typeDirection = 'right';
     component.onKeydown(new KeyboardEvent('keydown', { key: 'Backspace' }), 1, 1);
     tick(100);
@@ -200,6 +204,14 @@ describe('GridComponent', () => {
     component.onKeydown(new KeyboardEvent('keydown', { key: 'Backspace', ctrlKey: true }), 1, 1);
     tick(100);
     expect(cell.value).toBe('');
+
+    component.deleteDirectionToggle();
+    component.typeDirection = 'left';
+    component.onKeydown(new KeyboardEvent('keydown', { key: 'Backspace' }), 1, 1);
+    tick(100);
+    expect(cell.value).toBe('');
+    expect(inputElement.value).toBe('');
+    expect(moveFocusSpy).toHaveBeenCalledWith(0, 1);
   }));
 
   it('should load saved grids correctly', fakeAsync(() => {

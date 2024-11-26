@@ -29,6 +29,10 @@ export class RoomService {
     return this.http.get<GridPackage[]>(`/api/${roomId}/grids`);
   }
 
+  getWordGroups(): Observable<string[]> {
+    return this.http.get<string[]>(`/api/anagram/wordGroups`);
+  }
+
   getRoomById(roomId: string): Observable<Room> {
     return this.http.get<Room>(`${this.apiUrl}/${roomId}`);
   }
