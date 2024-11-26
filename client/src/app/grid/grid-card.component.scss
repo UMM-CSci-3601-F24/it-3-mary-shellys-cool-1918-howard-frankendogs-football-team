@@ -94,4 +94,58 @@ mat-card {
             transform: scale(0);
         }
     }
+
+    @media (prefers-color-scheme: light) {
+        background-color: white;
+        color: black;
+        outline: 0.3125rem solid lightgrey;
+
+        &:hover {
+            background-color: #f0f0f0;
+        }
+
+        &:active {
+            background-color: #e0e0e0;
+        }
+
+        .delete-button {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .delete-button:hover {
+            background-color: #f5c6cb;
+        }
+
+        .delete-button:active {
+            background-color: #f44336;
+        }
+    }
+
+    @media (prefers-color-scheme: dark) {
+        background-color: #333;
+        color: white;
+        outline: 0.3125rem solid grey;
+
+        &:hover {
+            background-color: #444;
+        }
+
+        &:active {
+            background-color: #555;
+        }
+
+        .delete-button {
+            background-color: #721c24;
+            color: #f8d7da;
+        }
+
+        .delete-button:hover {
+            background-color: #a94442;
+        }
+
+        .delete-button:active {
+            background-color: #d9534f;
+        }
+    }
 }

@@ -1,10 +1,11 @@
 @if (this.roomID !== null){
-  <div>
-    <h3>The saved grids for this room are:</h3>
+<mat-card>
+  <div style="max-height: 800px; overflow-y: auto;">
     <div class="card-container">
       @for (grid of this.grids; track grid._id) {
       <app-grid-card [gridPackage]="grid" (gridDeleted)="onGridDeleted($event)"></app-grid-card>
       }
     </div>
   </div>
+</mat-card>
   }
