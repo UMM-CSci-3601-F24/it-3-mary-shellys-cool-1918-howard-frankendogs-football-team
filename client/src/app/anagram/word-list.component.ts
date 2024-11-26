@@ -51,6 +51,7 @@ export class WordListComponent {
   //server side filtering
   contains = signal<string|undefined>('');
   group = signal<string|undefined>(undefined);
+  forceUpdate = signal<number>(0);
 
   filterType = signal<string|undefined>("exact");
 
@@ -63,10 +64,11 @@ export class WordListComponent {
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
   private filterType$ = toObservable(this.filterType);
+  private forceUpdate$ = toObservable(this.forceUpdate);
 
   serverFilteredContext =
     toSignal(
-      combineLatest([this.contains$, this.group$, this.filterType$]).pipe(
+      combineLatest([this.contains$, this.group$, this.filterType$, this.forceUpdate$]).pipe(
         switchMap(([word, wordGroup, filterType]) =>
           this.wordService.getWords({
             word,
@@ -100,6 +102,8 @@ export class WordListComponent {
     // takes list of words returned by server
     // then sends them through the client side sortWords)
     const serverFilteredWords = this.serverFilteredContext().words;
+    console.log("trying to print filtered words");
+    console.log(serverFilteredWords);
     return this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
@@ -137,9 +141,10 @@ export class WordListComponent {
           null,
           { duration: 2000 }
         );
-        // const contains = this.contains();
-        this.contains.set(this.contains() + ' ');
-        this.contains.set(this.contains().trim());
+        // // const contains = this.contains();
+        // this.contains.set(this.contains() + ' ');
+        // this.contains.set(this.contains().trim());
+        this.forceUpdate.set(this.forceUpdate() + 1);
       },
       error: err => {
         this.snackBar.open(

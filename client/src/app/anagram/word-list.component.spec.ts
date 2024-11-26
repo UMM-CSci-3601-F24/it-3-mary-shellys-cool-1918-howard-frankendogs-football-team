@@ -52,6 +52,17 @@ describe('Word List', () => {
       wordList.filteredWords().some((word: Word) => word.word === 'Mac')
     ).toBe(true);
   });
+  it("deletes a word 'Keenan'", () => {
+    wordList.deleteWord("Keenan_id");
+    fixture.detectChanges();
+    // console.log("deletes a word 'Keenan'")
+    // console.log(wordList.filteredWords());
+    expect(wordList.serverFilteredContext().words.length).toBe(4);
+    expect(wordList.filteredWords().length).toBe(4);
+    expect(
+      wordList.filteredWords().some((word: Word) => word.word === 'Keenan')
+    ).toBe(false);
+  });
   it('has four words in the group `team member`', () => {
     expect(
       wordList
