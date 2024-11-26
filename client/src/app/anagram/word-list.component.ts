@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SearchContext } from './searchContext';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { RoomService } from '../room.service';
 
 @Component({
   selector: 'app-word-list-component',
@@ -55,10 +56,15 @@ export class WordListComponent {
 
   filterType = signal<string|undefined>("exact");
 
-  errMsg = signal<string|undefined>(undefined);
+  wordGroups: string[];
 
-  constructor(private wordService: WordService, private snackBar: MatSnackBar) {
-    // Nothing here – everything is in the injection parameters.
+  errMsg = signal<string | undefined>(undefined);
+
+  constructor(
+    private wordService: WordService,
+    private roomService: RoomService,
+    private snackBar: MatSnackBar) {
+      this.loadWordGroups();
   }
 
   private contains$ = toObservable(this.contains);
@@ -116,17 +122,19 @@ export class WordListComponent {
     return searches;
   })
 
+  loadWordGroups() {
+    this.roomService.getWordGroups().subscribe(wordGroups => {
+      this.wordGroups = wordGroups
+    })
+  }
+
   /**
    * calls deleteWord and returns a snackbar
    * @param id - id of word to be deleted
    */
   deleteWord(id: string) {
     this.wordService.deleteWord(id).subscribe(() => {
-      /* this is to refresh the page eventually
-        also could delete from both client and sever to refresh
-       this.sortType.set(undefined);
-       this.sortType.set(tempSortType.toString()); */
-      this.snackBar.open(`We deleted a word!`, 'OK', {duration: 6000});
+      this.snackBar.open(`We deleted a word! \n Please refresh your page.`, 'OK', {duration: 6000});
     })
   }
 

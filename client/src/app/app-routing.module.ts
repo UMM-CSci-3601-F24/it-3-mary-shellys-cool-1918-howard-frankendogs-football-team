@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { GridComponent } from './grid/grid.component';
 import { WordListComponent } from './anagram/word-list.component';
 import { AddWordComponent } from './anagram/add-word.component';
+import { WordGroupProfileComponent } from './anagram/word-group-profile.component';
 
 
 // Note that the 'users/new' route needs to come before 'users/:id'.
@@ -15,9 +16,9 @@ const routes: Routes = [
 
   {path: 'anagram', component: WordListComponent, title: 'Anagram'},
   {path: 'anagram/new', component: AddWordComponent, title: 'Add Word'},
-  // this is kind of backwards but allows us to pass an id for deleteWord without having profile
+
   {path: 'anagram/:id', component: WordListComponent, title: 'Anagram'},
-  {path: 'anagram/:wordGroup', component: WordListComponent, title: 'Anagram'},
+  {path: 'anagram/wordGroup/:id', component: WordGroupProfileComponent, title: "Word Group Profile"}
 ];
 
 @NgModule({

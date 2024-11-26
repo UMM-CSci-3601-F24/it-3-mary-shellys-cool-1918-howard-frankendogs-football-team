@@ -187,7 +187,6 @@ export class GridComponent {
       roomID: this.gridPackage.roomID,
       id: this.gridPackage._id,
     };
-    console.log(message + '\n Inside onGridChange() in grid.component.ts');
     this.webSocketService.sendMessage(message);
   }
 

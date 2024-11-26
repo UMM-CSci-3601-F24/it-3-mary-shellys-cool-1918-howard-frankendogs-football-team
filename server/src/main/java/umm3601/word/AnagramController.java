@@ -3,8 +3,6 @@ package umm3601.word;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.regex;
-// import static org.junit.jupiter.api.Assertions.assertNotNull;
-// import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +33,9 @@ public class AnagramController implements Controller {
 
   private static final String API_WORDS = "/api/anagram";
   private static final String API_WORD_BY_ID = "/api/anagram/{id}";
-  private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/{wordGroup}";
+  private static final String API_WORD_GROUPS = "/api/anagram/wordGroups";
+  private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/wordGroup/{id}";
+  // might need to be: "/api/anagram/wordGroups/{id}"
   private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history";
   static final String WORD_KEY = "word";
   static final String WORD_GROUP_KEY = "wordGroup";
@@ -91,7 +91,27 @@ public class AnagramController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
-  Bson constructFilter(Context ctx) {
+  public void getWordsByWordGroup(Context ctx) {
+    String wordGroup = ctx.pathParam("id");
+    Bson sortOrder = Sorts.ascending("word");
+    ArrayList<Word> matchingWords = wordCollection
+      .find(regex(WORD_GROUP_KEY, wordGroup))
+      .sort(sortOrder)
+      .into(new ArrayList<>());
+    ctx.json(matchingWords);
+    ctx.status(HttpStatus.OK);
+  }
+
+  public void getWordGroups(Context ctx) {
+    ArrayList<String> wordGroups = wordCollection
+        // want to find all of the word groups across the words and to add
+        // non-duplicates
+        .distinct("wordGroup", String.class).into(new ArrayList<>());
+    ctx.json(wordGroups);
+    ctx.status(HttpStatus.OK);
+  }
+
+  public Bson constructFilter(Context ctx) {
     // names data to be logged
     List<Bson> filters = new ArrayList<>();
     Search newSearch = new Search();
@@ -99,7 +119,7 @@ public class AnagramController implements Controller {
     String searchedWord = ctx.queryParam(WORD_KEY);
     Map<Character, Integer> charCountMap = new HashMap<>();
 
-  // if searching for contains will enter this loop
+    // if searching for contains will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
       if ("exact".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
         //if filter type is exact it runs following code
@@ -118,18 +138,16 @@ public class AnagramController implements Controller {
             String regexPattern = "(?i)(.*" + Pattern.quote(String.valueOf(c)) + ".*){" + count + "}";
             filters.add(regex("word", Pattern.compile(regexPattern)));
         }
+      }
     }
-  }
-
     // if searching by word group will enter this loop
-
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(WORD_GROUP_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(WORD_GROUP_KEY, pattern));
       newSearch.setWordGroup(ctx.queryParam(WORD_GROUP_KEY));
     }
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
-    // log into database
+    // log search into database
     if ((ctx.queryParam(WORD_KEY) != null && ctx.queryParam(WORD_KEY) != "")
         || (ctx.queryParam(WORD_GROUP_KEY) != null && ctx.queryParam(WORD_GROUP_KEY) != "")) {
       searchCollection.insertOne(newSearch);
@@ -139,11 +157,12 @@ public class AnagramController implements Controller {
     return combinedFilter;
   }
 
-  //used for debugging setting up db, might be used again for debugging limiting saved searches
+  // used for debugging setting up db, might be used again for debugging limiting
+  // saved searches
   // public void getSearches(Context ctx) {
-  //   ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
-  //   ctx.json(searches);
-  //   ctx.status(HttpStatus.OK);
+  // ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
+  // ctx.json(searches);
+  // ctx.status(HttpStatus.OK);
   // }
 
   private Bson constructSortingOrder(Context ctx) {
@@ -152,7 +171,7 @@ public class AnagramController implements Controller {
 
     Bson sortingOrder = sortOrder.equals("desc") ? Sorts.descending(sortBy) : Sorts.ascending(sortBy);
     return sortingOrder;
-}
+  }
 
   public void addNewWord(Context ctx) {
 
@@ -183,21 +202,23 @@ public class AnagramController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
-  public void deleteListWords(Context ctx) {
-    // ctx passes wordGroup as the name of the group not the ids of the elements in
-    // group
-    String deleteWordGroup = ctx.pathParam("wordGroup");
-    DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup", deleteWordGroup));
+  // public void deleteListWords(Context ctx) {
+  // // ctx passes wordGroup as the name of the group not the ids of the elements
+  // in
+  // // group
+  // String deleteWordGroup = ctx.pathParam("wordGroup");
+  // DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup",
+  // deleteWordGroup));
 
-    if (deleteResult.getDeletedCount() == 0) {
-      ctx.status(HttpStatus.NOT_FOUND);
-      throw new NotFoundResponse(
-          "Was unable to delete word group "
-              + deleteWordGroup
-              + "; perhaps illegal word group or no items found in the system?");
-    }
-    ctx.status(HttpStatus.OK);
-  }
+  // if (deleteResult.getDeletedCount() == 0) {
+  // ctx.status(HttpStatus.NOT_FOUND);
+  // throw new NotFoundResponse(
+  // "Was unable to delete word group "
+  // + deleteWordGroup
+  // + "; perhaps illegal word group or no items found in the system?");
+  // }
+  // ctx.status(HttpStatus.OK);
+  // }
 
   @Override
   public void addRoutes(Javalin server) {
@@ -206,12 +227,16 @@ public class AnagramController implements Controller {
 
     // server.get(API_WORDS_SEARCH_HISTORY, this::getSearches);
 
+    server.get(API_WORD_GROUPS, this::getWordGroups);
+
     server.delete(API_WORD_BY_ID, this::deleteWord);
 
     server.post(API_WORDS, this::addNewWord);
 
     // server.post(API_WORDS, this::addListWords);
 
-    server.delete(API_WORDS_BY_WORDGROUP, this::deleteListWords);
+    // server.delete(API_WORDS_BY_WORDGROUP, this::deleteListWords);
+
+    server.get(API_WORDS_BY_WORDGROUP, this::getWordsByWordGroup);
   }
 }

@@ -182,4 +182,16 @@ describe('WordService', () => {
   //   }))
   // })
 
+  describe("Word Group Profiles", () => {
+    it('calls api/wordGroup/id where id is `team member`', waitForAsync(() => {
+      const targetGroup = "team member"
+      const mockedMethod = spyOn(httpClient, "get").and.returnValue(of(testWords.slice(1,3)));
+      wordService.getWordsByWordGroup(targetGroup).subscribe(() => {
+        expect(mockedMethod).withContext("one call").toHaveBeenCalledTimes(1);
+        expect(mockedMethod)
+          .withContext("talks to correct endpoint")
+          .toHaveBeenCalledWith(wordService.wordUrl + "/wordGroup/" + targetGroup);
+      })
+    }))
+  })
 });

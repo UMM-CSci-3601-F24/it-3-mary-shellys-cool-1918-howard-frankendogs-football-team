@@ -37,6 +37,28 @@ export class MockWordService extends WordService {
       wordGroup: "teachers",
     },
   ];
+  static wordsInGroup: Word[] = [
+    {
+      _id:"burger_id",
+      word: "burger",
+      wordGroup: "Foods",
+    },
+    {
+      _id:"fries_id",
+      word: "fries",
+      wordGroup: "Foods",
+    },
+    {
+      _id:"apple_id",
+      word: "apple",
+      wordGroup: "Foods",
+    },
+    {
+      _id:"orange_id",
+      word: "orange",
+      wordGroup: "Foods",
+    }
+  ]
   static testSearches: Search[] = [
     {
       _id: "",
@@ -63,6 +85,10 @@ export class MockWordService extends WordService {
   getWords(_filters: {word?: string; wordGroup?: string}): Observable<SearchContext> {
     const searchContext: SearchContext = { words: MockWordService.testWords, searches: MockWordService.testSearches };
     return of(searchContext);
+  }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getWordsByWordGroup(wordGroup: string): Observable<Word[]> {
+    return of(MockWordService.wordsInGroup);
   }
   // deleteWord(id: string): Observable<Word[]> {
   //   let temp: Word[];
