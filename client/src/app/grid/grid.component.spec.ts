@@ -318,7 +318,7 @@ describe('GridComponent', () => {
     component.onGridChange();
 
     expect(sendMessageSpy).toHaveBeenCalledWith({
-      type: 'GRID_UPDATE',
+      type: 'GRID_CELL_UPDATE',
       grid: mockGrid,
       roomID: 'testRoomId',
       id: 'testId'
@@ -331,7 +331,7 @@ describe('GridComponent', () => {
       [new GridCell(), new GridCell()]
     ];
     const message = {
-      type: 'GRID_UPDATE',
+      type: 'GRID_CELL_UPDATE',
       grid: mockGrid,
       id: 'testId'
     };

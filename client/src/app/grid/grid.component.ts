@@ -100,17 +100,14 @@ export class GridComponent {
     this.webSocketService.getMessage().subscribe((message: unknown) => {
       const msg = message as {
         type?: string;
-        grid?: GridCell[][];
-        id?: string;
-      };
-      // all of these are optional to allow heartbeat messages to pass through
-      if (
-        // checks that message was a grid update
-        msg.type === 'GRID_UPDATE' &&
-        // checks that grid you have open is the same as the one that was updated
-        this.gridPackage._id == (message as { id: string }).id
-      ) {
-        this.applyGridUpdate(msg.grid);
+        gridID?: string;
+        cell?: GridCell;
+        row?: number;
+        col?: number;
+      }; // all of these are optional to allow heartbeat messages to pass through
+
+      if (msg.type === 'GRID_CELL_UPDATE' && this.gridPackage._id === msg.gridID) {
+        this.gridPackage.grid[msg.row][msg.col] = msg.cell;
       }
     });
   }
@@ -192,18 +189,19 @@ export class GridComponent {
     });
   }
 
-  onGridChange() {
+  onGridChange(event: { row: number, col: number, cell: GridCell }) {
     const message = {
-      type: 'GRID_UPDATE',
-      grid: this.gridPackage.grid,
-      roomID: this.gridPackage.roomID,
-      id: this.gridPackage._id,
+      type: 'GRID_CELL_UPDATE',
+      cell: event.cell,
+      row: event.row,
+      col: event.col,
+      gridID: this.gridPackage._id,
     };
+
     this.webSocketService.sendMessage(message);
   }
 
   /**
-   * Handles the click event on a grid cell.
    * Moves the focus to the clicked cell.
    *
    * @param event - The mouse event.
@@ -363,6 +361,7 @@ export class GridComponent {
     this.typeDirection = this.typingDirections[this.currentDirectionIndex];
     console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
+
 
   deleteDirectionToggle() {
     this.deleteDirectionBool = !this.deleteDirectionBool;

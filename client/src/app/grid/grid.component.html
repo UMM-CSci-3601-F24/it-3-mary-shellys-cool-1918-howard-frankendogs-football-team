@@ -172,7 +172,7 @@
           [grid]="gridPackage.grid"
           [currentColor]="currentColor"
           [ngStyle]="{ height: cellSize + 'px', width: cellSize + 'px' }"
-          (gridChange)="onGridChange()"
+          (gridChange)="onGridChange($event)"
         ></app-grid-cell>
       </mat-grid-tile>
       } }
