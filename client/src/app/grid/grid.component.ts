@@ -50,7 +50,7 @@ import { MatIcon } from '@angular/material/icon';
   ],
 })
 export class GridComponent {
-  currentColor: string;
+  currentColor: string = 'Pink';
   highlight: string[] = ['Pink', 'Yellow', 'Green'];
 
   deleteDirectionBool: boolean = false;
