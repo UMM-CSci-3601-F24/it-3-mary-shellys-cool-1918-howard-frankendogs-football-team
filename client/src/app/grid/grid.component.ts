@@ -287,6 +287,7 @@ export class GridComponent {
 
               this.renderer.setProperty(inputElement, 'value', event.key);
               inputElement.dispatchEvent(new Event('input'));
+              cell.value = event.key;
 
               if (this.typeDirection === 'right') {
                 if (cell.edges.right === false) {
