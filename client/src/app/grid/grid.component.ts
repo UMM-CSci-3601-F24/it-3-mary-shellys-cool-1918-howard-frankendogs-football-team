@@ -329,10 +329,11 @@ export class GridComponent {
         switch (event.key) {
           case 'Backspace':
             if (inputElement) {
-              console.log(inputElement.value);
               this.renderer.setProperty(inputElement, 'value', '');
-              setTimeout(() => this.moveFocus(col, row), 0);
-              console.log(inputElement.value);
+              inputElement.dispatchEvent(new Event('input'));
+              cell.value = '';
+
+              this.moveFocus(col, row);
             }
         }
       }

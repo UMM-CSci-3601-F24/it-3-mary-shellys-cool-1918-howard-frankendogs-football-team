@@ -51,10 +51,10 @@ export class GridCellComponent {
   onInput(value: string) {
     if (this.validateInput(value)) {
       this.gridCell.value = value;
-      this.gridChange.emit({ row: this.row, col: this.col, cell: this.gridCell });
     } else {
       this.gridCell.value = '';
     }
+    this.gridChange.emit({ row: this.row, col: this.col, cell: this.gridCell });
   }
 
   /**
