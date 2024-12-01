@@ -8,18 +8,11 @@ describe('Grid Component', () => {
     cy.task('seed:database');
   });
 
-  // it('should open saved grid to server', () => {
-  //   cy.get(':nth-child(2) > .ng-star-inserted > button').click();
-  //   cy.get(':nth-child(2) > .ng-star-inserted > button').click();
-  //   cy.intercept('api/grid').as('saveGrids');
-  //   cy.url().should('contain', '/seededGrids/grid/673ba3a31e6a570b74f9a310');
-  // });
-
   it('should save a grid to server', () => {
     page.saveGrid();
     cy.wait(3000);
     cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click();
-    cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click(); // these buttons wouldn't show up if it saves, i promise this test actually checks for something
+    cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click();
 
   });
 
@@ -38,7 +31,7 @@ describe('Grid Component', () => {
 
   it('should black-out the cell with all edges bolded', () => {
     cy.get('#mat-input-3').click({ ctrlKey: true });
-    cy.get('#mat-input-3') // the current cell becomes 103 when its bold idk why we kinda have jank cell names
+    cy.get('#mat-input-3')
       .should('have.css', 'background-color')
       .and('eq', 'rgb(0, 0, 0)');
   });
@@ -46,7 +39,7 @@ describe('Grid Component', () => {
   it('should un-black cell background, but keep edges', () => {
     cy.get('#mat-input-3').click({ ctrlKey: true });
     cy.get('#mat-input-3').click({ altKey: true });
-    cy.get('#mat-input-3') // the current cell become 203, also idk why but f it we ball
+    cy.get('#mat-input-3')
       .should('have.css', 'background-color')
       .and('eq', 'rgb(255, 255, 255)');
   });

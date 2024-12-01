@@ -110,6 +110,19 @@ export class GridComponent {
         this.gridPackage.grid[msg.row][msg.col].color = msg.cell.color;
         this.gridPackage.grid[msg.row][msg.col].edges = msg.cell.edges;
         this.gridPackage.grid[msg.row][msg.col].value = msg.cell.value;
+
+        if (this.gridPackage.grid[msg.row + 1][msg.col]) {
+          this.gridPackage.grid[msg.row + 1][msg.col].edges.top = msg.cell.edges.bottom;
+        }
+        if (this.gridPackage.grid[msg.row - 1][msg.col]) {
+          this.gridPackage.grid[msg.row - 1][msg.col].edges.bottom = msg.cell.edges.top;
+        }
+        if (this.gridPackage.grid[msg.row][msg.col + 1]) {
+          this.gridPackage.grid[msg.row][msg.col + 1].edges.left = msg.cell.edges.right;
+        }
+        if (this.gridPackage.grid[msg.row][msg.col - 1]) {
+          this.gridPackage.grid[msg.row][msg.col - 1].edges.right = msg.cell.edges.left;
+        }
       }
     });
   }
