@@ -20,7 +20,6 @@ import {
   MatExpansionPanel,
   MatExpansionPanelDescription,
   MatExpansionPanelHeader,
-  MatExpansionPanelTitle,
 } from '@angular/material/expansion';
 import { MatIcon } from '@angular/material/icon';
 
@@ -43,7 +42,6 @@ import { MatIcon } from '@angular/material/icon';
     MatCardModule,
     MatExpansionPanel,
     MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
     MatExpansionPanelDescription,
     MatIcon,
   ],
@@ -107,7 +105,11 @@ export class GridComponent {
       }; // all of these are optional to allow heartbeat messages to pass through
 
       if (msg.type === 'GRID_CELL_UPDATE' && this.gridPackage._id === msg.gridID) {
-        this.gridPackage.grid[msg.row][msg.col] = msg.cell;
+        // this.gridPackage.grid[msg.row][msg.col] = msg.cell;
+
+        this.gridPackage.grid[msg.row][msg.col].color = msg.cell.color;
+        this.gridPackage.grid[msg.row][msg.col].edges = msg.cell.edges;
+        this.gridPackage.grid[msg.row][msg.col].value = msg.cell.value;
       }
     });
   }
@@ -282,7 +284,9 @@ export class GridComponent {
             break;
           default:
             if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
-              cell.value = event.key;
+
+              this.renderer.setProperty(inputElement, 'value', event.key);
+              inputElement.dispatchEvent(new Event('input'));
 
               if (this.typeDirection === 'right') {
                 if (cell.edges.right === false) {
