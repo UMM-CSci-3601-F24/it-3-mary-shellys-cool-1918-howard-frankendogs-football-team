@@ -26,7 +26,7 @@ export class WordGroupProfileComponent {
     map((paramMap: ParamMap) => paramMap.get("id"))));
 
   constructor(
-    private snackBar: MatSnackBar,
+    public snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private wordService: WordService
   ) {}

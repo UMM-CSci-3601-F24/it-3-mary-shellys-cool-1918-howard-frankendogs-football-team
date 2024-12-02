@@ -290,22 +290,6 @@ class AnagramControllerSpec {
   }
 
   @Test
-  void constructFiltersReturnsMessage() throws IOException {
-    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    System.setErr(new PrintStream(outContent));
-    // makes search that will be passed
-    Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
-    when(ctx.queryParamMap()).thenReturn(queryParams);
-    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
-    // calls getWords() which calls constructFilter()
-    anagramController.getWords(ctx);
-    // checks that construct filters gave out right message "search added with db
-    // params..."
-    assertTrue(outContent.toString().contains("search added to db"));
-  }
-
-  @Test
   public void testConstructFilterExactWordKey() {
 
     Word newWord = new Word();

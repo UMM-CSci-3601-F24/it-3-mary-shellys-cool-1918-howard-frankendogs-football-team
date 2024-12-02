@@ -90,13 +90,14 @@ export class MockWordService extends WordService {
   getWordsByWordGroup(wordGroup: string): Observable<Word[]> {
     return of(MockWordService.wordsInGroup);
   }
-  // deleteWord(id: string): Observable<Word[]> {
-  //   let temp: Word[];
-  //   for(let i = 0; i < MockWordService.testWords.length; i++){
-  //     if (MockWordService.testWords[i]._id !== id) {
-  //       temp[i] = MockWordService.testWords[i];
-  //     }
-  //   }
-  //   return (temp);
-  // }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  deleteWord(id: string): Observable<void> {
+    // let temp: Word[];
+    // for(let i = 0; i < MockWordService.testWords.length; i++){
+    //   if (MockWordService.testWords[i]._id !== id) {
+    //     temp[i] = MockWordService.testWords[i];
+    //   }
+    // }
+    return;
+  }
 }
