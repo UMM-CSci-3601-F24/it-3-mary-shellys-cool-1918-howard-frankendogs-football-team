@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
-
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -30,6 +30,7 @@ import { MatIcon } from '@angular/material/icon';
   standalone: true,
   providers: [],
   imports: [
+    MatButtonToggleModule,
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
@@ -47,8 +48,8 @@ import { MatIcon } from '@angular/material/icon';
   ],
 })
 export class GridComponent {
-  currentColor: string;
-  highlight: string[] = ['pink', 'yellow', 'green'];
+  currentColor: string = 'Pink';
+  highlight: string[] = ['Pink', 'Yellow', 'Green'];
 
   deleteDirectionBool: boolean = false;
 
@@ -227,7 +228,6 @@ export class GridComponent {
    * @param col - The column index of the clicked cell.
    * @param row - The row index of the clicked cell.
    */
-
   onClick(event: MouseEvent, col: number, row: number) {
     this.moveFocus(col, row);
   }
@@ -385,10 +385,11 @@ export class GridComponent {
     console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
 
-
+  /**
+   * flips the bool deleteDirectionBool
+   */
   deleteDirectionToggle() {
     this.deleteDirectionBool = !this.deleteDirectionBool;
-    console.log(this.deleteDirectionBool);
   }
 
   updateCellColor(row: number, col: number) {
