@@ -5,20 +5,22 @@
     <!-- Control Instructions Drop down panel -->
     <div>
       <mat-card>
-        <mat-card-header>
+        <!-- <mat-card-header>
           <mat-card-title>Controls Key</mat-card-title>
-        </mat-card-header>
+        </mat-card-header> -->
         <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
+          <mat-expansion-panel-header class="pannel-text">
+
             <mat-panel-description>
-              <mat-icon> tips_and_updates
-              </mat-icon>
+            Controls Key<mat-icon> tips_and_updates </mat-icon>
             </mat-panel-description>
           </mat-expansion-panel-header>
           <p> Typing/Letters types directly into the grid and move in the direction specified.
           </p>
           <p>
-            Backspace alone deletes current cell value and moves opposite of direction specified.
+            Backspace deletes the current cell value and moves to the left.
+            if delete direction is turned on, backspace will
+            delete the current cell value and moves opposite of typing direction
           </p>
           <p>
             Ctrl + Backspace deletes current cell value without moving.
@@ -27,16 +29,33 @@
             Arrow keys alone navigate the array in the respective direction.
           </p>
           <p>
-            Ctrl + Arrow keys bold the edge in the respective direction.
+            Ctrl + Arrow keys bold the edge in the respective direction. if all edges are bold, the
+            cell background goes black, and you cannot highlight it
           </p>
           <p>
             Clicking on a cell will focus onto that cell.
           </p>
           <p>
-            The left number input changes the number of cells in each row.
+            Ctrl + Right click will bold all edges.
           </p>
-         <p>
-            The right number input changes the pixel size of each cell. </p>
+          <p>
+            Alt + Right click on a blacked-out cell will turn the cell white, while keeping edges bold.
+            This also means you can highlight the cell.
+          </p>
+          <p>
+            Right click will highlight the cell background to the current selected color.
+            If color selected is the same as the cell's color, Left clicking will undo the highlight.
+          </p>
+          <p>
+            Holding shift and moving your mouse out of the current cell will highlight it
+          </p>
+          <p>
+            The Hight input makes the grid shorter/taller.
+            The Width input makes the grid thinner/thicker
+          </p>
+          <p>
+            The Size input makes the cells themselves larger/smaller.
+          </p>
         </mat-expansion-panel>
       </mat-card>
     </div>
@@ -172,7 +191,7 @@
           [grid]="gridPackage.grid"
           [currentColor]="currentColor"
           [ngStyle]="{ height: cellSize + 'px', width: cellSize + 'px' }"
-          (gridChange)="onGridChange()"
+          (gridChange)="onGridChange($event)"
         ></app-grid-cell>
       </mat-grid-tile>
       } }

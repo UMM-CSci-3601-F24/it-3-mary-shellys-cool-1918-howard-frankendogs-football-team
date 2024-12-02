@@ -20,7 +20,6 @@ import {
   MatExpansionPanel,
   MatExpansionPanelDescription,
   MatExpansionPanelHeader,
-  MatExpansionPanelTitle,
 } from '@angular/material/expansion';
 import { MatIcon } from '@angular/material/icon';
 
@@ -44,7 +43,6 @@ import { MatIcon } from '@angular/material/icon';
     MatCardModule,
     MatExpansionPanel,
     MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
     MatExpansionPanelDescription,
     MatIcon,
   ],
@@ -101,17 +99,35 @@ export class GridComponent {
     this.webSocketService.getMessage().subscribe((message: unknown) => {
       const msg = message as {
         type?: string;
-        grid?: GridCell[][];
-        id?: string;
-      };
-      // all of these are optional to allow heartbeat messages to pass through
-      if (
-        // checks that message was a grid update
-        msg.type === 'GRID_UPDATE' &&
-        // checks that grid you have open is the same as the one that was updated
-        this.gridPackage._id == (message as { id: string }).id
-      ) {
-        this.applyGridUpdate(msg.grid);
+        gridID?: string;
+        cell?: GridCell;
+        row?: number;
+        col?: number;
+      }; // all of these are optional to allow heartbeat messages to pass through
+
+      if (msg.type === 'GRID_CELL_UPDATE' && this.gridPackage._id === msg.gridID) {
+        // this.gridPackage.grid[msg.row][msg.col] = msg.cell;
+
+        this.gridPackage.grid[msg.row][msg.col].color = msg.cell.color;
+        this.gridPackage.grid[msg.row][msg.col].edges = msg.cell.edges;
+        this.gridPackage.grid[msg.row][msg.col].value = msg.cell.value;
+
+        if (this.gridPackage.grid[msg.row + 1][msg.col]) {
+          this.gridPackage.grid[msg.row + 1][msg.col].edges.top = msg.cell.edges.bottom;
+          this.updateCellColor(msg.row + 1, msg.col);
+        }
+        if (this.gridPackage.grid[msg.row - 1][msg.col]) {
+          this.gridPackage.grid[msg.row - 1][msg.col].edges.bottom = msg.cell.edges.top;
+          this.updateCellColor(msg.row - 1, msg.col);
+        }
+        if (this.gridPackage.grid[msg.row][msg.col + 1]) {
+          this.gridPackage.grid[msg.row][msg.col + 1].edges.left = msg.cell.edges.right;
+          this.updateCellColor(msg.row, msg.col + 1);
+        }
+        if (this.gridPackage.grid[msg.row][msg.col - 1]) {
+          this.gridPackage.grid[msg.row][msg.col - 1].edges.right = msg.cell.edges.left;
+          this.updateCellColor(msg.row, msg.col - 1);
+        }
       }
     });
   }
@@ -193,18 +209,19 @@ export class GridComponent {
     });
   }
 
-  onGridChange() {
+  onGridChange(event: { row: number, col: number, cell: GridCell }) {
     const message = {
-      type: 'GRID_UPDATE',
-      grid: this.gridPackage.grid,
-      roomID: this.gridPackage.roomID,
-      id: this.gridPackage._id,
+      type: 'GRID_CELL_UPDATE',
+      cell: event.cell,
+      row: event.row,
+      col: event.col,
+      gridID: this.gridPackage._id,
     };
+
     this.webSocketService.sendMessage(message);
   }
 
   /**
-   * Handles the click event on a grid cell.
    * Moves the focus to the clicked cell.
    *
    * @param event - The mouse event.
@@ -284,6 +301,9 @@ export class GridComponent {
             break;
           default:
             if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
+
+              this.renderer.setProperty(inputElement, 'value', event.key);
+              inputElement.dispatchEvent(new Event('input'));
               cell.value = event.key;
 
               if (this.typeDirection === 'right') {
@@ -313,10 +333,11 @@ export class GridComponent {
         switch (event.key) {
           case 'Backspace':
             if (inputElement) {
-              console.log(inputElement.value);
               this.renderer.setProperty(inputElement, 'value', '');
-              setTimeout(() => this.moveFocus(col, row), 0);
-              console.log(inputElement.value);
+              inputElement.dispatchEvent(new Event('input'));
+              cell.value = '';
+
+              this.moveFocus(col, row);
             }
         }
       }
@@ -369,5 +390,12 @@ export class GridComponent {
    */
   deleteDirectionToggle() {
     this.deleteDirectionBool = !this.deleteDirectionBool;
+  }
+
+  updateCellColor(row: number, col: number) {
+    const cell = this.gridPackage.grid[row][col];
+    if (cell.edges.top && cell.edges.right && cell.edges.bottom && cell.edges.left) {
+      cell.color = 'black';
+    }
   }
 }

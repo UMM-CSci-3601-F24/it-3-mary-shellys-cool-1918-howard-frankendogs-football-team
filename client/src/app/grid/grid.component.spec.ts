@@ -18,7 +18,7 @@ describe('GridComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [FormsModule, GridComponent, BrowserAnimationsModule, RouterTestingModule, HttpClientTestingModule],
+      imports: [FormsModule, BrowserAnimationsModule, RouterTestingModule, HttpClientTestingModule, GridComponent],
       providers: [
         { provide: GridService, useValue: new MockGridService() },
         RoomService
@@ -307,32 +307,31 @@ describe('GridComponent', () => {
 
   it('should send grid update message on grid change', () => {
     const sendMessageSpy = spyOn(component['webSocketService'], 'sendMessage');
-    const mockGrid: GridCell[][] = [
-      [new GridCell(), new GridCell()],
-      [new GridCell(), new GridCell()]
-    ];
-    component.gridPackage.grid = mockGrid;
+    const mockGridCell: GridCell = new GridCell();
+    mockGridCell.value = 'X';
+    component.gridPackage.grid[1][1] = mockGridCell;
     component.gridPackage._id = 'testId';
     component.gridPackage.roomID = 'testRoomId';
 
-    component.onGridChange();
+    component.onGridChange({ row: 1, col: 1, cell: mockGridCell });
 
     expect(sendMessageSpy).toHaveBeenCalledWith({
-      type: 'GRID_UPDATE',
-      grid: mockGrid,
-      roomID: 'testRoomId',
-      id: 'testId'
+      type: 'GRID_CELL_UPDATE',
+      cell: mockGridCell,
+      row: 1,
+      col: 1,
+      gridID: 'testId'
     });
   });
 
   it('should handle websocket messages correctly', fakeAsync(() => {
-    const mockGrid: GridCell[][] = [
-      [new GridCell(), new GridCell()],
-      [new GridCell(), new GridCell()]
-    ];
+    const mockGridCell: GridCell = new GridCell();
+    mockGridCell.value = 'X';
     const message = {
-      type: 'GRID_UPDATE',
-      grid: mockGrid,
+      type: 'GRID_CELL_UPDATE',
+      cell: mockGridCell,
+      row: 1,
+      col: 1,
       id: 'testId'
     };
 
@@ -341,17 +340,15 @@ describe('GridComponent', () => {
 
     // This is a workaround to make the test work
     component['webSocketService'].getMessage().subscribe((msg: unknown) => {
-      const receivedMessage = msg as { type: string, grid: GridCell[][], id: string };
-      if (receivedMessage.type === 'GRID_UPDATE' && component.gridPackage._id === receivedMessage.id) {
-        component.applyGridUpdate(receivedMessage.grid);
+      const receivedMessage = msg as { type: string, cell: GridCell, row: number, col: number, id: string };
+      if (receivedMessage.type === 'GRID_CELL_UPDATE' && component.gridPackage._id === receivedMessage.id) {
+        component.gridPackage.grid[receivedMessage.row][receivedMessage.col] = receivedMessage.cell;
       }
     });
 
     tick();
 
-    expect(component.gridPackage.grid).toEqual(mockGrid);
-    expect(component.gridHeight).toBe(mockGrid.length);
-    expect(component.gridWidth).toBe(mockGrid[0].length);
+    expect(component.gridPackage.grid[1][1].value).toBe('X');
   }));
 });
 
