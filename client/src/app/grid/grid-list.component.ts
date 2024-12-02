@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { GridCardComponent } from "./grid-card.component";
-import { ActivatedRoute, RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { GridPackage } from './gridPackage';
 import { GridService } from './grid.service';
 import { RoomService } from '../room.service';
@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-grid-list',
   standalone: true,
-  imports: [GridCardComponent, RouterLink, RouterModule, MatCardModule, HttpClientModule],
+  imports: [GridCardComponent, RouterModule, MatCardModule, HttpClientModule],
   templateUrl: './grid-list.component.html',
   styleUrl: './grid-list.component.scss'
 })
