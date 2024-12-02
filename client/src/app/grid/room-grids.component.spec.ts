@@ -1,62 +1,86 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { of } from 'rxjs';
-import { GridService } from './grid.service';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RoomGridsComponent } from './room-grids.component';
-import { Router } from '@angular/router';
+import { GridService } from './grid.service';
+import { RoomService } from '../room.service';
+import { MockGridService } from 'src/testing/grid.service.mock';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { of } from 'rxjs';
 
-describe('GridListComponent', () => {
+describe('RoomGridsComponent', () => {
   let component: RoomGridsComponent;
   let fixture: ComponentFixture<RoomGridsComponent>;
-  let httpTestingController: HttpTestingController;
-  let mockGridService: jasmine.SpyObj<GridService>;
-  let mockRouter: jasmine.SpyObj<Router>;
+  let mockRoomService: jasmine.SpyObj<RoomService>;
 
   beforeEach(async () => {
-    mockGridService = jasmine.createSpyObj('GridService', ['getGrids']);
-    mockGridService.getGrids.and.returnValue(of([]));
-    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
-
+    mockRoomService = jasmine.createSpyObj('RoomService', ['getGridsByRoomId', 'getRoomById']);
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        RoomGridsComponent
-      ],
+      imports: [RoomGridsComponent, RouterTestingModule, HttpClientTestingModule, MatSnackBarModule],
       providers: [
-        { provide: GridService, useValue: mockGridService },
-        { provide: Router, useValue: mockRouter }
+        { provide: GridService, useClass: MockGridService },
+        { provide: RoomService, useValue: mockRoomService }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
 
-    httpTestingController = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(RoomGridsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    httpTestingController.verify();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should load grids based on roomID', fakeAsync(() => {
+    const mockGrids = [
+      { _id: '1', name: 'Grid 1', roomID: 'room1', grid: [], lastSaved: new Date() },
+      { _id: '2', name: 'Grid 2', roomID: 'room2', grid: [], lastSaved: new Date() }
+    ];
+    mockRoomService.getGridsByRoomId.and.returnValue(of(mockGrids));
+    component.gridListComponent.roomID = 'room1';
+    component.gridListComponent.loadGrids();
+    tick();
+    expect(mockRoomService.getGridsByRoomId).toHaveBeenCalledWith('room1');
+    expect(component.gridListComponent.grids.length).toBe(mockGrids.length);
+  }));
+
   it('should copy room link to clipboard', () => {
-    const component = fixture.componentInstance;
     spyOn(navigator.clipboard, 'writeText').and.returnValue(Promise.resolve());
-    spyOn(window, 'alert');
+    component.roomID = 'room1';
     component.copyRoomLink();
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${window.location.origin}/room/${component.roomID}`);
-    expect(window.alert).toHaveBeenCalledWith('Room link copied to clipboard!');
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${window.location.origin}/room1/grids`);
   });
 
-  it('should navigate to home on exitRoom', () => {
-    const component = fixture.componentInstance;
+  it('should navigate to home on exit', () => {
+    const routerSpy = spyOn(component['router'], 'navigate');
     component.exitRoom();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
+    expect(routerSpy).toHaveBeenCalledWith(['/']);
   });
+
+  it('should save new grid', fakeAsync(() => {
+    const mockGrids = [
+      { _id: '1', name: 'Grid 1', roomID: 'room1', grid: [], lastSaved: new Date() }
+    ];
+
+    mockRoomService.getGridsByRoomId.and.returnValue(of(mockGrids));
+
+    const newGrid = { _id: '507f1f77bcf86cd799439011', name: 'New Grid', roomID: 'room1', grid: [], lastSaved: new Date() };
+    spyOn(component['gridService'], 'saveGrid').and.returnValue(of(newGrid));
+
+    const routerSpy = spyOn(component['router'], 'navigate');
+
+    spyOn(window, 'confirm').and.returnValue(true);
+
+    component.roomID = 'room1';
+    component.newGridName = 'New Grid';
+    component.newGridRows = 5;
+    component.newGridCols = 5;
+    component.saveNewGrid();
+    tick();
+
+    expect(component['gridService'].saveGrid).toHaveBeenCalled();
+    expect(mockRoomService.getGridsByRoomId).toHaveBeenCalledWith('room1');
+    expect(routerSpy).toHaveBeenCalledWith([`${component.roomID}/grid/${newGrid._id}`]);
+  }));
 });

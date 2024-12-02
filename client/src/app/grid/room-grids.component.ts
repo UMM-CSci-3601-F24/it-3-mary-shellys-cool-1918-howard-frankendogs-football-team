@@ -37,7 +37,7 @@ export class RoomGridsComponent {
     private gridService: GridService,
     private roomService: RoomService,
     private router: Router,
-    private snackBar: MatSnackBar
+    public snackBar: MatSnackBar
   ) {
 
     route = inject(ActivatedRoute);
@@ -56,7 +56,7 @@ export class RoomGridsComponent {
   }
 
   copyRoomLink() {
-    const roomLink = `${window.location.origin}/room/${this.roomID}`;
+    const roomLink = `${window.location.origin}/${this.roomID}/grids`;
     navigator.clipboard.writeText(roomLink).then(() => {
       alert('Room link copied to clipboard!');
     });
@@ -96,7 +96,7 @@ export class RoomGridsComponent {
           this.totalGrids = grids.length;
           this.gridListComponent.loadGrids();
           if (confirm('Grid created successfully. Do you want to navigate to the new grid?')) {
-            this.router.navigate([`/room/${this.roomID}/grid/${savedGrid}`]);
+            this.router.navigate([`${this.roomID}/grid/${savedGrid._id}`]);
           }
         });
       });
