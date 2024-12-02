@@ -76,3 +76,43 @@
   border-radius: 0.25rem;
   font-size: 1.2rem;
 }
+
+.grid-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.grid-buttons button {
+  margin: 0.625rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
+  width: 48%;
+}
+
+.grid-buttons button:hover {
+  background-color: #0056b3;
+}
+
+.save-button {
+  margin: 0.625rem 0;
+  padding: 0.625rem 1.25rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+}

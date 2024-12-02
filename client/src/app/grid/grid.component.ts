@@ -9,7 +9,7 @@ import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GridService } from './grid.service';
 import { GridPackage } from './gridPackage';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
@@ -62,7 +62,7 @@ export class GridComponent {
     grid: [],
     _id: '',
     roomID: '',
-    name: 'PlaceHolderNameLmaoWhat',
+    name: '',
     lastSaved: new Date()
   }
 
@@ -82,7 +82,8 @@ export class GridComponent {
     public elRef: ElementRef,
     private gridService: GridService,
     private roomService: RoomService,
-    private webSocketService: WebSocketService) {
+    private webSocketService: WebSocketService,
+    private router: Router) {
 
     this.route.paramMap.subscribe(params => {
       this.gridPackage.roomID = params.get('roomID');
@@ -152,25 +153,14 @@ export class GridComponent {
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id,
         name: this.gridPackage.name,
-        lastSaved: this.gridPackage.lastSaved
+        lastSaved: new Date() // Update the last saved date
       };
       this.gridService
         .saveGridWithRoomId(this.gridPackage.roomID, gridData)
         .subscribe(() => {
+          this.gridPackage.lastSaved = gridData.lastSaved; // Ensure the displayed last saved date is accurate
           this.loadSavedGrids();
-        });
-    } else {
-      const gridData: Partial<GridPackage> = {
-        roomID: this.gridPackage.roomID,
-        grid: this.gridPackage.grid,
-        name: this.gridPackage.name,
-        lastSaved: this.gridPackage.lastSaved
-      };
-      this.gridService
-        .saveGridWithRoomId(this.gridPackage.roomID, gridData)
-        .subscribe(() => {
-          this.loadSavedGrids();
-        });
+      });
     }
   }
 
@@ -185,7 +175,7 @@ export class GridComponent {
   loadGrid(id: string) {
     this.gridService.getGridById(id).subscribe((activeGrid) => {
       console.log(activeGrid._id);
-
+      this.gridPackage.name = activeGrid.name;
       this.gridPackage._id = activeGrid._id;
       this.gridPackage.roomID = activeGrid.roomID;
       this.applyGridUpdate(activeGrid.grid);
@@ -367,5 +357,16 @@ export class GridComponent {
   deleteDirectionToggle() {
     this.deleteDirectionBool = !this.deleteDirectionBool;
     console.log(this.deleteDirectionBool);
+  }
+
+  copyGridLink() {
+    const gridLink = `${window.location.origin}/grid/${this.gridPackage._id}`;
+    navigator.clipboard.writeText(gridLink).then(() => {
+      alert('Grid link copied to clipboard!');
+    });
+  }
+
+  leaveGrid() {
+    this.router.navigate([`/${this.gridPackage.roomID}/grids`]);
   }
 }

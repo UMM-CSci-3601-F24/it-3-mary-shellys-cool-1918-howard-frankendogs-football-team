@@ -227,47 +227,6 @@ describe('GridComponent', () => {
     expect(component.savedGrids).toEqual(mockGrids);
   }));
 
-  it('should save grid without existing ID', () => {
-    const saveGridWithRoomIdSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of('testId'));
-
-    component.gridPackage = {
-      grid: [
-        [new GridCell(), new GridCell()],
-        [new GridCell(), new GridCell()]
-      ],
-      _id: null,
-      roomID: null,
-      name: 'PlaceHolderNameLmaoWhat',
-      lastSaved: new Date()
-    };
-
-    component.saveGrid();
-
-    expect(saveGridWithRoomIdSpy).toHaveBeenCalledWith(null, {
-      roomID: null,
-      grid: component.gridPackage.grid,
-      name: 'PlaceHolderNameLmaoWhat',
-      lastSaved: jasmine.any(Date)
-    });
-  });
-
-  it('should save grid without existing ID', fakeAsync(() => {
-    const saveGridSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of(''));
-    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids');
-
-    component.gridPackage._id = '';
-    component.saveGrid();
-    tick();
-
-    expect(saveGridSpy).toHaveBeenCalledWith(component.gridPackage.roomID, {
-      roomID: component.gridPackage.roomID,
-      grid: component.gridPackage.grid,
-      name: 'PlaceHolderNameLmaoWhat',
-      lastSaved: jasmine.any(Date)
-    });
-    expect(loadSavedGridsSpy).toHaveBeenCalled();
-  }));
-
   it('should apply grid update correctly', () => {
     const mockGrid: GridCell[][] = [
       [new GridCell(), new GridCell()],

@@ -96,7 +96,7 @@ export class RoomGridsComponent {
           this.totalGrids = grids.length;
           this.gridListComponent.loadGrids();
           if (confirm('Grid created successfully. Do you want to navigate to the new grid?')) {
-            this.router.navigate([`${this.roomID}/grid/${savedGrid._id}`]);
+            this.router.navigate([`/${this.roomID}/grid/${savedGrid._id}`]);
           }
         });
       });
