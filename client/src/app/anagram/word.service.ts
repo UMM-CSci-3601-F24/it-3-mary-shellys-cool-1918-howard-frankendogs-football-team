@@ -14,21 +14,25 @@ export class WordService {
   private readonly groupKey = 'wordGroup';
   private readonly containsKey = 'word';
   private readonly filterTypeKey = 'filterType';
+  private readonly lengthKey = 'length';
 
   constructor(private httpClient: HttpClient) { }
 
-  getWords(filters?: {word?: string; wordGroup?: string; filterType?: string}): Observable<SearchContext> {
+  getWords(filters?: { word?: string; wordGroup?: string; filterType?: string; length?: number }): Observable<SearchContext> {
 
     let httpParams: HttpParams = new HttpParams();
-    if(filters) {
-      if(filters.word) {
+    if (filters) {
+      if (filters.word) {
         httpParams = httpParams.set(this.containsKey, filters.word);
       }
-      if(filters.wordGroup) {
+      if (filters.wordGroup) {
         httpParams = httpParams.set(this.groupKey, filters.wordGroup);
       }
-      if(filters.filterType) {
+      if (filters.filterType) {
         httpParams = httpParams.set(this.filterTypeKey, filters.filterType);
+      }
+      if (filters.length) {
+        httpParams = httpParams.set(this.lengthKey, filters.length);
       }
     }
     return this.httpClient.get<SearchContext>(this.wordUrl, {
@@ -36,16 +40,16 @@ export class WordService {
     });
   }
 
-  sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean}): Word[] {
+  sortWords(words: Word[], filters: { sortType?: string; sortOrder?: boolean }): Word[] {
     const filteredWords = words;
     //let filteredWords = words;
 
-    if(filters.sortType) {
-      if(filters.sortType === "alphabetical"){
+    if (filters.sortType) {
+      if (filters.sortType === "alphabetical") {
         filteredWords.map(w => w.word).sort();
       }
     }
-    if(filters.sortOrder) {
+    if (filters.sortOrder) {
       // if sortOrder is true reverse the results
       filteredWords.reverse();
     }
@@ -53,7 +57,7 @@ export class WordService {
   }
 
   addWord(newWord: Partial<Word>): Observable<string> {
-    return this.httpClient.post<{id: string}>(this.wordUrl, newWord).pipe(map(response => response.id))
+    return this.httpClient.post<{ id: string }>(this.wordUrl, newWord).pipe(map(response => response.id))
   }
 
   deleteWord(id: string): Observable<void> {

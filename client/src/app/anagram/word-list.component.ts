@@ -51,6 +51,7 @@ export class WordListComponent {
   //server side filtering
   contains = signal<string|undefined>(undefined);
   group = signal<string|undefined>(undefined);
+  length = signal<number|undefined>(undefined);
 
 
   filterType = signal<string|undefined>("exact");
@@ -64,15 +65,17 @@ export class WordListComponent {
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
   private filterType$ = toObservable(this.filterType);
+  private length$ = toObservable(this.length);
 
   serverFilteredContext =
     toSignal(
-      combineLatest([this.contains$, this.group$, this.filterType$]).pipe(
-        switchMap(([word, wordGroup, filterType]) =>
+      combineLatest([this.contains$, this.group$, this.filterType$, this.length$]).pipe(
+        switchMap(([word, wordGroup, filterType, length]) =>
           this.wordService.getWords({
             word,
             wordGroup,
             filterType,
+            length,
           })
         ),
         catchError((err) => {
