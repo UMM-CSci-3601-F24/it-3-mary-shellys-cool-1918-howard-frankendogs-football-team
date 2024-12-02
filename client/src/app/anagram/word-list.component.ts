@@ -151,8 +151,8 @@ export class WordListComponent {
     this.wordService.deleteWord(id).subscribe({
       next: () => {
         this.snackBar.open(
-          `deleted todo`,
-          null,
+          `We deleted a word!`,
+          "OK",
           { duration: 2000 }
         );
         // // const contains = this.contains();
