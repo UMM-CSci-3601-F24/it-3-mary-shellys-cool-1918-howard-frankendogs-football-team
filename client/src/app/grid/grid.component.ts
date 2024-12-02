@@ -113,15 +113,19 @@ export class GridComponent {
 
         if (this.gridPackage.grid[msg.row + 1][msg.col]) {
           this.gridPackage.grid[msg.row + 1][msg.col].edges.top = msg.cell.edges.bottom;
+          this.updateCellColor(msg.row + 1, msg.col);
         }
         if (this.gridPackage.grid[msg.row - 1][msg.col]) {
           this.gridPackage.grid[msg.row - 1][msg.col].edges.bottom = msg.cell.edges.top;
+          this.updateCellColor(msg.row - 1, msg.col);
         }
         if (this.gridPackage.grid[msg.row][msg.col + 1]) {
           this.gridPackage.grid[msg.row][msg.col + 1].edges.left = msg.cell.edges.right;
+          this.updateCellColor(msg.row, msg.col + 1);
         }
         if (this.gridPackage.grid[msg.row][msg.col - 1]) {
           this.gridPackage.grid[msg.row][msg.col - 1].edges.right = msg.cell.edges.left;
+          this.updateCellColor(msg.row, msg.col - 1);
         }
       }
     });
@@ -385,5 +389,14 @@ export class GridComponent {
   deleteDirectionToggle() {
     this.deleteDirectionBool = !this.deleteDirectionBool;
     console.log(this.deleteDirectionBool);
+  }
+
+  updateCellColor(row: number, col: number) {
+    const cell = this.gridPackage.grid[row][col];
+    if (cell.edges.top && cell.edges.right && cell.edges.bottom && cell.edges.left) {
+      cell.color = 'black';
+    } else {
+      cell.color = '';
+    }
   }
 }
