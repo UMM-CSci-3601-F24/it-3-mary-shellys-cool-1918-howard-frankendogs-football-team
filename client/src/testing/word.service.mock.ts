@@ -88,6 +88,9 @@ export class MockWordService extends WordService {
     const searchContext: SearchContext = { words: this.testWords, searches: MockWordService.testSearches };
     return of(searchContext);
   }
+
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getWordsByWordGroup(wordGroup: string): Observable<Word[]> {
     return of(MockWordService.wordsInGroup);
   }
