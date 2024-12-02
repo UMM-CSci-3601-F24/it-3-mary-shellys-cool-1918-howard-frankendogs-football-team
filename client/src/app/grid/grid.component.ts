@@ -395,8 +395,6 @@ export class GridComponent {
     const cell = this.gridPackage.grid[row][col];
     if (cell.edges.top && cell.edges.right && cell.edges.bottom && cell.edges.left) {
       cell.color = 'black';
-    } else {
-      cell.color = '';
     }
   }
 }
