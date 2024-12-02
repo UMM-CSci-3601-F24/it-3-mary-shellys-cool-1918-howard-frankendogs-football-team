@@ -1,5 +1,30 @@
-<div>
-  <h1>{{ roomName }}</h1>
-  <p>Total Grids: {{ totalGrids }}</p>
+<div class="card-container">
+  <div class="card">
+    <h1>{{ roomName }}</h1>
+    <p>Total Grids: {{ totalGrids }}</p>
+    <button (click)="copyRoomLink()">Copy Room Link</button>
+    <button (click)="exitRoom()">Exit Room</button>
+  </div>
+  <div class="card">
+    <h1>Add New Grid</h1>
+    <div class="grid-name-container">
+      <label>
+        Grid Name:
+        <input matInput type="text" [(ngModel)]="newGridName" placeholder="Enter grid name" maxlength="30" style="width: 30ch;">
+      </label>
+    </div>
+    <div class="input-container">
+      <label>
+        Rows:
+        <input matInput type="number" [(ngModel)]="newGridRows" min="1" placeholder="Enter number of rows">
+      </label>
+      <label>
+        Columns:
+        <input matInput type="number" [(ngModel)]="newGridCols" min="1" placeholder="Enter number of columns">
+      </label>
+    </div>
+    <button (click)="saveNewGrid()">Save New Grid</button>
+  </div>
 </div>
+<br>
 <app-grid-list></app-grid-list>

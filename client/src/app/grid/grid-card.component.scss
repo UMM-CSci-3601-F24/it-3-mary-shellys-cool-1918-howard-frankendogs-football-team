@@ -30,6 +30,10 @@ mat-card {
         font-size: 1.2rem;
         font-weight: bold;
         padding-top: 0.3125rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 15rem; /* Ensure the title does not exceed the card width */
     }
 
     mat-card-subtitle {
