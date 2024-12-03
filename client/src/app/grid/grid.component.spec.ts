@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { GridComponent } from './grid.component';
 import { GridService } from './grid.service';
@@ -301,7 +301,6 @@ describe('GridComponent', () => {
     spyOn(component['webSocketService'], 'getMessage').and.returnValue(of(message));
     component.gridPackage._id = 'testId';
 
-    // This is a workaround to make the test work
     component['webSocketService'].getMessage().subscribe((msg: unknown) => {
       const receivedMessage = msg as { type: string, cell: GridCell, row: number, col: number, id: string };
       if (receivedMessage.type === 'GRID_CELL_UPDATE' && component.gridPackage._id === receivedMessage.id) {
@@ -341,6 +340,7 @@ describe('GridComponent', () => {
     expect(loadGridsSpy).toHaveBeenCalled();
     expect(component.gridPackage.lastSaved).toBeTruthy();
     expect(component.gridPackage.lastSaved.getTime()).toBeCloseTo(new Date().getTime(), -2);
+    flush();
   }));
 
   it('should update cell color correctly', () => {
@@ -357,11 +357,12 @@ describe('GridComponent', () => {
     spyOn(navigator.clipboard, 'writeText').and.callFake(() => Promise.resolve());
     const snackBarSpy = spyOn(snackBar, 'open');
     component.gridPackage._id = 'testId';
+    component.gridPackage.roomID = 'testRoom'
 
     component.copyGridLink();
     tick();
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${window.location.origin}/grid/testId`);
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${window.location.origin}/testRoom/grid/testId`);
     expect(snackBarSpy).toHaveBeenCalledWith('Grid link copied to clipboard!', 'Close', { duration: 3000 });
   }));
 
