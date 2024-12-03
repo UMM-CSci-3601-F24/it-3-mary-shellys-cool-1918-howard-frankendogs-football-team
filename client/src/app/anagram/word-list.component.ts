@@ -73,12 +73,13 @@ export class WordListComponent {
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
   private filterType$ = toObservable(this.filterType);
+  private forceUpdate$ = toObservable(this.forceUpdate);
   private length$ = toObservable(this.length);
 
   serverFilteredContext =
     toSignal(
-        switchMap(([word, wordGroup, filterType, length]) =>
       combineLatest([this.contains$, this.group$, this.filterType$, this.forceUpdate$, this.length$]).pipe(
+        switchMap(([word, wordGroup, filterType]) =>
           this.wordService.getWords({
             word,
             wordGroup,
