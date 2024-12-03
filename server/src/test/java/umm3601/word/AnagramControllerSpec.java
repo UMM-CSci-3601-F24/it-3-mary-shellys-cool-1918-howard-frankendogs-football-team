@@ -339,17 +339,20 @@ class AnagramControllerSpec {
   void testConstructFilterByLengthKey() {
     Integer targetLength = 4;
     String targetLengthString = targetLength.toString();
+
     Map<String, List<String>> queryParams = new HashMap<>();
     queryParams.put(AnagramController.LENGTH_KEY, Arrays.asList(new String[] {targetLengthString}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(AnagramController.LENGTH_KEY)).thenReturn(targetLengthString);
+
     Validation validation = new Validation();
     Validator<Integer> validator = validation.validator(AnagramController.LENGTH_KEY, Integer.class, targetLengthString);
     when(ctx.queryParamAsClass(AnagramController.LENGTH_KEY, Integer.class)).thenReturn(validator);
+
     anagramController.getWords(ctx);
+
     verify(ctx).json(searchContextCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
-
 
     assertEquals(1, searchContextCaptor.getValue().words.size());
   }

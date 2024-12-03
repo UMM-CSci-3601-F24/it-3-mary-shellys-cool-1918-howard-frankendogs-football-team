@@ -129,6 +129,15 @@ public class AnagramController implements Controller {
       filters.add(regex(WORD_GROUP_KEY, pattern));
       newSearch.setWordGroup(ctx.queryParam(WORD_GROUP_KEY));
     }
+
+    if (ctx.queryParamMap().containsKey(LENGTH_KEY)){
+      int targetLength = ctx.queryParamAsClass(LENGTH_KEY, Integer.class)
+      .check(it -> it >0, "Word length must be greater than zero; you provided " + ctx.queryParam(LENGTH_KEY)).get();
+      Document query = new Document("$where", "this." + WORD_KEY + ".length == " + targetLength);
+      // Document query = new Document(WORD_KEY, new Document("$strLenCP", targetLength));
+      filters.add(query);
+    }
+
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
     // log into database
     if ((ctx.queryParam(WORD_KEY) != null && ctx.queryParam(WORD_KEY) != "")
@@ -137,12 +146,6 @@ public class AnagramController implements Controller {
       System.err.println("search added to db with params: " + combinedFilter.toString());
     }
 
-    if (ctx.queryParamMap().containsKey(LENGTH_KEY)){
-      int targetLength = ctx.queryParamAsClass(LENGTH_KEY, Integer.class)
-      .check(it -> it >0, "Word length must be greater than zero; you provided " + ctx.queryParam(LENGTH_KEY)).get();
-      Document query = new Document(WORD_KEY, new Document("$strLenCP", targetLength));
-      filters.add(query);
-    }
     // return filter to be applied to db in getWords()
     return combinedFilter;
   }

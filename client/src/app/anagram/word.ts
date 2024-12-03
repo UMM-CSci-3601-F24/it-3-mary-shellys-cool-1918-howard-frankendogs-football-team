@@ -6,7 +6,7 @@ export interface Word {
   _id: string;
   wordGroup: string;
   word: string;
-  length: number;
+  // length: number;
 
   // future implementations
   // definition: string;
