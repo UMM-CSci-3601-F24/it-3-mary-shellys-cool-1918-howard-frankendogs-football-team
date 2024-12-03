@@ -40,17 +40,33 @@ export class WordService {
     });
   }
 
-  sortWords(words: Word[], filters: { sortType?: string; sortOrder?: boolean }): Word[] {
-    const filteredWords = words;
-    //let filteredWords = words;
+  getWordsByWordGroup(wordGroup: string): Observable<Word[]> {
+    const tempURL: string = this.wordUrl+"/wordGroup/"+wordGroup;
+    return this.httpClient.get<Word[]>(tempURL);
+  }
 
-    if (filters.sortType) {
-      if (filters.sortType === "alphabetical") {
-        filteredWords.map(w => w.word).sort();
+  sortWords(words: Word[], filters: {sortType?: string; sortOrder?: boolean; sortByWordOrGroup?: string}): Word[] {
+    const filteredWords = words;
+
+    if(filters.sortType) {
+      if(filters.sortType === "alphabetical"){
+        if(filters.sortByWordOrGroup =="word") {
+          filteredWords.sort((a, b) => a.word.localeCompare(b.word));
+        }
+        else {
+          filteredWords.sort((a, b) => a.wordGroup.localeCompare(b.wordGroup));
+        }
+      }
+      if(filters.sortType === "length") {
+        if(filters.sortByWordOrGroup =="word") {
+          filteredWords.sort((a, b) => a.word.length - b.word.length);
+        }
+        else {
+          filteredWords.sort((a, b) => a.wordGroup.length - b.wordGroup.length);
+        }
       }
     }
-    if (filters.sortOrder) {
-      // if sortOrder is true reverse the results
+    if(filters.sortOrder) {
       filteredWords.reverse();
     }
     return filteredWords;

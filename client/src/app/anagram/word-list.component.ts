@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SearchContext } from './searchContext';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { RoomService } from '../room.service';
 
 @Component({
   selector: 'app-word-list-component',
@@ -48,18 +49,25 @@ export class WordListComponent {
   // client side sorting
   sortType = signal<string | undefined>(undefined);
   sortOrder = signal<boolean | undefined>(false);
+  sortByWordOrGroup = signal<string | undefined>(undefined);
   //server side filtering
-  contains = signal<string|undefined>(undefined);
+  contains = signal<string|undefined>('');
   group = signal<string|undefined>(undefined);
   length = signal<number|undefined>(undefined);
+  forceUpdate = signal<number>(0);
 
 
   filterType = signal<string|undefined>("exact");
 
-  errMsg = signal<string|undefined>(undefined);
+  wordGroups: string[];
 
-  constructor(private wordService: WordService, private snackBar: MatSnackBar) {
-    // Nothing here – everything is in the injection parameters.
+  errMsg = signal<string | undefined>(undefined);
+
+  constructor(
+    private wordService: WordService,
+    private roomService: RoomService,
+    private snackBar: MatSnackBar) {
+      this.loadWordGroups();
   }
 
   private contains$ = toObservable(this.contains);
@@ -69,8 +77,8 @@ export class WordListComponent {
 
   serverFilteredContext =
     toSignal(
-      combineLatest([this.contains$, this.group$, this.filterType$, this.length$]).pipe(
         switchMap(([word, wordGroup, filterType, length]) =>
+      combineLatest([this.contains$, this.group$, this.filterType$, this.forceUpdate$, this.length$]).pipe(
           this.wordService.getWords({
             word,
             wordGroup,
@@ -104,9 +112,12 @@ export class WordListComponent {
     // takes list of words returned by server
     // then sends them through the client side sortWords)
     const serverFilteredWords = this.serverFilteredContext().words;
+    console.log("trying to print filtered words");
+    console.log(serverFilteredWords);
     return this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
+      sortByWordOrGroup: this.sortByWordOrGroup(),
     });
   });
 
@@ -118,19 +129,50 @@ export class WordListComponent {
     return searches;
   })
 
+  loadWordGroups() {
+    this.roomService.getWordGroups().subscribe(wordGroups => {
+      this.wordGroups = wordGroups
+    })
+  }
+
   /**
    * calls deleteWord and returns a snackbar
    * @param id - id of word to be deleted
    */
+  // deleteWord(id: string) {
+  //   this.wordService.deleteWord(id).subscribe(() => {
+  //     /* this is to refresh the page eventually
+  //       also could delete from both client and sever to refresh
+  //      this.sortType.set(undefined);
+  //      this.sortType.set(tempSortType.toString()); */
+  //     this.snackBar.open(`We deleted a word!`, 'OK', {duration: 6000});
+  //   })
+  // }
+
   deleteWord(id: string) {
-    this.wordService.deleteWord(id).subscribe(() => {
-      /* this is to refresh the page eventually
-        also could delete from both client and sever to refresh
-       this.sortType.set(undefined);
-       this.sortType.set(tempSortType.toString()); */
-      this.snackBar.open(`We deleted a word!`, 'OK', {duration: 6000});
-    })
+    console.log("Trying to delete todo with id " + id)
+    this.wordService.deleteWord(id).subscribe({
+      next: () => {
+        this.snackBar.open(
+          `We deleted a word!`,
+          "OK",
+          { duration: 2000 }
+        );
+        // // const contains = this.contains();
+        // this.contains.set(this.contains() + ' ');
+        // this.contains.set(this.contains().trim());
+        this.forceUpdate.set(this.forceUpdate() + 1);
+      },
+      error: err => {
+        this.snackBar.open(
+          `Problem contacting the server – Error Code: ${err.status}\nMessage: ${err.message}`,
+          'OK',
+          { duration: 5000 }
+        );
+      },
+    });
   }
+
 
   /**
    * Deletes all words in the wordGroup

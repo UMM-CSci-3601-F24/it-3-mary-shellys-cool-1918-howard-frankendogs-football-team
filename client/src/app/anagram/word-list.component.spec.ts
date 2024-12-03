@@ -1,19 +1,17 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-// import { MatCardModule } from '@angular/material/card';
-
 import { WordListComponent } from './word-list.component';
 import { WordService } from './word.service';
 import { MockWordService } from 'src/testing/word.service.mock';
 import { Word } from './word';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { Observable } from 'rxjs';
-import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Search } from './search';
-// import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const COMMON_IMPORTS: unknown[] = [
   RouterTestingModule,
   BrowserAnimationsModule,
+  HttpClientTestingModule,
 ];
 
 describe('Word List', () => {
@@ -51,6 +49,17 @@ describe('Word List', () => {
     expect(
       wordList.filteredWords().some((word: Word) => word.word === 'Mac')
     ).toBe(true);
+  });
+  it("deletes a word 'Keenan'", () => {
+    wordList.deleteWord("Keenan_id");
+    fixture.detectChanges();
+    // console.log("deletes a word 'Keenan'")
+    // console.log(wordList.filteredWords());
+    expect(wordList.serverFilteredContext().words.length).toBe(4);
+    expect(wordList.filteredWords().length).toBe(4);
+    expect(
+      wordList.filteredWords().some((word: Word) => word.word === 'Keenan')
+    ).toBe(false);
   });
   it('has four words in the group `team member`', () => {
     expect(

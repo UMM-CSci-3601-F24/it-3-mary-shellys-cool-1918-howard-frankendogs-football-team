@@ -5,5 +5,5 @@ export class GridCell {
   value: string = '';
   edges: Edges = { top: false, right: false, bottom: false, left: false };
   color: string = '';
-  // Each boolean coresponds to an edge, true means it is bolded.
+  // Each boolean corresponds to an edge, true means it is bolded.
 }

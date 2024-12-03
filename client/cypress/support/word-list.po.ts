@@ -2,6 +2,7 @@ export class WordListPage {
   private readonly baseUrl = '/anagram';
   private readonly pageTitle = '.word-list-title';
   private readonly addWordButtonSelector = '[data-test=addWordButton]';
+  private readonly wordGroupProfileSelector = '[data-test=wordGroupProfileButton]';
   private readonly anagramListItemsSelectorWords = '.anagram-nav-list .anagram-list-word'
   private readonly anagramListItemsSelectorHistory = ".anagram-nav-list-history .anagram-list-item"
   private readonly snackBar = '.mat-mdc-simple-snack-bar';
@@ -16,6 +17,10 @@ export class WordListPage {
 
   addWordButton() {
     return cy.get(this.addWordButtonSelector);
+  }
+
+  wordGroupProfileButton() {
+    return cy.get(this.wordGroupProfileSelector);
   }
 
   getAnagramListItems() {

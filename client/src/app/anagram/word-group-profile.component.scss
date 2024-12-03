@@ -1,0 +1,26 @@
+.delete-button {
+  visibility: hidden;
+  margin-left: 15px;
+  margin-right: 10px;
+}
+
+mat-grid-tile {
+  .word-group-list-item {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  &:hover {
+    background-color: white;
+    font-weight: bolder;
+    color: black;
+  }
+
+  &:hover  .delete-button {
+    visibility: visible;
+  }
+}

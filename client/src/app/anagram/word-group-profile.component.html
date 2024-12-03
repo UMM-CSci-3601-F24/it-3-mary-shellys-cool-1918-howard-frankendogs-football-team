@@ -1,0 +1,36 @@
+<div>
+  @if(words()){
+    <mat-card>
+      <mat-card-header class="word-group-title">
+        <mat-card-title>Group Name: {{wordGroup()}}</mat-card-title>
+         <!-- <mat-card-title>Temp Title</mat-card-title> -->
+        <mat-card-subtitle>Number of words: {{words().length}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-grid-list cols="4" rowHeight="30px" class="word-group-list" >
+        @if(words().length === 0 ){
+          <mat-list-item>No Words in Word Group</mat-list-item>
+        } @for(word of words(); track word._id) {
+          <mat-grid-tile >
+            <div class="word-group-list-item">
+              <span>{{word.word}}</span>
+              <button
+                class="delete-button"
+                (click)="deleteWord(word._id)"
+                data-test="deleteWordButton"
+                >
+                Delete Word
+              </button>
+            </div>
+          </mat-grid-tile>
+        }
+      </mat-grid-list>
+    </mat-card>
+  } @else {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Loading Words: </mat-card-title>
+        <mat-card-subtitle>  </mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  }
+</div>

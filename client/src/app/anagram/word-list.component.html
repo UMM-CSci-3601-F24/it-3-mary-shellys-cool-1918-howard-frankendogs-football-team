@@ -14,6 +14,7 @@
             <mat-label>Input letters</mat-label>
             <input matInput data-test="wordContainsInput" placeholder="Filter by contents" [(ngModel)]="contains">
           </mat-form-field>
+
           <mat-form-field class="input-field">
             <mat-label>Word Group</mat-label>
             <input
@@ -41,22 +42,17 @@
           <mat-select [(ngModel)]="sortType" data-test="sortTypeSelect">
             <mat-option value="null">--</mat-option>
             <mat-option value="alphabetical">Alphabetical</mat-option>
+            <mat-option value="length">Length</mat-option>
           </mat-select>
         </mat-form-field>
         <div>
-          <!-- This is going to be kept here till we get the toggle confirmed working
           <label for="sortOrder">Sort Order</label>
-          <mat-radio-group aria-label="Sort Order" [(ngModel)]="sortOrder" data-test="sortOrderRadio">
-            <mat-radio-button value="increasing">Increasing</mat-radio-button>
-            <mat-radio-button value="decreasing">Decreasing</mat-radio-button>
-          </mat-radio-group> -->
+          <mat-radio-group aria-label="Sort Order" [(ngModel)]="sortByWordOrGroup" data-test="sortOrderRadio">
+            <mat-radio-button checked value="word">word</mat-radio-button>
+            <mat-radio-button value="wordGroup">wordGroup</mat-radio-button>
+          </mat-radio-group>
           <p>
-            <mat-slide-toggle
-              class="sortOrder"
-              [(ngModel)]="sortOrder"
-              data-test="sortOrderToggle"
-              aria-label="Change sort order"
-            >
+            <mat-slide-toggle class="sortOrder" [(ngModel)]="sortOrder" data-test="sortOrderToggle" aria-label="Change sort order">
               Change Sort Order
             </mat-slide-toggle>
           </p>
@@ -85,14 +81,22 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <!-- Word List Links -->
-  <div class="flex-row column right">
-    <mat-card>
-    <mat-card-header>Word Lists</mat-card-header>
-    <mat-card-subtitle style="visibility: hidden">In Word Group : </mat-card-subtitle>
-      <mat-card-content>This is where word list links will go - coming soon!</mat-card-content>
-    </mat-card>
-  </div>
+ <!-- Word List Links -->
+ <div class="flex-row column right">
+  <mat-card>
+   <mat-card-header>Word Lists</mat-card-header>
+   <mat-card-subtitle style="visibility: hidden">Groups from room : </mat-card-subtitle>
+     <mat-card-content>
+       @for (group of this.wordGroups; track group) {
+         <div>
+           <button routerLink="/anagram/wordGroup/{{group}}" data-test="wordGroupProfileButton">
+             {{ group }}
+           </button>
+         </div>
+       }
+     </mat-card-content>
+   </mat-card>
+ </div>
 </div>
 <br />
 <div class="flex-row flex-wrap">

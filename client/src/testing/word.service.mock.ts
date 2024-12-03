@@ -10,7 +10,7 @@ import { AppComponent } from "src/app/app.component";
   providedIn: AppComponent
 })
 export class MockWordService extends WordService {
-  static testWords: Word[] = [
+  testWords: Word[] = [
     {
       _id:"El_id",
       word: "El",
@@ -28,7 +28,7 @@ export class MockWordService extends WordService {
     },
     {
       _id:"Keenan_id",
-      word: "Kennan",
+      word: "Keenan",
       wordGroup: "team member",
     },
     {
@@ -37,19 +37,41 @@ export class MockWordService extends WordService {
       wordGroup: "teachers",
     },
   ];
+  static wordsInGroup: Word[] = [
+    {
+      _id:"burger_id",
+      word: "burger",
+      wordGroup: "Foods",
+    },
+    {
+      _id:"fries_id",
+      word: "fries",
+      wordGroup: "Foods",
+    },
+    {
+      _id:"apple_id",
+      word: "apple",
+      wordGroup: "Foods",
+    },
+    {
+      _id:"orange_id",
+      word: "orange",
+      wordGroup: "Foods",
+    }
+  ]
   static testSearches: Search[] = [
     {
-      _id: "",
+      _id: "sigma_id",
       contains: null,
       wordGroup: "Laugh"
     },
     {
-      _id: "",
+      _id: "alhpa_id",
       contains: "Haha",
       wordGroup: "Laugh"
     },
     {
-      _id: "",
+      _id: "theskibidizer_id",
       contains: "hehe",
       wordGroup: null
     }
@@ -61,16 +83,27 @@ export class MockWordService extends WordService {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getWords(_filters: {word?: string; wordGroup?: string}): Observable<SearchContext> {
-    const searchContext: SearchContext = { words: MockWordService.testWords, searches: MockWordService.testSearches };
+    console.log("trying to print test words");
+    console.log(this.testWords);
+    const searchContext: SearchContext = { words: this.testWords, searches: MockWordService.testSearches };
     return of(searchContext);
   }
-  // deleteWord(id: string): Observable<Word[]> {
-  //   let temp: Word[];
-  //   for(let i = 0; i < MockWordService.testWords.length; i++){
-  //     if (MockWordService.testWords[i]._id !== id) {
-  //       temp[i] = MockWordService.testWords[i];
-  //     }
-  //   }
-  //   return (temp);
-  // }
+
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getWordsByWordGroup(wordGroup: string): Observable<Word[]> {
+    return of(MockWordService.wordsInGroup);
+  }
+  deleteWord(id: string): Observable<void> {
+    const temp: Word[] = [];
+    for (let i = 0; i < this.testWords.length; i++){
+      if (this.testWords[i]._id !== id) {
+        temp.push(this.testWords[i]);
+      }
+
+      console.log("hello" + temp);
+    }
+    this.testWords = temp;
+    return of(void 0);
+  }
 }

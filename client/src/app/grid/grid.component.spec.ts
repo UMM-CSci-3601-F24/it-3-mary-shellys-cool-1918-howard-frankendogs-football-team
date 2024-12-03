@@ -9,6 +9,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { GridPackage } from './gridPackage';
 import { of } from 'rxjs';
 import { GridCell } from '../grid-cell/grid-cell';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('GridComponent', () => {
   let component: GridComponent;
@@ -17,7 +18,7 @@ describe('GridComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [FormsModule, GridComponent, RouterTestingModule, HttpClientTestingModule],
+      imports: [FormsModule, BrowserAnimationsModule, RouterTestingModule, HttpClientTestingModule, GridComponent],
       providers: [
         { provide: GridService, useValue: new MockGridService() },
         RoomService
@@ -174,6 +175,10 @@ describe('GridComponent', () => {
     const inputElement = document.createElement('input');
     spyOn(component.elRef.nativeElement, 'querySelector').and.returnValue(inputElement);
 
+    const initialDirection = component.deleteDirectionBool;
+    component.deleteDirectionToggle();
+    expect(component.deleteDirectionBool).not.toBe(initialDirection);
+
     component.typeDirection = 'right';
     component.onKeydown(new KeyboardEvent('keydown', { key: 'Backspace' }), 1, 1);
     tick(100);
@@ -199,12 +204,20 @@ describe('GridComponent', () => {
     component.onKeydown(new KeyboardEvent('keydown', { key: 'Backspace', ctrlKey: true }), 1, 1);
     tick(100);
     expect(cell.value).toBe('');
+
+    component.deleteDirectionToggle();
+    component.typeDirection = 'left';
+    component.onKeydown(new KeyboardEvent('keydown', { key: 'Backspace' }), 1, 1);
+    tick(100);
+    expect(cell.value).toBe('');
+    expect(inputElement.value).toBe('');
+    expect(moveFocusSpy).toHaveBeenCalledWith(0, 1);
   }));
 
   it('should load saved grids correctly', fakeAsync(() => {
     const mockGrids: GridPackage[] = [
-      { grid: [], _id: '1', roomID: 'room1' },
-      { grid: [], _id: '2', roomID: 'room2' }
+      { grid: [], _id: '1', roomID: 'room1', name: "Grid1", lastSaved: new Date() },
+      { grid: [], _id: '2', roomID: 'room2', name: "Grid2", lastSaved: new Date() }
     ];
     spyOn(component['roomService'], 'getGridsByRoomId').and.returnValue(of(mockGrids));
 
@@ -214,21 +227,29 @@ describe('GridComponent', () => {
     expect(component.savedGrids).toEqual(mockGrids);
   }));
 
-  it('should save grid with existing ID', fakeAsync(() => {
-    const saveGridSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of(''));
-    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids');
+  it('should save grid without existing ID', () => {
+    const saveGridWithRoomIdSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of('testId'));
 
-    component.gridPackage._id = 'existingId';
+    component.gridPackage = {
+      grid: [
+        [new GridCell(), new GridCell()],
+        [new GridCell(), new GridCell()]
+      ],
+      _id: null,
+      roomID: null,
+      name: 'PlaceHolderNameLmaoWhat',
+      lastSaved: new Date()
+    };
+
     component.saveGrid();
-    tick();
 
-    expect(saveGridSpy).toHaveBeenCalledWith(component.gridPackage.roomID, {
-      roomID: component.gridPackage.roomID,
+    expect(saveGridWithRoomIdSpy).toHaveBeenCalledWith(null, {
+      roomID: null,
       grid: component.gridPackage.grid,
-      _id: component.gridPackage._id
+      name: 'PlaceHolderNameLmaoWhat',
+      lastSaved: jasmine.any(Date)
     });
-    expect(loadSavedGridsSpy).toHaveBeenCalled();
-  }));
+  });
 
   it('should save grid without existing ID', fakeAsync(() => {
     const saveGridSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of(''));
@@ -240,7 +261,9 @@ describe('GridComponent', () => {
 
     expect(saveGridSpy).toHaveBeenCalledWith(component.gridPackage.roomID, {
       roomID: component.gridPackage.roomID,
-      grid: component.gridPackage.grid
+      grid: component.gridPackage.grid,
+      name: 'PlaceHolderNameLmaoWhat',
+      lastSaved: jasmine.any(Date)
     });
     expect(loadSavedGridsSpy).toHaveBeenCalled();
   }));
@@ -265,7 +288,9 @@ describe('GridComponent', () => {
         [new GridCell(), new GridCell()]
       ],
       _id: 'testId',
-      roomID: 'testRoomId'
+      roomID: 'testRoomId',
+      name: '',
+      lastSaved: undefined
     };
 
     spyOn(component['gridService'], 'getGridById').and.returnValue(of(mockGridPackage));
@@ -282,32 +307,31 @@ describe('GridComponent', () => {
 
   it('should send grid update message on grid change', () => {
     const sendMessageSpy = spyOn(component['webSocketService'], 'sendMessage');
-    const mockGrid: GridCell[][] = [
-      [new GridCell(), new GridCell()],
-      [new GridCell(), new GridCell()]
-    ];
-    component.gridPackage.grid = mockGrid;
+    const mockGridCell: GridCell = new GridCell();
+    mockGridCell.value = 'X';
+    component.gridPackage.grid[1][1] = mockGridCell;
     component.gridPackage._id = 'testId';
     component.gridPackage.roomID = 'testRoomId';
 
-    component.onGridChange();
+    component.onGridChange({ row: 1, col: 1, cell: mockGridCell });
 
     expect(sendMessageSpy).toHaveBeenCalledWith({
-      type: 'GRID_UPDATE',
-      grid: mockGrid,
-      roomID: 'testRoomId',
-      id: 'testId'
+      type: 'GRID_CELL_UPDATE',
+      cell: mockGridCell,
+      row: 1,
+      col: 1,
+      gridID: 'testId'
     });
   });
 
   it('should handle websocket messages correctly', fakeAsync(() => {
-    const mockGrid: GridCell[][] = [
-      [new GridCell(), new GridCell()],
-      [new GridCell(), new GridCell()]
-    ];
+    const mockGridCell: GridCell = new GridCell();
+    mockGridCell.value = 'X';
     const message = {
-      type: 'GRID_UPDATE',
-      grid: mockGrid,
+      type: 'GRID_CELL_UPDATE',
+      cell: mockGridCell,
+      row: 1,
+      col: 1,
       id: 'testId'
     };
 
@@ -316,17 +340,15 @@ describe('GridComponent', () => {
 
     // This is a workaround to make the test work
     component['webSocketService'].getMessage().subscribe((msg: unknown) => {
-      const receivedMessage = msg as { type: string, grid: GridCell[][], id: string };
-      if (receivedMessage.type === 'GRID_UPDATE' && component.gridPackage._id === receivedMessage.id) {
-        component.applyGridUpdate(receivedMessage.grid);
+      const receivedMessage = msg as { type: string, cell: GridCell, row: number, col: number, id: string };
+      if (receivedMessage.type === 'GRID_CELL_UPDATE' && component.gridPackage._id === receivedMessage.id) {
+        component.gridPackage.grid[receivedMessage.row][receivedMessage.col] = receivedMessage.cell;
       }
     });
 
     tick();
 
-    expect(component.gridPackage.grid).toEqual(mockGrid);
-    expect(component.gridHeight).toBe(mockGrid.length);
-    expect(component.gridWidth).toBe(mockGrid[0].length);
+    expect(component.gridPackage.grid[1][1].value).toBe('X');
   }));
 });
 
