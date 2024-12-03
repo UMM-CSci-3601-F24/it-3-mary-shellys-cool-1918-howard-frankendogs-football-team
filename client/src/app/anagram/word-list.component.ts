@@ -20,6 +20,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SearchContext } from './searchContext';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { RoomService } from '../room.service';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-word-list-component',
@@ -39,7 +40,8 @@ import { RoomService } from '../room.service';
     MatListModule,
     MatInputModule,
     MatSlideToggleModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatPaginatorModule
   ],
   templateUrl: './word-list.component.html',
   styleUrl: './word-list.component.scss'
@@ -54,12 +56,13 @@ export class WordListComponent {
   contains = signal<string|undefined>('');
   group = signal<string|undefined>(undefined);
   forceUpdate = signal<number>(0);
-
   filterType = signal<string|undefined>("exact");
-
-  wordGroups: string[];
-
+  //pagination values
+  pageSize = signal<number>(25);
+  pageNumber = signal<number>(0);
+  // Misc
   errMsg = signal<string | undefined>(undefined);
+  wordGroups: string[];
 
   constructor(
     private wordService: WordService,
@@ -102,9 +105,6 @@ export class WordListComponent {
       )
     );
 
-  // serverFilterType =
-  //   toSignal(this.filterType$);
-
   filteredWords = computed(() => {
     // takes list of words returned by server
     // then sends them through the client side sortWords)
@@ -116,6 +116,13 @@ export class WordListComponent {
       sortOrder: this.sortOrder(),
       sortByWordOrGroup: this.sortByWordOrGroup(),
     });
+  });
+
+ displayWords= computed(() => {
+    return this.filteredWords()
+      .slice(
+        this.pageNumber()*this.pageSize(),
+        Math.min((this.pageNumber() + 1)*this.pageSize(), this.getNumWords()));
   });
 
   /**
@@ -170,7 +177,6 @@ export class WordListComponent {
     });
   }
 
-
   /**
    * Deletes all words in the wordGroup
    * pulls group from the wordGroup search box as of 10/20/24
@@ -181,6 +187,19 @@ export class WordListComponent {
       this.snackBar.open(`We deleted a word group!`, 'OK', {duration: 6000});
     })
   }
+
+  handlePageEvent($event: PageEvent) {
+    this.pageNumber.set($event.pageIndex);
+    this.pageSize.set($event.pageSize);
+  }
+
+  // gets the number of words that match current params
+  getNumWords = computed(() => {
+    if (this.serverFilteredContext().words === undefined) {
+      return 0;
+    }
+    return this.serverFilteredContext().words.length
+  });
 
   max(arg0: number,arg1: number): number {
     if (arg0 >= arg1){
