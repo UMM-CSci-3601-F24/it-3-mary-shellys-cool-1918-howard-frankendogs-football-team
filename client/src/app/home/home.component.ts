@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-home-component',
@@ -15,12 +16,13 @@ import { RouterLink } from '@angular/router';
     providers: [],
     standalone: true,
     imports: [
-        MatCardModule, 
-        ReactiveFormsModule, 
-        MatFormFieldModule, 
-        MatInputModule, 
+        MatCardModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
         MatButtonModule,
         RouterLink,
+        MatIcon,
     ],
 })
 export class HomeComponent {
