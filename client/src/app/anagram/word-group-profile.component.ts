@@ -9,6 +9,7 @@ import { Word } from './word';
 import { MatListModule } from '@angular/material/list';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-word-group-profile',
@@ -17,7 +18,8 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
     MatCardModule,
     MatListModule,
     MatGridListModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    // BrowserAnimationsModule,
   ],
   templateUrl: './word-group-profile.component.html',
   styleUrl: './word-group-profile.component.scss'
