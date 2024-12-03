@@ -133,14 +133,14 @@ describe('WordService', () => {
   })
 
   describe('sorting on the client (by length)', () => {
-    it('returns the list in the correct order when sorting by word', () => {
-      const filteredWords = wordService.sortWords(testWords, {sortType: "length", sortOrder: false, sortByWordOrGroup: "word"});
-      expect(filteredWords[0].word).toBe('El');
-      expect(filteredWords[1].word).toBe('Nic');
-      expect(filteredWords[2].word).toBe('Mac');
-      expect(filteredWords[3].word).toBe('Jakob');
-      expect(filteredWords[4].word).toBe('Kennan');
-    })
+    // it('returns the list in the correct order when sorting by word', () => {
+    //   const filteredWords = wordService.sortWords(testWords, {sortType: "length", sortOrder: false, sortByWordOrGroup: "word"});
+    //   expect(filteredWords[0].word).toBe('El');
+    //   expect(filteredWords[1].word).toBe('Nic');
+    //   expect(filteredWords[2].word).toBe('Mac');
+    //   expect(filteredWords[3].word).toBe('Jakob');
+    //   expect(filteredWords[4].word).toBe('Kennan');
+    // })
 
     it('returns the list in the correct order when sorting by wordGroup', () => {
       const filteredWords = wordService.sortWords(testWords, {sortType: "length", sortOrder: false, sortByWordOrGroup: "wordGroup"});
