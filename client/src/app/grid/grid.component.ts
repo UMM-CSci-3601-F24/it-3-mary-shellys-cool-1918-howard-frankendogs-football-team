@@ -63,7 +63,7 @@ export class GridComponent {
     _id: '',
     roomID: '',
     name: '',
-    lastSaved: new Date()
+    lastSaved: null
   }
 
   savedGrids: GridPackage[];
@@ -172,13 +172,14 @@ export class GridComponent {
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id,
         name: this.gridPackage.name,
-        lastSaved: new Date() // Update the last saved date
+        lastSaved: new Date()
       };
       this.gridService
         .saveGridWithRoomId(this.gridPackage.roomID, gridData)
         .subscribe(() => {
-          this.gridPackage.lastSaved = gridData.lastSaved; // Ensure the displayed last saved date is accurate
+          this.gridPackage.lastSaved = new Date();
           this.loadSavedGrids();
+          this.snackBar.open('Grid saved successfully!', 'Close', { duration: 3000 });
       });
     }
   }
@@ -197,6 +198,7 @@ export class GridComponent {
       this.gridPackage.name = activeGrid.name;
       this.gridPackage._id = activeGrid._id;
       this.gridPackage.roomID = activeGrid.roomID;
+      this.gridPackage.lastSaved = activeGrid.lastSaved;
       this.applyGridUpdate(activeGrid.grid);
     });
   }
@@ -392,7 +394,7 @@ export class GridComponent {
   }
 
   copyGridLink() {
-    const gridLink = `${window.location.origin}/grid/${this.gridPackage._id}`;
+    const gridLink = `${window.location.origin}/${this.gridPackage.roomID}/grid/${this.gridPackage._id}`;
     navigator.clipboard.writeText(gridLink).then(() => {
       this.snackBar.open('Grid link copied to clipboard!', 'Close', { duration: 3000 });
     });

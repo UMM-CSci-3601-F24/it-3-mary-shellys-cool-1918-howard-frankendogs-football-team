@@ -7,6 +7,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('RoomGridsComponent', () => {
   let component: RoomGridsComponent;
@@ -16,7 +18,7 @@ describe('RoomGridsComponent', () => {
   beforeEach(async () => {
     mockRoomService = jasmine.createSpyObj('RoomService', ['getGridsByRoomId', 'getRoomById']);
     await TestBed.configureTestingModule({
-      imports: [RoomGridsComponent, RouterTestingModule, HttpClientTestingModule, MatSnackBarModule],
+      imports: [RoomGridsComponent, RouterTestingModule, HttpClientTestingModule, MatSnackBarModule, MatDialogModule, NoopAnimationsModule],
       providers: [
         { provide: GridService, useClass: MockGridService },
         { provide: RoomService, useValue: mockRoomService }
@@ -71,6 +73,9 @@ describe('RoomGridsComponent', () => {
     const routerSpy = spyOn(component['router'], 'navigate');
 
     spyOn(window, 'confirm').and.returnValue(true);
+
+    const dialogRefSpyObj = jasmine.createSpyObj({ afterClosed: of(true), close: null });
+    spyOn(TestBed.inject(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
 
     component.roomID = 'room1';
     component.newGridName = 'New Grid';

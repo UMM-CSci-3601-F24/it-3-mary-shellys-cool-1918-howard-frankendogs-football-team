@@ -58,7 +58,7 @@ export class RoomGridsComponent {
   copyRoomLink() {
     const roomLink = `${window.location.origin}/${this.roomID}/grids`;
     navigator.clipboard.writeText(roomLink).then(() => {
-      alert('Room link copied to clipboard!');
+      this.snackBar.open('Grid link copied to clipboard!', 'Close', { duration: 3000 });
     });
   }
 
