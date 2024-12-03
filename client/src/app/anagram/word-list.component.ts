@@ -58,8 +58,10 @@ export class WordListComponent {
   forceUpdate = signal<number>(0);
   filterType = signal<string|undefined>("exact");
   //pagination values
-  pageSize = signal<number>(25);
-  pageNumber = signal<number>(0);
+  wordsPageSize = signal<number>(25);
+  wordsPageNumber = signal<number>(0);
+  searchesPageSize = signal<number>(25);
+  searchesPageNumber = signal<number>(0);
   // Misc
   errMsg = signal<string | undefined>(undefined);
   wordGroups: string[];
@@ -121,16 +123,18 @@ export class WordListComponent {
  displayWords= computed(() => {
     return this.filteredWords()
       .slice(
-        this.pageNumber()*this.pageSize(),
-        Math.min((this.pageNumber() + 1)*this.pageSize(), this.getNumWords()));
+        this.wordsPageNumber()*this.wordsPageSize(),
+        Math.min((this.wordsPageNumber() + 1)*this.wordsPageSize(), this.getNumWords()));
   });
 
   /**
    * returns list of searches given by server
    */
   searchHistory = computed(() => {
-    const searches = this.serverFilteredContext().searches;
-    return searches;
+    return this.serverFilteredContext().searches
+      .slice(
+        this.searchesPageNumber()*this.searchesPageSize(),
+        Math.min((this.searchesPageNumber() + 1)*this.searchesPageSize(), this.getNumSearches()));
   })
 
   loadWordGroups() {
@@ -188,9 +192,14 @@ export class WordListComponent {
     })
   }
 
-  handlePageEvent($event: PageEvent) {
-    this.pageNumber.set($event.pageIndex);
-    this.pageSize.set($event.pageSize);
+  handlePageEvent($event: PageEvent, source: string) {
+    if (source == "word list paginator") {
+      this.wordsPageNumber.set($event.pageIndex);
+      this.wordsPageSize.set($event.pageSize);
+    } else if (source == "search history paginator") {
+      this.searchesPageNumber.set($event.pageIndex);
+      this.searchesPageSize.set($event.pageSize);
+    }
   }
 
   // gets the number of words that match current params
@@ -199,6 +208,14 @@ export class WordListComponent {
       return 0;
     }
     return this.serverFilteredContext().words.length
+  });
+
+  // gets the number of searches that match current params
+  getNumSearches = computed(() => {
+    if (this.serverFilteredContext().searches === undefined) {
+      return 0;
+    }
+    return this.serverFilteredContext().searches.length
   });
 
   max(arg0: number,arg1: number): number {

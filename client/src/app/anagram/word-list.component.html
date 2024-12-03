@@ -162,22 +162,19 @@
           @if(displayWords().length === 0) {
           <p>No words match your search parameters</p>
           }
-          <!-- <br />
-          @if(filteredWords().length > 100) {
-          <p>Showing first 100 words, Please increase search parameters</p>
-          } -->
         </mat-card-content>
+        <mat-card-actions>
+          <mat-paginator
+          [length]="getNumWords()"
+          [pageSize]="25"
+          [pageSizeOptions]="[5, 10, 25, 100]"
+          (page)="handlePageEvent($event, 'word list paginator')"
+          aria-label="Select page"
+          data-test="word-list-mat-paginator"
+        >
+        </mat-paginator>
+        </mat-card-actions>
       </mat-card>
-      <br />
-      <mat-paginator
-        [length]="getNumWords()"
-        [pageSize]="10"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        (page)="handlePageEvent($event)"
-        aria-label="Select page"
-        data-test="mat-paginator"
-      >
-      </mat-paginator>
     </div>
     } @else {
     <div class="flex-1" class="anagram-error">
@@ -218,6 +215,17 @@
             }
           </mat-list>
         </mat-card-content>
+        <mat-card-actions>
+          <mat-paginator
+          [length]="getNumSearches()"
+          [pageSize]="25"
+          [pageSizeOptions]="[5, 10, 25, 100]"
+          (page)="handlePageEvent($event, 'search history paginator')"
+          aria-label="Select page"
+          data-test="search-history-mat-paginator"
+        >
+        </mat-paginator>
+        </mat-card-actions>
       </mat-card>
     </div>
     } @else {
