@@ -130,9 +130,9 @@ public class AnagramController implements Controller {
       newSearch.setWordGroup(ctx.queryParam(WORD_GROUP_KEY));
     }
 
-    if (ctx.queryParamMap().containsKey(LENGTH_KEY)){
+    if (ctx.queryParamMap().containsKey(LENGTH_KEY)) {
       int targetLength = ctx.queryParamAsClass(LENGTH_KEY, Integer.class)
-      .check(it -> it >0, "Word length must be greater than zero; you provided " + ctx.queryParam(LENGTH_KEY)).get();
+      .check(it -> it > 0, "Word length must be greater than zero; you provided " + ctx.queryParam(LENGTH_KEY)).get();
       Document query = new Document("$where", "this." + WORD_KEY + ".length == " + targetLength);
       // Document query = new Document(WORD_KEY, new Document("$strLenCP", targetLength));
       filters.add(query);

@@ -346,7 +346,8 @@ class AnagramControllerSpec {
     when(ctx.queryParam(AnagramController.LENGTH_KEY)).thenReturn(targetLengthString);
 
     Validation validation = new Validation();
-    Validator<Integer> validator = validation.validator(AnagramController.LENGTH_KEY, Integer.class, targetLengthString);
+    Validator<Integer> validator =
+                        validation.validator(AnagramController.LENGTH_KEY, Integer.class, targetLengthString);
     when(ctx.queryParamAsClass(AnagramController.LENGTH_KEY, Integer.class)).thenReturn(validator);
 
     anagramController.getWords(ctx);
