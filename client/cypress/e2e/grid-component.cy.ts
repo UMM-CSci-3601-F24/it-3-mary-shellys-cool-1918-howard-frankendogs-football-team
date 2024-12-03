@@ -45,7 +45,6 @@ describe('Grid Component', () => {
   });
 
   it('should highlight cell', () => {
-    cy.get('#mat-radio-2-input').click();
     cy.get('#mat-input-3').rightclick();
     cy.get('#mat-input-3')
       .should('have.css', 'background-color')
@@ -53,7 +52,6 @@ describe('Grid Component', () => {
   });
 
   it('should un-highlight cell', () => {
-    cy.get('#mat-radio-2-input').click();
     cy.get('#mat-input-3').rightclick();
     cy.get('#mat-input-3').rightclick();
     cy.get('#mat-input-3')
@@ -62,7 +60,6 @@ describe('Grid Component', () => {
   });
 
   it('should highlight cell on mouseleave', () => {
-    cy.get('#mat-radio-2-input').click();
     cy.get('#mat-input-3').trigger('mouseleave', {shiftKey: true});
     cy.get('#mat-input-3')
       .should('have.css', 'background-color')

@@ -133,21 +133,21 @@
         <!-- Highlight Colors -->
         <div>
           <br />
-          Highlight color:
-          <mat-radio-group
-            aria-labelledby="example-radio-group-label"
-            class="example-radio-group"
+          Highlight color: {{ currentColor }}
+          <br />
+          <mat-button-toggle-group
+            appearance="legacy"
+            class="highlight-button-group"
             [(ngModel)]="currentColor"
           >
             @for (highlight of highlight; track highlight) {
-            <mat-radio-button
-              class="example-radio-button"
+            <mat-button-toggle
+              class="highlight-button"
               [value]="highlight"
-              >{{ highlight }}</mat-radio-button
+              >{{ highlight }}</mat-button-toggle
             >
             }
-          </mat-radio-group>
-
+          </mat-button-toggle-group>
         </div>
         <!-- Typing Direction -->
         <div>

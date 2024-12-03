@@ -51,8 +51,9 @@ export class WordListComponent {
   sortOrder = signal<boolean | undefined>(false);
   sortByWordOrGroup = signal<string | undefined>(undefined);
   //server side filtering
-  contains = signal<string|undefined>(undefined);
+  contains = signal<string|undefined>('');
   group = signal<string|undefined>(undefined);
+  forceUpdate = signal<number>(0);
 
   filterType = signal<string|undefined>("exact");
 
@@ -70,10 +71,11 @@ export class WordListComponent {
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
   private filterType$ = toObservable(this.filterType);
+  private forceUpdate$ = toObservable(this.forceUpdate);
 
   serverFilteredContext =
     toSignal(
-      combineLatest([this.contains$, this.group$, this.filterType$]).pipe(
+      combineLatest([this.contains$, this.group$, this.filterType$, this.forceUpdate$]).pipe(
         switchMap(([word, wordGroup, filterType]) =>
           this.wordService.getWords({
             word,
@@ -107,6 +109,8 @@ export class WordListComponent {
     // takes list of words returned by server
     // then sends them through the client side sortWords)
     const serverFilteredWords = this.serverFilteredContext().words;
+    console.log("trying to print filtered words");
+    console.log(serverFilteredWords);
     return this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
@@ -132,11 +136,40 @@ export class WordListComponent {
    * calls deleteWord and returns a snackbar
    * @param id - id of word to be deleted
    */
+  // deleteWord(id: string) {
+  //   this.wordService.deleteWord(id).subscribe(() => {
+  //     /* this is to refresh the page eventually
+  //       also could delete from both client and sever to refresh
+  //      this.sortType.set(undefined);
+  //      this.sortType.set(tempSortType.toString()); */
+  //     this.snackBar.open(`We deleted a word!`, 'OK', {duration: 6000});
+  //   })
+  // }
+
   deleteWord(id: string) {
-    this.wordService.deleteWord(id).subscribe(() => {
-      this.snackBar.open(`We deleted a word! \n Please refresh your page.`, 'OK', {duration: 6000});
-    })
+    console.log("Trying to delete todo with id " + id)
+    this.wordService.deleteWord(id).subscribe({
+      next: () => {
+        this.snackBar.open(
+          `We deleted a word!`,
+          "OK",
+          { duration: 2000 }
+        );
+        // // const contains = this.contains();
+        // this.contains.set(this.contains() + ' ');
+        // this.contains.set(this.contains().trim());
+        this.forceUpdate.set(this.forceUpdate() + 1);
+      },
+      error: err => {
+        this.snackBar.open(
+          `Problem contacting the server – Error Code: ${err.status}\nMessage: ${err.message}`,
+          'OK',
+          { duration: 5000 }
+        );
+      },
+    });
   }
+
 
   /**
    * Deletes all words in the wordGroup
