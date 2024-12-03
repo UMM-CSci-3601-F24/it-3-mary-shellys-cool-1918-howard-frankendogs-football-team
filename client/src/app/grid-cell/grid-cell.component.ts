@@ -32,7 +32,7 @@ export class GridCellComponent {
   @Input({}) grid: GridCell[][];
   @Input() currentColor: string;
 
-  @Output() gridChange = new EventEmitter<void>();
+  @Output() gridChange = new EventEmitter<{row: number, col: number, cell: GridCell}>();
 
   /**
    * Constructor for GridCellComponent.
@@ -51,10 +51,10 @@ export class GridCellComponent {
   onInput(value: string) {
     if (this.validateInput(value)) {
       this.gridCell.value = value;
-      this.gridChange.emit();
     } else {
       this.gridCell.value = '';
     }
+    this.gridChange.emit({ row: this.row, col: this.col, cell: this.gridCell });
   }
 
   /**
@@ -81,6 +81,7 @@ export class GridCellComponent {
    */
   setColor(color: string) {
     this.gridCell.color = color;
+    this.gridChange.emit({ row: this.row, col: this.col, cell: this.gridCell });
   }
 
   /**
@@ -191,7 +192,7 @@ export class GridCellComponent {
     }
     this.cellCheck('');
     if (emitChange) {
-      this.gridChange.emit();
+      this.gridChange.emit({ row: this.row, col: this.col, cell: this.gridCell });
     }
   }
 
@@ -214,11 +215,10 @@ export class GridCellComponent {
           }
         }
       }
-      this.gridChange.emit();
+      this.gridChange.emit({ row: this.row, col: this.col, cell: this.gridCell });
     } else if (event.altKey) {
       if (this.allEdgeCheck(0, 0)) {
         this.setColor('white');
-        this.gridChange.emit();
       }
     }
   }
@@ -241,7 +241,6 @@ export class GridCellComponent {
           this.setColor('');
         }
       }
-      this.gridChange.emit();
     }
   }
 
@@ -258,7 +257,6 @@ export class GridCellComponent {
           this.setColor('');
         }
       }
-      this.gridChange.emit();
     }
   }
 

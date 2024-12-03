@@ -10,18 +10,21 @@ import { GridPackage } from './gridPackage';
 import { of } from 'rxjs';
 import { GridCell } from '../grid-cell/grid-cell';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('GridComponent', () => {
   let component: GridComponent;
   let fixture: ComponentFixture<GridComponent>;
+  let snackBar: MatSnackBar;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [FormsModule, GridComponent, BrowserAnimationsModule, RouterTestingModule, HttpClientTestingModule],
+      imports: [FormsModule, BrowserAnimationsModule, RouterTestingModule, HttpClientTestingModule, GridComponent, MatSnackBarModule],
       providers: [
         { provide: GridService, useValue: new MockGridService() },
-        RoomService
+        RoomService,
+        MatSnackBar
       ],
     })
       .compileComponents();
@@ -31,6 +34,7 @@ describe('GridComponent', () => {
     TestBed.compileComponents().then(() => {
       fixture = TestBed.createComponent(GridComponent);
       component = fixture.componentInstance;
+      snackBar = TestBed.inject(MatSnackBar);
       fixture.detectChanges();
     });
   }));
@@ -266,32 +270,31 @@ describe('GridComponent', () => {
 
   it('should send grid update message on grid change', () => {
     const sendMessageSpy = spyOn(component['webSocketService'], 'sendMessage');
-    const mockGrid: GridCell[][] = [
-      [new GridCell(), new GridCell()],
-      [new GridCell(), new GridCell()]
-    ];
-    component.gridPackage.grid = mockGrid;
+    const mockGridCell: GridCell = new GridCell();
+    mockGridCell.value = 'X';
+    component.gridPackage.grid[1][1] = mockGridCell;
     component.gridPackage._id = 'testId';
     component.gridPackage.roomID = 'testRoomId';
 
-    component.onGridChange();
+    component.onGridChange({ row: 1, col: 1, cell: mockGridCell });
 
     expect(sendMessageSpy).toHaveBeenCalledWith({
-      type: 'GRID_UPDATE',
-      grid: mockGrid,
-      roomID: 'testRoomId',
-      id: 'testId'
+      type: 'GRID_CELL_UPDATE',
+      cell: mockGridCell,
+      row: 1,
+      col: 1,
+      gridID: 'testId'
     });
   });
 
   it('should handle websocket messages correctly', fakeAsync(() => {
-    const mockGrid: GridCell[][] = [
-      [new GridCell(), new GridCell()],
-      [new GridCell(), new GridCell()]
-    ];
+    const mockGridCell: GridCell = new GridCell();
+    mockGridCell.value = 'X';
     const message = {
-      type: 'GRID_UPDATE',
-      grid: mockGrid,
+      type: 'GRID_CELL_UPDATE',
+      cell: mockGridCell,
+      row: 1,
+      col: 1,
       id: 'testId'
     };
 
@@ -300,18 +303,76 @@ describe('GridComponent', () => {
 
     // This is a workaround to make the test work
     component['webSocketService'].getMessage().subscribe((msg: unknown) => {
-      const receivedMessage = msg as { type: string, grid: GridCell[][], id: string };
-      if (receivedMessage.type === 'GRID_UPDATE' && component.gridPackage._id === receivedMessage.id) {
-        component.applyGridUpdate(receivedMessage.grid);
+      const receivedMessage = msg as { type: string, cell: GridCell, row: number, col: number, id: string };
+      if (receivedMessage.type === 'GRID_CELL_UPDATE' && component.gridPackage._id === receivedMessage.id) {
+        component.gridPackage.grid[receivedMessage.row][receivedMessage.col] = receivedMessage.cell;
       }
     });
 
     tick();
 
-    expect(component.gridPackage.grid).toEqual(mockGrid);
-    expect(component.gridHeight).toBe(mockGrid.length);
-    expect(component.gridWidth).toBe(mockGrid[0].length);
+    expect(component.gridPackage.grid[1][1].value).toBe('X');
   }));
+
+  it('should save grid correctly', fakeAsync(() => {
+    const saveGridSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.callThrough();
+    const loadGridsSpy = spyOn(component, 'loadSavedGrids').and.callThrough();
+    const mockGridPackage: GridPackage = {
+      grid: [
+        [new GridCell(), new GridCell()],
+        [new GridCell(), new GridCell()]
+      ],
+      _id: 'testId',
+      roomID: 'testRoomId',
+      name: 'Test Grid',
+      lastSaved: new Date()
+    };
+
+    component.gridPackage = mockGridPackage;
+    component.saveGrid();
+    tick();
+
+    expect(saveGridSpy).toHaveBeenCalledWith('testRoomId', jasmine.objectContaining({
+      grid: mockGridPackage.grid,
+      _id: mockGridPackage._id,
+      name: mockGridPackage.name,
+      lastSaved: jasmine.any(Date)
+    }));
+    expect(loadGridsSpy).toHaveBeenCalled();
+    expect(component.gridPackage.lastSaved).toBeTruthy();
+    expect(component.gridPackage.lastSaved.getTime()).toBeCloseTo(new Date().getTime(), -2);
+  }));
+
+  it('should update cell color correctly', () => {
+    const cell = new GridCell();
+    cell.edges = { top: true, right: true, bottom: true, left: true };
+    component.gridPackage.grid = [[cell]];
+
+    component.updateCellColor(0, 0);
+
+    expect(component.gridPackage.grid[0][0].color).toBe('black');
+  });
+
+  it('should copy grid link to clipboard', fakeAsync(() => {
+    spyOn(navigator.clipboard, 'writeText').and.callFake(() => Promise.resolve());
+    const snackBarSpy = spyOn(snackBar, 'open');
+    component.gridPackage._id = 'testId';
+
+    component.copyGridLink();
+    tick();
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${window.location.origin}/grid/testId`);
+    expect(snackBarSpy).toHaveBeenCalledWith('Grid link copied to clipboard!', 'Close', { duration: 3000 });
+  }));
+
+  it('should navigate to grids page on leaveGrid', () => {
+    const navigateSpy = spyOn(component['router'], 'navigate');
+    component.gridPackage.roomID = 'testRoomId';
+
+    component.leaveGrid();
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/testRoomId/grids']);
+  });
 });
 
 

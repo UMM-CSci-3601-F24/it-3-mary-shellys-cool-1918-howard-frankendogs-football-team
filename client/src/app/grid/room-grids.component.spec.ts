@@ -81,6 +81,6 @@ describe('RoomGridsComponent', () => {
 
     expect(component['gridService'].saveGrid).toHaveBeenCalled();
     expect(mockRoomService.getGridsByRoomId).toHaveBeenCalledWith('room1');
-    expect(routerSpy).toHaveBeenCalledWith([`${component.roomID}/grid/${newGrid._id}`]);
+    expect(routerSpy).toHaveBeenCalledWith([`/${component.roomID}/grid/${newGrid._id}`]);
   }));
 });

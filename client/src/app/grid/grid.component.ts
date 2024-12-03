@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
-
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,9 +20,9 @@ import {
   MatExpansionPanel,
   MatExpansionPanelDescription,
   MatExpansionPanelHeader,
-  MatExpansionPanelTitle,
 } from '@angular/material/expansion';
 import { MatIcon } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-grid-component',
@@ -31,6 +31,7 @@ import { MatIcon } from '@angular/material/icon';
   standalone: true,
   providers: [],
   imports: [
+    MatButtonToggleModule,
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
@@ -43,14 +44,13 @@ import { MatIcon } from '@angular/material/icon';
     MatCardModule,
     MatExpansionPanel,
     MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
     MatExpansionPanelDescription,
     MatIcon,
   ],
 })
 export class GridComponent {
-  currentColor: string;
-  highlight: string[] = ['pink', 'yellow', 'green'];
+  currentColor: string = 'Pink';
+  highlight: string[] = ['Pink', 'Yellow', 'Green'];
 
   deleteDirectionBool: boolean = false;
 
@@ -83,7 +83,8 @@ export class GridComponent {
     private gridService: GridService,
     private roomService: RoomService,
     private webSocketService: WebSocketService,
-    private router: Router) {
+    private router: Router,
+    private snackBar: MatSnackBar) {
 
     this.route.paramMap.subscribe(params => {
       this.gridPackage.roomID = params.get('roomID');
@@ -101,17 +102,35 @@ export class GridComponent {
     this.webSocketService.getMessage().subscribe((message: unknown) => {
       const msg = message as {
         type?: string;
-        grid?: GridCell[][];
-        id?: string;
-      };
-      // all of these are optional to allow heartbeat messages to pass through
-      if (
-        // checks that message was a grid update
-        msg.type === 'GRID_UPDATE' &&
-        // checks that grid you have open is the same as the one that was updated
-        this.gridPackage._id == (message as { id: string }).id
-      ) {
-        this.applyGridUpdate(msg.grid);
+        gridID?: string;
+        cell?: GridCell;
+        row?: number;
+        col?: number;
+      }; // all of these are optional to allow heartbeat messages to pass through
+
+      if (msg.type === 'GRID_CELL_UPDATE' && this.gridPackage._id === msg.gridID) {
+        // this.gridPackage.grid[msg.row][msg.col] = msg.cell;
+
+        this.gridPackage.grid[msg.row][msg.col].color = msg.cell.color;
+        this.gridPackage.grid[msg.row][msg.col].edges = msg.cell.edges;
+        this.gridPackage.grid[msg.row][msg.col].value = msg.cell.value;
+
+        if (this.gridPackage.grid[msg.row + 1][msg.col]) {
+          this.gridPackage.grid[msg.row + 1][msg.col].edges.top = msg.cell.edges.bottom;
+          this.updateCellColor(msg.row + 1, msg.col);
+        }
+        if (this.gridPackage.grid[msg.row - 1][msg.col]) {
+          this.gridPackage.grid[msg.row - 1][msg.col].edges.bottom = msg.cell.edges.top;
+          this.updateCellColor(msg.row - 1, msg.col);
+        }
+        if (this.gridPackage.grid[msg.row][msg.col + 1]) {
+          this.gridPackage.grid[msg.row][msg.col + 1].edges.left = msg.cell.edges.right;
+          this.updateCellColor(msg.row, msg.col + 1);
+        }
+        if (this.gridPackage.grid[msg.row][msg.col - 1]) {
+          this.gridPackage.grid[msg.row][msg.col - 1].edges.right = msg.cell.edges.left;
+          this.updateCellColor(msg.row, msg.col - 1);
+        }
       }
     });
   }
@@ -182,25 +201,25 @@ export class GridComponent {
     });
   }
 
-  onGridChange() {
+  onGridChange(event: { row: number, col: number, cell: GridCell }) {
     const message = {
-      type: 'GRID_UPDATE',
-      grid: this.gridPackage.grid,
-      roomID: this.gridPackage.roomID,
-      id: this.gridPackage._id,
+      type: 'GRID_CELL_UPDATE',
+      cell: event.cell,
+      row: event.row,
+      col: event.col,
+      gridID: this.gridPackage._id,
     };
+
     this.webSocketService.sendMessage(message);
   }
 
   /**
-   * Handles the click event on a grid cell.
    * Moves the focus to the clicked cell.
    *
    * @param event - The mouse event.
    * @param col - The column index of the clicked cell.
    * @param row - The row index of the clicked cell.
    */
-
   onClick(event: MouseEvent, col: number, row: number) {
     this.moveFocus(col, row);
   }
@@ -274,6 +293,9 @@ export class GridComponent {
             break;
           default:
             if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
+
+              this.renderer.setProperty(inputElement, 'value', event.key);
+              inputElement.dispatchEvent(new Event('input'));
               cell.value = event.key;
 
               if (this.typeDirection === 'right') {
@@ -303,10 +325,11 @@ export class GridComponent {
         switch (event.key) {
           case 'Backspace':
             if (inputElement) {
-              console.log(inputElement.value);
               this.renderer.setProperty(inputElement, 'value', '');
-              setTimeout(() => this.moveFocus(col, row), 0);
-              console.log(inputElement.value);
+              inputElement.dispatchEvent(new Event('input'));
+              cell.value = '';
+
+              this.moveFocus(col, row);
             }
         }
       }
@@ -354,15 +377,24 @@ export class GridComponent {
     console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
 
+  /**
+   * flips the bool deleteDirectionBool
+   */
   deleteDirectionToggle() {
     this.deleteDirectionBool = !this.deleteDirectionBool;
-    console.log(this.deleteDirectionBool);
+  }
+
+  updateCellColor(row: number, col: number) {
+    const cell = this.gridPackage.grid[row][col];
+    if (cell.edges.top && cell.edges.right && cell.edges.bottom && cell.edges.left) {
+      cell.color = 'black';
+    }
   }
 
   copyGridLink() {
     const gridLink = `${window.location.origin}/grid/${this.gridPackage._id}`;
     navigator.clipboard.writeText(gridLink).then(() => {
-      alert('Grid link copied to clipboard!');
+      this.snackBar.open('Grid link copied to clipboard!', 'Close', { duration: 3000 });
     });
   }
 

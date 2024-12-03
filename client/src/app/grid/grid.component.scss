@@ -1,17 +1,14 @@
-.example-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
-  align-items: flex-start;
-}
-
 .column {
   float: left;
   padding: 10px;
   width: 40%;
 }
 
-.example-radio-button {
+.highlight-button-group {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+.highlight-button {
   margin: 5px;
 }
 

@@ -20,7 +20,6 @@ describe('Anagram Solver', () => {
     page.getAnagramListItems().should('have.length.at.least', 5);
   });
 
-  /**
   it('should type something into the contains filter and check that elements returned are correct', () => {
     cy.get('[data-test=wordContainsInput]').type('can',{ force: true });
     page.getAnagramListItems().each( e => {
@@ -37,18 +36,13 @@ describe('Anagram Solver', () => {
     });
   });
 
-   I cannot get these to work with current code.
-    We should come back to it.
-     - Josie
-  **/
+  it('should make a search and show search in search history', () => {
+    cy.get('[data-test=wordGroupInput]').type('2005',{ force: true });
+    cy.get('[data-test=wordContainsInput]').type('year',{ force: true });
+    cy.get('.anagram-search-history-contains').first().should('include.text', 'year');
+    cy.get('.anagram-search-history-wordGroup').first().should('include.text', '2005');
+  });
 
-  // it('should make a search and show search in search history', () => {
-  //   cy.get('[data-test=wordGroupInput]').type('2005',{ force: true });
-  //   cy.get('[data-test=wordContainsInput]').type('year',{ force: true });
-  //   cy.get('.anagram-search-history-contains').first().should('include.text', 'year');
-  //   cy.get('.anagram-search-history-wordGroup').first().should('include.text', '2005');
-  // });
-  // this test is screwy
   it('should click add word group and go to right url', () => {
     page.addWordButton().click();
     cy.url().should(url => expect(url.endsWith('/anagram/new')).to.be.true);
@@ -58,10 +52,8 @@ describe('Anagram Solver', () => {
   it("should click button for word group and go to right url", () => {
     page.wordGroupProfileButton().first().click();
     cy.url().should(url => expect(url.includes('/anagram/wordGroup/10000%20Common%20Words')).to.be.true);
-    // This is objectively a bad url to work with,
-    // but I know that this is going to change when we add word groups to rooms
     cy.get('.word-group-title mat-card-title').should('contain.text', 'Group Name:');
-  })
+  });
 
   it('should open the expansion panel for a word and then delete it', () => {
     cy.get('[data-cy=expansion-panel-header]').first().click();
