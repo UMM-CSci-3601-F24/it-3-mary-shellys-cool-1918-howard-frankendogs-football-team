@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Search } from './search';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PageEvent } from '@angular/material/paginator';
 
 const COMMON_IMPORTS: unknown[] = [
   RouterTestingModule,
@@ -128,4 +129,96 @@ describe('max function', () => {
 
   });
 })
+
+describe('handlePageEvent', () => {
+  let wordList: WordListComponent;
+  let fixture: ComponentFixture<WordListComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [COMMON_IMPORTS, WordListComponent],
+      providers: [{ provide: WordService, useValue: new MockWordService() }],
+    });
+  });
+
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(WordListComponent);
+      wordList = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+  }));
+
+  it('should update wordsPageNumber and wordsPageSize for word list paginator', () => {
+    const event = { pageIndex: 1, pageSize: 50 } as PageEvent;
+    wordList.handlePageEvent(event, "word list paginator");
+    expect(wordList.wordsPageNumber()).toBe(1);
+    expect(wordList.wordsPageSize()).toBe(50);
+  });
+
+  it('should update searchesPageNumber and searchesPageSize for search history paginator', () => {
+    const event = { pageIndex: 2, pageSize: 100 } as PageEvent;
+    wordList.handlePageEvent(event, "search history paginator");
+    expect(wordList.searchesPageNumber()).toBe(2);
+    expect(wordList.searchesPageSize()).toBe(100);
+  });
+});
+
+describe('getNumWords and getNumSearches', () => {
+  let wordList: WordListComponent;
+  let fixture: ComponentFixture<WordListComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [COMMON_IMPORTS, WordListComponent],
+      providers: [{ provide: WordService, useValue: new MockWordService() }],
+    });
+  });
+
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(WordListComponent);
+      wordList = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+  }));
+
+  it('should return the correct number of words', () => {
+    expect(wordList.getNumWords()).toBe(5);
+  });
+
+  it('should return the correct number of searches', () => {
+    expect(wordList.getNumSearches()).toBe(3);
+  });
+});
+
+describe('getNumWords and getNumSearches when context is undefined', () => {
+  let wordList: WordListComponent;
+  let fixture: ComponentFixture<WordListComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [COMMON_IMPORTS, WordListComponent],
+      providers: [{ provide: WordService, useValue: new MockWordService() }],
+    });
+  });
+
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(WordListComponent);
+      wordList = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+  }));
+
+  it('should return 0 when words are undefined', () => {
+    wordList.serverFilteredContext().words = undefined;
+    expect(wordList.getNumWords()).toBe(0);
+  });
+
+  it('should return 0 when searches are undefined', () => {
+    wordList.serverFilteredContext().searches = undefined;
+    expect(wordList.getNumSearches()).toBe(0);
+  });
+});
 
