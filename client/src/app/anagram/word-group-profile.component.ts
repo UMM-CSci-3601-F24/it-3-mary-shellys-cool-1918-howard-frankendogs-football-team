@@ -1,13 +1,14 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { ActivatedRoute, ParamMap} from '@angular/router';
 import { WordService } from './word.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map, switchMap, catchError, of, Subject } from 'rxjs';
+import { map, switchMap, catchError, of} from 'rxjs';
 import { Word } from './word';
 import { MatListModule } from '@angular/material/list';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-word-group-profile',
@@ -15,15 +16,20 @@ import {MatGridListModule} from '@angular/material/grid-list';
   imports: [
     MatCardModule,
     MatListModule,
-    MatGridListModule
+    MatGridListModule,
+    MatPaginatorModule
   ],
   templateUrl: './word-group-profile.component.html',
   styleUrl: './word-group-profile.component.scss'
 })
 export class WordGroupProfileComponent {
-
+  error = signal({ help: '', httpResponse: '', message: '' });
+  // gets the word group we are looking for out of the param map
   wordGroup = toSignal(this.route.paramMap.pipe(
     map((paramMap: ParamMap) => paramMap.get("id"))));
+  // pagination values
+  pageSize = signal<number>(100);
+  pageNumber = signal<number>(0);
 
   constructor(
     private snackBar: MatSnackBar,
@@ -46,9 +52,25 @@ export class WordGroupProfileComponent {
       })
     )
   );
-  error = signal({ help: '', httpResponse: '', message: '' });
 
-  private ngUnsubscribe = new Subject<void>();
+  getNumWords = computed(() => {
+    if (this.words() === undefined) {
+      return 0;
+    }
+    return this.words().length
+  });
+
+  displayWords = computed(() => {
+    return this.words()
+    .slice(
+      this.pageNumber()*this.pageSize(),
+      Math.min((this.pageNumber() + 1)*this.pageSize(), this.getNumWords()));
+  })
+
+  handlePageEvent($event: PageEvent) {
+    this.pageNumber.set($event.pageIndex);
+    this.pageSize.set($event.pageSize);
+  }
 
   /**
    * calls deleteWord and returns a snackbar
