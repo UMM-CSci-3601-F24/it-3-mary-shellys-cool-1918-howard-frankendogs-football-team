@@ -14,5 +14,9 @@
 .developer-image {
     width: 100%;
     height: auto;
-    border-radius: 50%;
+    max-height: 25rem;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+
+    overflow: hidden;
 }
