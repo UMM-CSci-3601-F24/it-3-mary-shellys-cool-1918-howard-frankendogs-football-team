@@ -28,7 +28,7 @@ export class AboutComponent {
     {
       name: 'Owen Beyer',
       image: '../../assets/images/Owen.jpg',
-      bio: 'Mostly worked on front end development. Worked mainly on the grid side of things instead of the anagram solver.'
+      bio: 'Mostly worked on front end development. Implemented highlighting, Bolding on ctrl click, Custom grid sizes, custom cell size, and aided in displaying the grid with the 2d array, + some more misc features. '
     },
     {
       name: 'John Gulon',
