@@ -1,10 +1,21 @@
 <div class="flex-row">
   <div>
     <mat-card class="grid-route-card">
+      <mat-card-header class="grid-route-header">
+        <mat-card-subtitle>
+          <mat-icon class="icon">border_all</mat-icon>
+        </mat-card-subtitle>
+        <mat-card-title>
+          Grid
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        Create a unsavable grid in order to see how it works, and figure out the controls.
+      </mat-card-content>
       <button mat-button routerLink="/grid" routerLinkActive="drawer-list-item-active">
         <mat-card-header>
           <mat-card-title>
-            Grid:
+            Take Me There!
           </mat-card-title>
         </mat-card-header>
       </button>
@@ -20,29 +31,41 @@
       <br>
       <mat-card-content>
         <form [formGroup]="roomForm" (ngSubmit)="createRoom()" autoComplete="off" class="room-form">
-          <input mat-input data-test="room-name-input" formControlName="name" placeholder="Room Name"/>
+          <input mat-input data-test="room-name-input" formControlName="name" placeholder="Room Name" />
           <button mat-raised-button type="submit">Create Room</button>
         </form>
         @if (createdRoomId) {
+          <br>
           Created Room ID: {{ createdRoomId }}
           <br>
           <button mat-button (click)="copyLink()" data-test="copy-link-button">Copy Link</button>
           <br>
-          <button mat-button routerLink="/{{this.createdRoomId}}/grids" data-test="go-to-room-grids-button">Go to Room Grids</button>
+          <button mat-button routerLink="/{{this.createdRoomId}}/grids" data-test="go-to-room-grids-button">Go to Room
+            Grids</button>
         }
       </mat-card-content>
     </mat-card>
   </div>
   <div>
-    <mat-card class="anagram-card">
+    <mat-card class="anagram-route-card">
+      <mat-card-header class="anagram-route-header">
+        <mat-card-subtitle>
+          <mat-icon class="icon">hdr_auto</mat-icon>
+        </mat-card-subtitle>
+        <mat-card-title>
+          Anagram
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        Solve anagrams using search parameters, and add/import individual words or groups of words.
+      </mat-card-content>
       <button mat-button routerLink="/anagram" routerLinkActive="drawer-list-item-active">
         <mat-card-header>
           <mat-card-title>
-            Anagram:
+            Take Me There!
           </mat-card-title>
         </mat-card-header>
       </button>
     </mat-card>
   </div>
 </div>
-

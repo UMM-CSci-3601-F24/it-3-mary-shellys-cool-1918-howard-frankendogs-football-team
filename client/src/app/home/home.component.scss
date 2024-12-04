@@ -1,4 +1,11 @@
-.room-card, .grid-route-card, .anagram-card {
+.icon {
+    font-size: 4rem;
+   height: auto;
+   width: auto;
+
+}
+
+.room-card, .grid-route-card, .anagram-route-card {
     width: 20rem;
     margin: 0;
     padding: 1.25rem;
@@ -10,7 +17,7 @@
     display: flex;
 }
 
-.grid-route-card button, .anagram-card button {
+.room-card button, .grid-route-card button, .anagram-route-card button {
 
     padding: 0.625rem 1.25rem;
     font-size: 1.2rem;
@@ -23,7 +30,7 @@
     width: 100%;
 }
 
-.room-card button:hover, .grid-route-card button:hover, .anagram-card button:hover {
+.room-card button:hover, .grid-route-card button:hover, .anagram-route-card button:hover {
     background-color: #0056b3;
 }
 
@@ -32,28 +39,21 @@
     gap: 1rem;
 }
 
-.room-header {
+mat-card-header {
     justify-content: center;
     display: flex;
     margin-bottom: 1rem;
 }
 
+mat-card-content {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
 .room-form {
-    // max-width: 100%;
     justify-content: center;
-    // display: flex;
 }
 
 .room-card button {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    padding: 0.625rem 1.25rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    border: none;
-    border-radius: 0.25rem;
-    background-color: #007bff;
-    color: white;
-    transition: background-color 0.3s ease;
-    width: 100%;
+    margin-top: 2rem;
 }
