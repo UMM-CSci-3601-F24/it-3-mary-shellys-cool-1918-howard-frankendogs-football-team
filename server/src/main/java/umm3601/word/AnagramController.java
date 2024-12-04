@@ -92,7 +92,7 @@ public class AnagramController implements Controller {
   }
 
   public void getWordsByWordGroup(Context ctx) {
-    String wordGroup = ctx.pathParam("id");
+    String wordGroup = ctx.pathParam("wordGroup");
     System.out.println(wordGroup);
     Bson sortOrder = Sorts.ascending("word");
     ArrayList<Word> matchingWords = wordCollection
@@ -205,23 +205,6 @@ public class AnagramController implements Controller {
 
   public void deleteWordGroup(Context ctx) {
     String wordGroupString = ctx.pathParam("wordGroup");
-
-  // For loop to delete all words in a word group
-
-  //   if (wordGroupString != "10000 Common Words") {
-  //   for (Word word : wordCollection.find(eq(WORD_GROUP_KEY, wordGroupString)).into(new ArrayList<>())) {
-  //     DeleteResult deletedWord = wordCollection.deleteOne(eq("_id", new ObjectId(word._id)));
-  //     if (deletedWord.getDeletedCount() < 1) {
-  //       ctx.status(HttpStatus.NOT_FOUND);
-  //       throw new NotFoundResponse(
-  //           "Was unable to delete Word "
-  //               + word.word
-  //               + "; Please try deleting a word group");
-  //     }
-  //   }
-  // }
-
-  // Delete all words in a word group using deleteMany
 
   DeleteResult deletedWordGroup = wordCollection.deleteMany(eq("wordGroup", wordGroupString));
     System.out.println(wordGroupString);
