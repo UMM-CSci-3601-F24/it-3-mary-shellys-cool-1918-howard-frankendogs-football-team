@@ -6,7 +6,10 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import {  RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-home-component',
@@ -15,19 +18,27 @@ import { RouterLink } from '@angular/router';
     providers: [],
     standalone: true,
     imports: [
-        MatCardModule, 
-        ReactiveFormsModule, 
-        MatFormFieldModule, 
-        MatInputModule, 
+        MatCardModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
         MatButtonModule,
         RouterLink,
+        MatIcon,
+        MatSnackBarModule,
     ],
 })
 export class HomeComponent {
     roomForm: FormGroup;
     createdRoomId: string | null = null;
 
-    constructor(private fb: FormBuilder, private http: HttpClient, private clipboard: Clipboard) {
+    constructor(
+        private fb: FormBuilder,
+        private http: HttpClient,
+        private clipboard: Clipboard,
+        public snackBar: MatSnackBar,
+        private router: Router,
+    ) {
         this.roomForm = this.fb.group({
             name: ['']
         });
@@ -35,9 +46,14 @@ export class HomeComponent {
 
     createRoom() {
         const roomData = this.roomForm.value;
-        this.http.post<{ id: string }>('/api/rooms', roomData).subscribe(response => {
-            this.createdRoomId = response.id;
-        });
+
+        if (roomData.name !== '' && roomData.name !== null && roomData.name !== undefined) {
+            this.http.post<{ id: string }>('/api/rooms', roomData).subscribe(response => {
+                this.createdRoomId = response.id;
+            });
+        } else {
+            this.snackBar.open('Rooms need a non-empty name', 'Ok', { duration: 3000 });
+        }
     }
 
     copyLink() {
@@ -45,5 +61,9 @@ export class HomeComponent {
             const link = `${window.location.origin}/${this.createdRoomId}/grids`;
             this.clipboard.copy(link);
         }
+    }
+
+    navigateToAbout() {
+        this.router.navigate(['/about']);
     }
 }
