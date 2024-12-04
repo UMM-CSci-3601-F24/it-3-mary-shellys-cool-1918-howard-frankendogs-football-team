@@ -1,17 +1,26 @@
 <div class="flex-row">
   <div>
-    <mat-card class="home-card">
-      <mat-card-header>
+    <mat-card class="grid-route-card">
+      <button mat-button routerLink="/grid" routerLinkActive="drawer-list-item-active">
+        <mat-card-header>
+          <mat-card-title>
+            Grid:
+          </mat-card-title>
+        </mat-card-header>
+      </button>
+    </mat-card>
+  </div>
+  <div>
+    <mat-card class="room-card">
+      <mat-card-header class="room-header">
         <mat-card-title>
           Create A Room
         </mat-card-title>
       </mat-card-header>
       <br>
-      <mat-card-content style="text-align: center;">
-        <form [formGroup]="roomForm" (ngSubmit)="createRoom()">
-          <label for="name"></label>
-          <input mat-input id="name" formControlName="name" placeholder="Room Name"/>
-          <br>
+      <mat-card-content>
+        <form [formGroup]="roomForm" (ngSubmit)="createRoom()" autoComplete="off" class="room-form">
+          <input mat-input data-test="room-name-input" formControlName="name" placeholder="Room Name"/>
           <button mat-raised-button type="submit">Create Room</button>
         </form>
         @if (createdRoomId) {
@@ -24,15 +33,14 @@
       </mat-card-content>
     </mat-card>
   </div>
-<div class="flex-row">
-  <div class="flex-1">
-    <mat-card class="grid-route-card">
-      <button mat-button routerLink="/grid" routerLinkActive="drawer-list-item-active">
-      <mat-card-header>
-        <mat-card-title>
-          Grid:
-        </mat-card-title>
-      </mat-card-header>
+  <div>
+    <mat-card class="anagram-card">
+      <button mat-button routerLink="/anagram" routerLinkActive="drawer-list-item-active">
+        <mat-card-header>
+          <mat-card-title>
+            Anagram:
+          </mat-card-title>
+        </mat-card-header>
       </button>
     </mat-card>
   </div>

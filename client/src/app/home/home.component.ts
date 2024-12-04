@@ -45,7 +45,6 @@ export class HomeComponent {
     createRoom() {
         const roomData = this.roomForm.value;
 
-
         if (roomData.name !== '' && roomData.name !== null && roomData.name !== undefined) {
             this.http.post<{ id: string }>('/api/rooms', roomData).subscribe(response => {
                 this.createdRoomId = response.id;
