@@ -53,8 +53,6 @@ describe('Word List', () => {
   it("deletes a word 'Keenan'", () => {
     wordList.deleteWord("Keenan_id");
     fixture.detectChanges();
-    // console.log("deletes a word 'Keenan'")
-    // console.log(wordList.filteredWords());
     expect(wordList.serverFilteredContext().words.length).toBe(4);
     expect(wordList.filteredWords().length).toBe(4);
     expect(
