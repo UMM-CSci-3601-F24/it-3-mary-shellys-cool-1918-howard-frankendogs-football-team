@@ -35,18 +35,15 @@ export class GridListComponent implements OnInit {
 
   loadGrids(): void {
     if (this.roomID) {
-      console.log(this.roomID);
       this.roomService.getGridsByRoomId(this.roomID).subscribe(grids => {
         this.grids = grids;
       });
-      console.log(this.grids);
     } else {
       console.error('roomID is null or undefined');
     }
   }
 
   onGridDeleted(deletedId: string) {
-    console.log("entered onGridDeleted")
     this.grids = this.grids.filter(grid => grid._id !== deletedId);
   }
 }

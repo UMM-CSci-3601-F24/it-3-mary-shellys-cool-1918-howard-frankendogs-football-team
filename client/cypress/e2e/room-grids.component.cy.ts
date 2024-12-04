@@ -32,5 +32,5 @@ describe('Room Grids Component', () => {
   //   cy.on('window:confirm', () => false);
   // });
 
-  // Cannot get to work with timing?
+  // Cannot get to work with timing - talked to nic about it, just leaving it here.
 });

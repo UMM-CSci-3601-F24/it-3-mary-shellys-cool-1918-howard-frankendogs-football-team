@@ -146,8 +146,6 @@ export class GridComponent {
    * Reinitializes the grid based on the new size.
    */
   onSizeInput() {
-    console.log(this.gridWidth);
-    console.log(this.gridHeight);
     this.initializeGrid();
   }
 
@@ -194,7 +192,6 @@ export class GridComponent {
 
   loadGrid(id: string) {
     this.gridService.getGridById(id).subscribe((activeGrid) => {
-      console.log(activeGrid._id);
       this.gridPackage.name = activeGrid.name;
       this.gridPackage._id = activeGrid._id;
       this.gridPackage.roomID = activeGrid.roomID;
@@ -239,8 +236,6 @@ export class GridComponent {
     const inputElement = this.elRef.nativeElement.querySelector(
       `app-grid-cell[col="${col}"][row="${row}"] input`
     );
-
-    console.log('keydown', event.key, col, row);
 
     if (this.focusTimeout) {
       clearTimeout(this.focusTimeout);
@@ -355,12 +350,9 @@ export class GridComponent {
       this.currentCol = col;
       this.currentRow = row;
 
-      console.log(col, row);
-
       const cellInput = document.querySelector(
         `app-grid-cell[col="${col}"][row="${row}"] input`
       );
-      console.log(cellInput);
 
       if (cellInput) {
         setTimeout(() => (cellInput as HTMLElement).focus());
@@ -376,7 +368,6 @@ export class GridComponent {
     this.currentDirectionIndex =
       (this.currentDirectionIndex + 1) % this.typingDirections.length;
     this.typeDirection = this.typingDirections[this.currentDirectionIndex];
-    console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
 
   /**
