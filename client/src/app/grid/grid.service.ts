@@ -11,13 +11,8 @@ import { map, Observable } from 'rxjs';
 export class GridService {
   constructor(private httpClient: HttpClient) { }
 
-  saveGrid(gridData: Partial<GridPackage>): Observable<string> {
-    console.log(`save grid called with url": ${environment.apiUrl + 'grids'}`);
-    // console.log(`save grid was called with id: ${gridData._id}`);
-
-    console.log(`save grid was called with grid{0,0} : ${gridData.grid[0][0].value}`);
-    console.log(`save grid was called with owner: ${gridData.roomID}`);
-    return this.httpClient.post<{id: string}>(environment.apiUrl + 'grids', gridData).pipe(map(response => response.id));
+  saveGrid(gridData: Partial<GridPackage>): Observable<GridPackage> {
+    return this.httpClient.post<GridPackage>(`${environment.apiUrl}grids`, gridData);
   }
 
   saveGridWithRoomId(roomId: string, gridData: Partial<GridPackage>): Observable<string> {
@@ -30,5 +25,9 @@ export class GridService {
 
   getGridById(id: string) {
     return this.httpClient.get<GridPackage>(environment.apiUrl + `grids/${id}`);
+  }
+
+  deleteGrid(id: string): Observable<{ deletedId: string }> {
+    return this.httpClient.delete<{ deletedId: string }>(`${environment.apiUrl}grids/${id}`);
   }
 }

@@ -2,50 +2,76 @@
 <div class="flex-row flex-wrap">
   <!-- Left Side: Control Dropdown Room Info -->
   <div class="column">
+    <!-- Room Information -->
+    <div>
+      <mat-card>
+        <h1 style="font-size: 2rem; margin: auto; margin-top: 2rem; text-align: center;">{{this.gridPackage.name}}</h1>
+        <p style="font-size: 1rem; margin: auto; margin-top: 1.2rem">Last Saved:</p>
+        <p style="font-size: 1rem; margin: auto;">{{this.gridPackage.lastSaved | date:'short'}}</p>
+        <div class="grid-buttons">
+          <button (click)="copyGridLink()">Copy Grid Link</button>
+          <button (click)="leaveGrid()">Leave Grid</button>
+        </div>
+      </mat-card>
+    </div>
+    <br />
     <!-- Control Instructions Drop down panel -->
     <div>
       <mat-card>
-        <mat-card-header>
+        <!-- <mat-card-header>
           <mat-card-title>Controls Key</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          Coming soon!
-          <!-- Put grid control guide dropdown here -->
-        </mat-card-content>
+        </mat-card-header> -->
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header class="pannel-text">
+
+            <mat-panel-description>
+            Controls Key<mat-icon> tips_and_updates </mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <p> Typing/Letters types directly into the grid and move in the direction specified.
+          </p>
+          <p>
+            Backspace deletes the current cell value and moves to the left.
+            if delete direction is turned on, backspace will
+            delete the current cell value and moves opposite of typing direction
+          </p>
+          <p>
+            Ctrl + Backspace deletes current cell value without moving.
+          </p>
+          <p>
+            Arrow keys alone navigate the array in the respective direction.
+          </p>
+          <p>
+            Ctrl + Arrow keys bold the edge in the respective direction. if all edges are bold, the
+            cell background goes black, and you cannot highlight it
+          </p>
+          <p>
+            Clicking on a cell will focus onto that cell.
+          </p>
+          <p>
+            Ctrl + Right click will bold all edges.
+          </p>
+          <p>
+            Alt + Right click on a blacked-out cell will turn the cell white, while keeping edges bold.
+            This also means you can highlight the cell.
+          </p>
+          <p>
+            Right click will highlight the cell background to the current selected color.
+            If color selected is the same as the cell's color, Left clicking will undo the highlight.
+          </p>
+          <p>
+            Holding shift and moving your mouse out of the current cell will highlight it
+          </p>
+          <p>
+            The Hight input makes the grid shorter/taller.
+            The Width input makes the grid thinner/thicker
+          </p>
+          <p>
+            The Size input makes the cells themselves larger/smaller.
+          </p>
+        </mat-expansion-panel>
       </mat-card>
     </div>
-    <!-- Room Information -->
-    <br />
-    @if (this.gridPackage.roomID !== null){
-    <div>
-      <button
-        class="save-button"
-        data-test="saveGridButton"
-        (click)="saveGrid()"
-      >
-        Save Grid
-      </button>
-      <div>
-        <h3>Saved Grids</h3>
-        @for (grid of this.savedGrids; track grid._id) {
-        <div>
-          <button
-            routerLink="/{{ gridPackage.roomID }}/grid/{{ grid._id }}"
-            (click)="loadGrid(grid._id)"
-          >
-            {{ grid._id }}
-          </button>
-        </div>
-        }
-      </div>
-    </div>
-    } @else {
-    <div>
-      <mat-card>
-        <mat-card-content>Rooms Coming Soon!</mat-card-content>
-      </mat-card>
-    </div>
-    }
   </div>
   <!-- Right Side: Control Inputs -->
   <div class="flex-row flex-wrap column">
@@ -56,80 +82,70 @@
       <mat-card-content>
         <div class="flex-row flex-wrap">
           <!-- height and width -->
-          <div>
-            <p style="margin: 0">Height</p>
-            <input
-              matInput
-              [(ngModel)]="gridHeight"
-              type="number"
-              (input)="onSizeInput()"
-              placeholder="{{ gridHeight }}"
-            />
-            <p style="margin: 0">Width</p>
-            <input
-              matInput
-              [(ngModel)]="gridWidth"
-              type="number"
-              (input)="onSizeInput()"
-              placeholder="{{ gridWidth }}"
-            />
+          <div class="control-group">
+            <p>Height</p>
+            <input matInput [(ngModel)]="gridHeight" type="number" (input)="onSizeInput()"
+              placeholder="{{ gridHeight }}" />
+            <p>Width</p>
+            <input matInput [(ngModel)]="gridWidth" type="number" (input)="onSizeInput()"
+              placeholder="{{ gridWidth }}" />
           </div>
           <!-- Cell Size -->
-          <div style="margin-left: 10px;">
-            Cell Size:<br />
-            <input
-              matInput
-              [(ngModel)]="cellSize"
-              type="number"
-              placeholder="{{ cellSize }}"
-            />
+          <div class="control-group">
+            <p>Cell Size</p>
+            <input matInput [(ngModel)]="cellSize" type="number" placeholder="{{ cellSize }}" />
           </div>
         </div>
         <!-- Highlight Colors -->
         <div>
           <br />
-          Highlight color:
-          <mat-radio-group
-            aria-labelledby="example-radio-group-label"
-            class="example-radio-group"
+          Highlight color: {{ currentColor }}
+          <br />
+          <mat-button-toggle-group
+            appearance="legacy"
+            class="highlight-button-group"
             [(ngModel)]="currentColor"
           >
             @for (highlight of highlight; track highlight) {
-            <mat-radio-button
-              class="example-radio-button"
+            <mat-button-toggle
+              class="highlight-button"
               [value]="highlight"
-              >{{ highlight }}</mat-radio-button
+              >{{ highlight }}</mat-button-toggle
             >
             }
-          </mat-radio-group>
-
+          </mat-button-toggle-group>
         </div>
         <!-- Typing Direction -->
-        <div>
+        <div class="control-group">
           <button mat-button (click)="cycleTypingDirection()">
             Cycle Typing Direction
           </button>
           <p>Current Typing Direction is {{ typeDirection }}</p>
         </div>
-        <div>
         <!-- Delete Direction Toggle -->
-        <button mat-button (click)="deleteDirectionToggle()">
-          Delete Direction
-        </button>
-        <p>Delete Direction Linked To Type Direction: {{ deleteDirectionBool }}</p>
-      </div>
+        <div class="control-group">
+          <button mat-button (click)="deleteDirectionToggle()">
+            Delete Direction
+          </button>
+          <p>Delete Direction Linked To Type Direction: {{ deleteDirectionBool }}</p>
+        </div>
+        @if (this.gridPackage.roomID !== null){
+        <div class="control-group">
+          <button class="save-button" data-test="saveGridButton" (click)="saveGrid()">
+            Save Grid
+          </button>
+        </div>
+        }
       </mat-card-content>
     </mat-card>
   </div>
 </div>
 <!-- Grid -->
 <div class="flex-row">
-  <div
-    [ngStyle]="{
+  <div [ngStyle]="{
       height: gridHeight * cellSize + 'px',
       width: gridWidth * cellSize + 'px'
-    }"
-  >
+    }">
     <mat-grid-list cols="{{ gridWidth }}" gridHeight="1:1" gutterSize="0">
       @for (row of gridPackage.grid; track row; let rowIndex = $index) { @for
       (cell of row; track cell; let colIndex = $index) {
@@ -146,43 +162,10 @@
           [grid]="gridPackage.grid"
           [currentColor]="currentColor"
           [ngStyle]="{ height: cellSize + 'px', width: cellSize + 'px' }"
-          (gridChange)="onGridChange()"
+          (gridChange)="onGridChange($event)"
         ></app-grid-cell>
       </mat-grid-tile>
       } }
     </mat-grid-list>
   </div>
 </div>
-
-
-<mat-expansion-panel hideToggle>
-  <mat-expansion-panel-header>
-    <mat-panel-title> Controls Legend </mat-panel-title>
-    <mat-panel-description>
-      <mat-icon> tips_and_updates
-      </mat-icon>
-    </mat-panel-description>
-  </mat-expansion-panel-header>
-  <p> Typing/Letters types directly into the grid and move in the direction specified.
-  </p>
-  <p>
-    Backspace alone deletes current cell value and moves opposite of direction specified.
-  </p>
-  <p>
-    Ctrl + Backspace deletes current cell value without moving.
-  </p>
-  <p>
-    Arrow keys alone navigate the array in the respective direction.
-  </p>
-  <p>
-    Ctrl + Arrow keys bold the edge in the respective direction.
-  </p>
-  <p>
-    Clicking on a cell will focus onto that cell.
-  </p>
-  <p>
-    The left number input changes the number of cells in each row.
-  </p>
- <p>
-    The right number input changes the pixel size of each cell. </p>
-</mat-expansion-panel>

@@ -1,0 +1,22 @@
+@if (gridPackage) {
+<mat-card routerLink="/{{gridPackage.roomID}}/grid/{{gridPackage._id}}">
+    <mat-card-header>
+        <mat-card-title>
+            {{ gridPackage.name }}
+        </mat-card-title>
+        <mat-card-subtitle style="margin-bottom: 0px">
+            Last Saved:
+        </mat-card-subtitle>
+        <mat-card-subtitle>
+            {{ gridPackage.lastSaved | date:'h:mm a \'on\' MMM d yyyy' }}
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <br>
+        <div class="grid-info">
+            <p>Grid Size: {{ gridPackage.grid.length }} x {{ gridPackage.grid[0].length }}</p>
+            <button class="delete-button" (click)="deleteGrid($event)">Delete This Grid</button>
+        </div>
+    </mat-card-content>
+</mat-card>
+}

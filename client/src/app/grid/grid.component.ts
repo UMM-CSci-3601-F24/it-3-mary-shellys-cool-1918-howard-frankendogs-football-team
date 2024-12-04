@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
-
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,7 +9,7 @@ import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GridService } from './grid.service';
 import { GridPackage } from './gridPackage';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
@@ -20,9 +20,9 @@ import {
   MatExpansionPanel,
   MatExpansionPanelDescription,
   MatExpansionPanelHeader,
-  MatExpansionPanelTitle,
 } from '@angular/material/expansion';
 import { MatIcon } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-grid-component',
@@ -31,6 +31,7 @@ import { MatIcon } from '@angular/material/icon';
   standalone: true,
   providers: [],
   imports: [
+    MatButtonToggleModule,
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
@@ -43,14 +44,13 @@ import { MatIcon } from '@angular/material/icon';
     MatCardModule,
     MatExpansionPanel,
     MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
     MatExpansionPanelDescription,
     MatIcon,
   ],
 })
 export class GridComponent {
-  currentColor: string;
-  highlight: string[] = ['pink', 'yellow', 'green'];
+  currentColor: string = 'Pink';
+  highlight: string[] = ['Pink', 'Yellow', 'Green'];
 
   deleteDirectionBool: boolean = false;
 
@@ -62,7 +62,9 @@ export class GridComponent {
     grid: [],
     _id: '',
     roomID: '',
-  };
+    name: '',
+    lastSaved: null
+  }
 
   savedGrids: GridPackage[];
 
@@ -80,29 +82,55 @@ export class GridComponent {
     public elRef: ElementRef,
     private gridService: GridService,
     private roomService: RoomService,
-    private webSocketService: WebSocketService
-  ) {
-    this.route.paramMap.subscribe((params) => {
+    private webSocketService: WebSocketService,
+    private router: Router,
+    private snackBar: MatSnackBar) {
+
+    this.route.paramMap.subscribe(params => {
       this.gridPackage.roomID = params.get('roomID');
-      console.log(params.get('roomID'));
+      this.gridPackage._id = params.get('id')
     });
-    this.initializeGrid();
+
+    if (this.gridPackage._id !== null && this.gridPackage._id !== '') {
+      this.loadGrid(this.gridPackage._id);
+    } else {
+      this.initializeGrid();
+    }
+
     this.loadSavedGrids();
 
     this.webSocketService.getMessage().subscribe((message: unknown) => {
       const msg = message as {
         type?: string;
-        grid?: GridCell[][];
-        id?: string;
-      };
-      // all of these are optional to allow heartbeat messages to pass through
-      if (
-        // checks that message was a grid update
-        msg.type === 'GRID_UPDATE' &&
-        // checks that grid you have open is the same as the one that was updated
-        this.gridPackage._id == (message as { id: string }).id
-      ) {
-        this.applyGridUpdate(msg.grid);
+        gridID?: string;
+        cell?: GridCell;
+        row?: number;
+        col?: number;
+      }; // all of these are optional to allow heartbeat messages to pass through
+
+      if (msg.type === 'GRID_CELL_UPDATE' && this.gridPackage._id === msg.gridID) {
+        // this.gridPackage.grid[msg.row][msg.col] = msg.cell;
+
+        this.gridPackage.grid[msg.row][msg.col].color = msg.cell.color;
+        this.gridPackage.grid[msg.row][msg.col].edges = msg.cell.edges;
+        this.gridPackage.grid[msg.row][msg.col].value = msg.cell.value;
+
+        if (this.gridPackage.grid[msg.row + 1][msg.col]) {
+          this.gridPackage.grid[msg.row + 1][msg.col].edges.top = msg.cell.edges.bottom;
+          this.updateCellColor(msg.row + 1, msg.col);
+        }
+        if (this.gridPackage.grid[msg.row - 1][msg.col]) {
+          this.gridPackage.grid[msg.row - 1][msg.col].edges.bottom = msg.cell.edges.top;
+          this.updateCellColor(msg.row - 1, msg.col);
+        }
+        if (this.gridPackage.grid[msg.row][msg.col + 1]) {
+          this.gridPackage.grid[msg.row][msg.col + 1].edges.left = msg.cell.edges.right;
+          this.updateCellColor(msg.row, msg.col + 1);
+        }
+        if (this.gridPackage.grid[msg.row][msg.col - 1]) {
+          this.gridPackage.grid[msg.row][msg.col - 1].edges.right = msg.cell.edges.left;
+          this.updateCellColor(msg.row, msg.col - 1);
+        }
       }
     });
   }
@@ -143,22 +171,16 @@ export class GridComponent {
         roomID: this.gridPackage.roomID,
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id,
+        name: this.gridPackage.name,
+        lastSaved: new Date()
       };
       this.gridService
         .saveGridWithRoomId(this.gridPackage.roomID, gridData)
         .subscribe(() => {
+          this.gridPackage.lastSaved = new Date();
           this.loadSavedGrids();
-        });
-    } else {
-      const gridData: Partial<GridPackage> = {
-        roomID: this.gridPackage.roomID,
-        grid: this.gridPackage.grid,
-      };
-      this.gridService
-        .saveGridWithRoomId(this.gridPackage.roomID, gridData)
-        .subscribe(() => {
-          this.loadSavedGrids();
-        });
+          this.snackBar.open('Grid saved successfully!', 'Close', { duration: 3000 });
+      });
     }
   }
 
@@ -173,32 +195,33 @@ export class GridComponent {
   loadGrid(id: string) {
     this.gridService.getGridById(id).subscribe((activeGrid) => {
       console.log(activeGrid._id);
-
+      this.gridPackage.name = activeGrid.name;
       this.gridPackage._id = activeGrid._id;
       this.gridPackage.roomID = activeGrid.roomID;
+      this.gridPackage.lastSaved = activeGrid.lastSaved;
       this.applyGridUpdate(activeGrid.grid);
     });
   }
 
-  onGridChange() {
+  onGridChange(event: { row: number, col: number, cell: GridCell }) {
     const message = {
-      type: 'GRID_UPDATE',
-      grid: this.gridPackage.grid,
-      roomID: this.gridPackage.roomID,
-      id: this.gridPackage._id,
+      type: 'GRID_CELL_UPDATE',
+      cell: event.cell,
+      row: event.row,
+      col: event.col,
+      gridID: this.gridPackage._id,
     };
+
     this.webSocketService.sendMessage(message);
   }
 
   /**
-   * Handles the click event on a grid cell.
    * Moves the focus to the clicked cell.
    *
    * @param event - The mouse event.
    * @param col - The column index of the clicked cell.
    * @param row - The row index of the clicked cell.
    */
-
   onClick(event: MouseEvent, col: number, row: number) {
     this.moveFocus(col, row);
   }
@@ -272,6 +295,9 @@ export class GridComponent {
             break;
           default:
             if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
+
+              this.renderer.setProperty(inputElement, 'value', event.key);
+              inputElement.dispatchEvent(new Event('input'));
               cell.value = event.key;
 
               if (this.typeDirection === 'right') {
@@ -301,10 +327,11 @@ export class GridComponent {
         switch (event.key) {
           case 'Backspace':
             if (inputElement) {
-              console.log(inputElement.value);
               this.renderer.setProperty(inputElement, 'value', '');
-              setTimeout(() => this.moveFocus(col, row), 0);
-              console.log(inputElement.value);
+              inputElement.dispatchEvent(new Event('input'));
+              cell.value = '';
+
+              this.moveFocus(col, row);
             }
         }
       }
@@ -352,8 +379,28 @@ export class GridComponent {
     console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
 
+  /**
+   * flips the bool deleteDirectionBool
+   */
   deleteDirectionToggle() {
     this.deleteDirectionBool = !this.deleteDirectionBool;
-    console.log(this.deleteDirectionBool);
+  }
+
+  updateCellColor(row: number, col: number) {
+    const cell = this.gridPackage.grid[row][col];
+    if (cell.edges.top && cell.edges.right && cell.edges.bottom && cell.edges.left) {
+      cell.color = 'black';
+    }
+  }
+
+  copyGridLink() {
+    const gridLink = `${window.location.origin}/${this.gridPackage.roomID}/grid/${this.gridPackage._id}`;
+    navigator.clipboard.writeText(gridLink).then(() => {
+      this.snackBar.open('Grid link copied to clipboard!', 'Close', { duration: 3000 });
+    });
+  }
+
+  leaveGrid() {
+    this.router.navigate([`/${this.gridPackage.roomID}/grids`]);
   }
 }

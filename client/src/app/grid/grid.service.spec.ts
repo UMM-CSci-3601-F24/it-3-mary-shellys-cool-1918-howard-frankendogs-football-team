@@ -10,44 +10,46 @@ describe('GridService', () => {
   // const testGrids: Grid[] = [] //this is intentionally empty
   let gridService: GridService;
   let httpClient: HttpClient;
-  let httpTestingController : HttpTestingController;
+  let httpTestingController: HttpTestingController;
   const testGrid: GridPackage = {
-    _id:"hehe",
-    roomID:"haha",
+    name: "testGrid",
+    _id: "hehe",
+    roomID: "haha",
     grid: [
       [{
         editable: true,
         value: "w",
-        edges: {top: false, right: false, bottom: false, left: false},
+        edges: { top: false, right: false, bottom: false, left: false },
         color: ''
-        },
-        {
+      },
+      {
         editable: true,
         value: "x",
-        edges: {top: false, right: false, bottom: false, left: false},
+        edges: { top: false, right: false, bottom: false, left: false },
         color: ''
-        },
+      },
       ],
       [{
         editable: true,
         value: "y",
-        edges: {top: false, right: false, bottom: false, left: false},
+        edges: { top: false, right: false, bottom: false, left: false },
         color: ''
-        },
-        {
+      },
+      {
         editable: true,
         value: "z",
-        edges: {top: false, right: false, bottom: false, left: false},
+        edges: { top: false, right: false, bottom: false, left: false },
         color: ''
-        },
+      },
       ]
-    ]
-}
+    ],
+    lastSaved: undefined
+  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [],
-      providers: [provideHttpClient(withInterceptorsFromDi()),provideHttpClientTesting()]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });
     httpClient = TestBed.inject(HttpClient);
     httpTestingController = TestBed.inject(HttpTestingController);

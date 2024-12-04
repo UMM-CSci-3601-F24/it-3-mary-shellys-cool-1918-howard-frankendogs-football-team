@@ -1,0 +1,157 @@
+mat-card {
+    width: 20rem;
+    height: 10.625rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
+    outline: 0.3125rem solid lightgrey;
+    // position: center;
+
+    &:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+        background-color: #f0f0f0;
+    }
+
+    &:active {
+        box-shadow: none;
+        background-color: #e0e0e0;
+    }
+
+    mat-card-header {
+        padding-top: 0.3125rem;
+        padding-bottom: 0;
+    }
+
+    mat-card-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding-top: 0.3125rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 15rem; /* Ensure the title does not exceed the card width */
+    }
+
+    mat-card-subtitle {
+        font-size: 0.9rem;
+        color: gray;
+    }
+
+    mat-card-content {
+        font-size: 0.9rem;
+    }
+
+    .grid-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .delete-button {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: none;
+        border-radius: 0.25rem;
+        padding: 0.3125rem 0.625rem;
+        cursor: pointer;
+        transition: background-color 0.1s ease-in-out;
+        position: absolute;
+        bottom: 0.625rem;
+        right: 0.625rem;
+        transform: scale(0);
+        transform-origin: center bottom;
+        animation: shrinkButton 0.3s forwards;
+    }
+
+    &:hover .delete-button {
+        animation: growButton 0.3s forwards;
+    }
+
+    .delete-button:hover {
+        background-color: #f5c6cb;
+    }
+
+    .delete-button:active {
+        background-color: #f44336;
+    }
+
+    @keyframes growButton {
+        from {
+            transform: scale(0);
+        }
+
+        to {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes shrinkButton {
+        from {
+            transform: scale(1);
+        }
+
+        to {
+            transform: scale(0);
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        background-color: white;
+        color: black;
+        outline: 0.3125rem solid lightgrey;
+
+        &:hover {
+            background-color: #f0f0f0;
+        }
+
+        &:active {
+            background-color: #e0e0e0;
+        }
+
+        .delete-button {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .delete-button:hover {
+            background-color: #f5c6cb;
+        }
+
+        .delete-button:active {
+            background-color: #f44336;
+        }
+    }
+
+    @media (prefers-color-scheme: dark) {
+        background-color: #333;
+        color: white;
+        outline: 0.3125rem solid grey;
+
+        &:hover {
+            background-color: #444;
+        }
+
+        &:active {
+            background-color: #555;
+        }
+
+        .delete-button {
+            background-color: #721c24;
+            color: #f8d7da;
+        }
+
+        .delete-button:hover {
+            background-color: #a94442;
+        }
+
+        .delete-button:active {
+            background-color: #d9534f;
+        }
+    }
+}
