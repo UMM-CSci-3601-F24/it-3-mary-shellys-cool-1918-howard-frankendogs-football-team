@@ -151,6 +151,7 @@ export class GridComponent {
   /**
    * Handles the input size change event.
    * Reinitializes the grid based on the new size.
+        MatInputModule, 
    */
   onSizeInput() {
     this.initializeGrid();
@@ -241,15 +242,11 @@ export class GridComponent {
     let col = 0;
     let row = 0;
     for (col; col <= this.gridWidth - 1; col++) {
-      this.moveFocus(col, 0);
       this.gridPackage.grid[0][col].edges.top = true;
-      this.moveFocus(col, this.gridHeight - 1);
       this.gridPackage.grid[this.gridHeight - 1][col].edges.bottom = true;
     }
     for (row; row <= this.gridHeight - 1; row++) {
-      this.moveFocus(0, row);
       this.gridPackage.grid[row][0].edges.left = true;
-      this.moveFocus(this.gridWidth - 1, row);
       this.gridPackage.grid[row][this.gridWidth - 1].edges.right = true;
     }
   }
