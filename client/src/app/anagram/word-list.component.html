@@ -14,6 +14,7 @@
             <mat-label>Input letters</mat-label>
             <input matInput data-test="wordContainsInput" placeholder="Filter by contents" [(ngModel)]="contains">
           </mat-form-field>
+
           <mat-form-field class="input-field">
             <mat-label>Word Group</mat-label>
             <input
@@ -114,7 +115,7 @@
                 <mat-panel-title class="anagram-list-word">
                   {{ word.word }}
                 </mat-panel-title>
-                <mat-panel-description>{{
+                <mat-panel-description class="anagram-list-word-group">{{
                   word.wordGroup
                 }}</mat-panel-description>
               </mat-expansion-panel-header>

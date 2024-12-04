@@ -1,16 +1,67 @@
-.example-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
-  align-items: flex-start;
-}
-
 .column {
   float: left;
   padding: 10px;
   width: 40%;
 }
 
-.example-radio-button {
+.highlight-button-group {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+.highlight-button {
   margin: 5px;
+}
+
+.save-button {
+  padding: 0.625rem 1.25rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+}
+
+.control-group {
+  margin-bottom: 1rem;
+}
+
+.control-group p {
+  margin: 0;
+  font-weight: bold;
+}
+
+.control-group input {
+  width: 90%;
+  margin-top: 5px;
+}
+
+.grid-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 1rem;
+}
+
+.grid-buttons button {
+  padding: 0.625rem 1.25rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
+  width: 90%;
+  margin-top: 1rem;
+}
+
+.grid-buttons button:hover {
+  background-color: #0056b3;
 }
