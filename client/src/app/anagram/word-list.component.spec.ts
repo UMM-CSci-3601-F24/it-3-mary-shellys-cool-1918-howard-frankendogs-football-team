@@ -91,7 +91,7 @@ describe('Word List', () => {
   });
 });
 
-describe('max function', () => {
+describe('support functions', () => {
   let wordList: WordListComponent;
   let fixture: ComponentFixture<WordListComponent>;
 
@@ -114,7 +114,51 @@ describe('max function', () => {
     expect(wordList.max(5,10)).toBe(10);
     expect(wordList.max(8,2)).toBe(8);
     expect(wordList.max(4,4)).toBe(4);
+  });
 
+  it('update params() should update params from undefined to new params', () => {
+    // these slice functions should eventually be removed,
+    // but this is an okay workaround for now
+    expect(wordList.contains.toString().slice(9)).toBe("undefined]");
+    expect(wordList.group.toString().slice(9)).toBe("undefined]");
+    wordList.updateParams("hehe", "haha");
+    expect(wordList.contains.toString().slice(9)).toBe("hehe]");
+    expect(wordList.group.toString().slice(9)).toBe("haha]");
+  });
+
+  it('updateParams() can clear params', () => {
+    // once again, these slice functions should eventually be removed,
+    // but this is an okay workaround for now
+    //tests updateParams when pass (null, null)
+    wordList.updateParams("contains", "group");
+    wordList.updateParams(null, null);
+    expect(wordList.contains.toString().slice(9)).toBe("null]");
+    expect(wordList.group.toString().slice(9)).toBe("null]");
+    //tests updateParams when pass no params
+    wordList.updateParams("contains", "group");
+    wordList.updateParams();
+    expect(wordList.contains.toString().slice(9)).toBe("null]");
+    expect(wordList.group.toString().slice(9)).toBe("null]");
+  });
+
+  it('updateParams() handles updating one params', () => {
+    // once again, these slice functions should eventually be removed,
+    // but this is an okay workaround for now
+    //tests passing in just a contains param
+    wordList.updateParams("contains", "group");
+    wordList.updateParams("contains2");
+    expect(wordList.contains.toString().slice(9)).toBe("contains2]");
+    expect(wordList.group.toString().slice(9)).toBe("null]");
+    //tests passing in just a contains param in different format
+    wordList.updateParams("contains", "group");
+    wordList.updateParams("contains2", null);
+    expect(wordList.contains.toString().slice(9)).toBe("contains2]");
+    expect(wordList.group.toString().slice(9)).toBe("null]");
+    //tests passing in just a wordGroup param
+    wordList.updateParams("contains", "group");
+    wordList.updateParams(null, "group1");
+    expect(wordList.contains.toString().slice(9)).toBe("null]");
+    expect(wordList.group.toString().slice(9)).toBe("group1]");
   });
 })
 

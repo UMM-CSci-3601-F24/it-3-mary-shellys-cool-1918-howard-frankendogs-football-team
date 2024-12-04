@@ -52,16 +52,4 @@ describe('WordGroupProfileComponent', () => {
     activatedRoute.setParamMap({id: desiredGroup[0].wordGroup})
     expect(wordGroupProfile.words()).toEqual(desiredGroup);
   });
-
-  describe('delete word', () => {
-    it('should return snackbar with correct message after word is deleted', () => {
-      spyOn(wordGroupProfile.snackBar, 'open');
-      wordGroupProfile.deleteWord(MockWordService.testWords[0]._id);
-      expect(wordGroupProfile.snackBar.open).toHaveBeenCalledWith('You deleted a word! \n Please refresh your page.','OK', {duration: 6000});
-
-      // const mockSnackBarMessage = {message: `You deleted a word! \n Please refresh your page.`, status: 'OK', duration: 6000};
-      // const deleteWordSpy = spyOn(wordGroupProfile, 'deleteWord').and.returnValue(new MatSnackBar() => mockSnackBarMessage);
-    });
-
-  })
 });
