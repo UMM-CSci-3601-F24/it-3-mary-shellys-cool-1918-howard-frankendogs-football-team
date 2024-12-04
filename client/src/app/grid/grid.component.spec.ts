@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { GridComponent } from './grid.component';
 import { GridService } from './grid.service';
@@ -10,18 +10,21 @@ import { GridPackage } from './gridPackage';
 import { of } from 'rxjs';
 import { GridCell } from '../grid-cell/grid-cell';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('GridComponent', () => {
   let component: GridComponent;
   let fixture: ComponentFixture<GridComponent>;
+  let snackBar: MatSnackBar;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [FormsModule, BrowserAnimationsModule, RouterTestingModule, HttpClientTestingModule, GridComponent],
+      imports: [FormsModule, BrowserAnimationsModule, RouterTestingModule, HttpClientTestingModule, GridComponent, MatSnackBarModule],
       providers: [
         { provide: GridService, useValue: new MockGridService() },
-        RoomService
+        RoomService,
+        MatSnackBar
       ],
     })
       .compileComponents();
@@ -31,6 +34,7 @@ describe('GridComponent', () => {
     TestBed.compileComponents().then(() => {
       fixture = TestBed.createComponent(GridComponent);
       component = fixture.componentInstance;
+      snackBar = TestBed.inject(MatSnackBar);
       fixture.detectChanges();
     });
   }));
@@ -227,47 +231,6 @@ describe('GridComponent', () => {
     expect(component.savedGrids).toEqual(mockGrids);
   }));
 
-  it('should save grid without existing ID', () => {
-    const saveGridWithRoomIdSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of('testId'));
-
-    component.gridPackage = {
-      grid: [
-        [new GridCell(), new GridCell()],
-        [new GridCell(), new GridCell()]
-      ],
-      _id: null,
-      roomID: null,
-      name: 'PlaceHolderNameLmaoWhat',
-      lastSaved: new Date()
-    };
-
-    component.saveGrid();
-
-    expect(saveGridWithRoomIdSpy).toHaveBeenCalledWith(null, {
-      roomID: null,
-      grid: component.gridPackage.grid,
-      name: 'PlaceHolderNameLmaoWhat',
-      lastSaved: jasmine.any(Date)
-    });
-  });
-
-  it('should save grid without existing ID', fakeAsync(() => {
-    const saveGridSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.returnValue(of(''));
-    const loadSavedGridsSpy = spyOn(component, 'loadSavedGrids');
-
-    component.gridPackage._id = '';
-    component.saveGrid();
-    tick();
-
-    expect(saveGridSpy).toHaveBeenCalledWith(component.gridPackage.roomID, {
-      roomID: component.gridPackage.roomID,
-      grid: component.gridPackage.grid,
-      name: 'PlaceHolderNameLmaoWhat',
-      lastSaved: jasmine.any(Date)
-    });
-    expect(loadSavedGridsSpy).toHaveBeenCalled();
-  }));
-
   it('should apply grid update correctly', () => {
     const mockGrid: GridCell[][] = [
       [new GridCell(), new GridCell()],
@@ -338,7 +301,6 @@ describe('GridComponent', () => {
     spyOn(component['webSocketService'], 'getMessage').and.returnValue(of(message));
     component.gridPackage._id = 'testId';
 
-    // This is a workaround to make the test work
     component['webSocketService'].getMessage().subscribe((msg: unknown) => {
       const receivedMessage = msg as { type: string, cell: GridCell, row: number, col: number, id: string };
       if (receivedMessage.type === 'GRID_CELL_UPDATE' && component.gridPackage._id === receivedMessage.id) {
@@ -350,6 +312,68 @@ describe('GridComponent', () => {
 
     expect(component.gridPackage.grid[1][1].value).toBe('X');
   }));
+
+  it('should save grid correctly', fakeAsync(() => {
+    const saveGridSpy = spyOn(component['gridService'], 'saveGridWithRoomId').and.callThrough();
+    const loadGridsSpy = spyOn(component, 'loadSavedGrids').and.callThrough();
+    const mockGridPackage: GridPackage = {
+      grid: [
+        [new GridCell(), new GridCell()],
+        [new GridCell(), new GridCell()]
+      ],
+      _id: 'testId',
+      roomID: 'testRoomId',
+      name: 'Test Grid',
+      lastSaved: new Date()
+    };
+
+    component.gridPackage = mockGridPackage;
+    component.saveGrid();
+    tick();
+
+    expect(saveGridSpy).toHaveBeenCalledWith('testRoomId', jasmine.objectContaining({
+      grid: mockGridPackage.grid,
+      _id: mockGridPackage._id,
+      name: mockGridPackage.name,
+      lastSaved: jasmine.any(Date)
+    }));
+    expect(loadGridsSpy).toHaveBeenCalled();
+    expect(component.gridPackage.lastSaved).toBeTruthy();
+    expect(component.gridPackage.lastSaved.getTime()).toBeCloseTo(new Date().getTime(), -2);
+    flush();
+  }));
+
+  it('should update cell color correctly', () => {
+    const cell = new GridCell();
+    cell.edges = { top: true, right: true, bottom: true, left: true };
+    component.gridPackage.grid = [[cell]];
+
+    component.updateCellColor(0, 0);
+
+    expect(component.gridPackage.grid[0][0].color).toBe('black');
+  });
+
+  it('should copy grid link to clipboard', fakeAsync(() => {
+    spyOn(navigator.clipboard, 'writeText').and.callFake(() => Promise.resolve());
+    const snackBarSpy = spyOn(snackBar, 'open');
+    component.gridPackage._id = 'testId';
+    component.gridPackage.roomID = 'testRoom'
+
+    component.copyGridLink();
+    tick();
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${window.location.origin}/testRoom/grid/testId`);
+    expect(snackBarSpy).toHaveBeenCalledWith('Grid link copied to clipboard!', 'Close', { duration: 3000 });
+  }));
+
+  it('should navigate to grids page on leaveGrid', () => {
+    const navigateSpy = spyOn(component['router'], 'navigate');
+    component.gridPackage.roomID = 'testRoomId';
+
+    component.leaveGrid();
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/testRoomId/grids']);
+  });
 });
 
 

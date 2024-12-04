@@ -11,14 +11,11 @@ import { map, Observable } from 'rxjs';
 export class GridService {
   constructor(private httpClient: HttpClient) { }
 
-  saveGrid(gridData: Partial<GridPackage>): Observable<string> {
-
-    console.log(`save grid was called with name: ${gridData.name}`);
-    return this.httpClient.post<{id: string}>(environment.apiUrl + 'grids', gridData).pipe(map(response => response.id));
+  saveGrid(gridData: Partial<GridPackage>): Observable<GridPackage> {
+    return this.httpClient.post<GridPackage>(`${environment.apiUrl}grids`, gridData);
   }
 
   saveGridWithRoomId(roomId: string, gridData: Partial<GridPackage>): Observable<string> {
-    console.log(`save grid was called with owner: ${gridData.name}`);
     return this.httpClient.post<{id: string}>(`${environment.apiUrl}grids`, gridData).pipe(map(response => response.id));
   }
 

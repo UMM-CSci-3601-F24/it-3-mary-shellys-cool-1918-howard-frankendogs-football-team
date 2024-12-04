@@ -17,9 +17,9 @@
         @if (createdRoomId) {
           Created Room ID: {{ createdRoomId }}
           <br>
-          <button mat-button (click)="copyLink()">Copy Link</button>
+          <button mat-button (click)="copyLink()" data-test="copy-link-button">Copy Link</button>
           <br>
-          <button mat-button routerLink="/{{this.createdRoomId}}/grids">Go to Room Grids</button>
+          <button mat-button routerLink="/{{this.createdRoomId}}/grids" data-test="go-to-room-grids-button">Go to Room Grids</button>
         }
       </mat-card-content>
     </mat-card>

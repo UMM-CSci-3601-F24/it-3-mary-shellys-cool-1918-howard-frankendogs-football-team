@@ -45,4 +45,15 @@ describe('App', () => {
       .should('be.hidden');
   });
 
+  it('should create a new room and navigate to it', () => {
+
+    // Create a new room
+    cy.get('[data-test="room-name-input"]').type('Test Room');
+    cy.get('[data-test="create-room-button"]').click();
+
+    // Verify the room was created and navigate to it
+    cy.get('[data-test="go-to-room-grids-button"]').click();
+    cy.url().should('include', '/grids');
+  });
+
 });
