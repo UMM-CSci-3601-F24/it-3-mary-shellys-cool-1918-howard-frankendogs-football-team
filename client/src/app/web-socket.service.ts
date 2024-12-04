@@ -26,7 +26,6 @@ export class WebSocketService {
   }
 
   sendMessage(message: unknown) {
-    console.log('Sending message to server:', message);
     this.socket$.next(message);
   }
 
@@ -35,7 +34,6 @@ export class WebSocketService {
   }
 
   handleMessage(message: unknown) {
-    console.log('Received message from server:', message);
     this.messageSubject.next(message);
   }
 }
