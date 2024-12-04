@@ -9,7 +9,7 @@ import { GridCell } from '../grid-cell/grid-cell';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GridService } from './grid.service';
 import { GridPackage } from './gridPackage';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { WebSocketService } from '../web-socket.service';
@@ -22,6 +22,7 @@ import {
   MatExpansionPanelHeader,
 } from '@angular/material/expansion';
 import { MatIcon } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-grid-component',
@@ -61,9 +62,9 @@ export class GridComponent {
     grid: [],
     _id: '',
     roomID: '',
-    name: 'PlaceHolderNameLmaoWhat',
-    lastSaved: new Date(),
-  };
+    name: '',
+    lastSaved: null
+  }
 
   savedGrids: GridPackage[];
 
@@ -81,9 +82,11 @@ export class GridComponent {
     public elRef: ElementRef,
     private gridService: GridService,
     private roomService: RoomService,
-    private webSocketService: WebSocketService
-  ) {
-    this.route.paramMap.subscribe((params) => {
+    private webSocketService: WebSocketService,
+    private router: Router,
+    private snackBar: MatSnackBar) {
+
+    this.route.paramMap.subscribe(params => {
       this.gridPackage.roomID = params.get('roomID');
       this.gridPackage._id = params.get('id');
     });
@@ -175,25 +178,15 @@ export class GridComponent {
         grid: this.gridPackage.grid,
         _id: this.gridPackage._id,
         name: this.gridPackage.name,
-        lastSaved: this.gridPackage.lastSaved,
+        lastSaved: new Date()
       };
       this.gridService
         .saveGridWithRoomId(this.gridPackage.roomID, gridData)
         .subscribe(() => {
+          this.gridPackage.lastSaved = new Date();
           this.loadSavedGrids();
-        });
-    } else {
-      const gridData: Partial<GridPackage> = {
-        roomID: this.gridPackage.roomID,
-        grid: this.gridPackage.grid,
-        name: this.gridPackage.name,
-        lastSaved: this.gridPackage.lastSaved,
-      };
-      this.gridService
-        .saveGridWithRoomId(this.gridPackage.roomID, gridData)
-        .subscribe(() => {
-          this.loadSavedGrids();
-        });
+          this.snackBar.open('Grid saved successfully!', 'Close', { duration: 3000 });
+      });
     }
   }
 
@@ -208,9 +201,10 @@ export class GridComponent {
   loadGrid(id: string) {
     this.gridService.getGridById(id).subscribe((activeGrid) => {
       console.log(activeGrid._id);
-
+      this.gridPackage.name = activeGrid.name;
       this.gridPackage._id = activeGrid._id;
       this.gridPackage.roomID = activeGrid.roomID;
+      this.gridPackage.lastSaved = activeGrid.lastSaved;
       this.applyGridUpdate(activeGrid.grid);
     });
   }
@@ -423,5 +417,16 @@ export class GridComponent {
     ) {
       cell.color = 'black';
     }
+  }
+
+  copyGridLink() {
+    const gridLink = `${window.location.origin}/${this.gridPackage.roomID}/grid/${this.gridPackage._id}`;
+    navigator.clipboard.writeText(gridLink).then(() => {
+      this.snackBar.open('Grid link copied to clipboard!', 'Close', { duration: 3000 });
+    });
+  }
+
+  leaveGrid() {
+    this.router.navigate([`/${this.gridPackage.roomID}/grids`]);
   }
 }
