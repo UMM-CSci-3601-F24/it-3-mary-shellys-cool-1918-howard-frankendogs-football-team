@@ -6,7 +6,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -37,7 +37,7 @@ export class HomeComponent {
         private http: HttpClient,
         private clipboard: Clipboard,
         public snackBar: MatSnackBar,
-        private router: Router
+        private router: Router,
     ) {
         this.roomForm = this.fb.group({
             name: ['']

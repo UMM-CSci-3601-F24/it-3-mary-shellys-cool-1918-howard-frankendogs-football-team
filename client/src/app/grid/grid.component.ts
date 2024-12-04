@@ -350,12 +350,9 @@ export class GridComponent {
       this.currentCol = col;
       this.currentRow = row;
 
-      console.log(col, row);
-
       const cellInput = document.querySelector(
         `app-grid-cell[col="${col}"][row="${row}"] input`
       );
-      console.log(cellInput);
 
       if (cellInput) {
         setTimeout(() => (cellInput as HTMLElement).focus());
@@ -371,7 +368,6 @@ export class GridComponent {
     this.currentDirectionIndex =
       (this.currentDirectionIndex + 1) % this.typingDirections.length;
     this.typeDirection = this.typingDirections[this.currentDirectionIndex];
-    console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
 
   /**
