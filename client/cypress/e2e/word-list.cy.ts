@@ -17,22 +17,21 @@ describe('Anagram Solver', () => {
   });
 
   it('Should show 5 words', () => {
-    page.getAnagramListItems().should('have.length.at.least', 5);
+    page. getAnagramListItemWords().should('have.length.at.least', 5);
   });
 
+
   it('should type something into the contains filter and check that elements returned are correct', () => {
-    cy.get('[data-test=wordContainsInput]').type('can',{ force: true });
-    page.getAnagramListItems().each( e => {
-      cy.wrap(e).find('.anagram-list-word').should('include.text', 'a');
-      cy.wrap(e).find('.anagram-list-word').should('include.text', 'n');
-      cy.wrap(e).find('.anagram-list-word').should('include.text', 'c');
+    cy.get('[data-test=wordContainsInput]').type('can', { force: true });
+    page. getAnagramListItemWords().each(e => {
+      cy.wrap(e).should('include.text', 'can');
     });
   });
 
   it('should type something into the wordGroup filter and check that elements returned are correct', () => {
-    cy.get('[data-test=wordGroupInput]').type('1000',{ force: true });
-    page.getAnagramListItems().each( e => {
-      cy.wrap(e).find('.anagram-list-wordGroup').contains('10000 Common Words', {matchCase: false});
+    cy.get('[data-test=wordGroupInput]').type('1000', { force: true });
+    page. getAnagramListItemWordGroups().each(e => {
+      cy.wrap(e).should('include.text', '1000');
     });
   });
 
@@ -52,8 +51,10 @@ describe('Anagram Solver', () => {
   it("should click button for word group and go to right url", () => {
     page.wordGroupProfileButton().first().click();
     cy.url().should(url => expect(url.includes('/anagram/wordGroup/10000%20Common%20Words')).to.be.true);
+    // This is objectively a bad url to work with,
+    // but I know that this is going to change when we add word groups to rooms
     cy.get('.word-group-title mat-card-title').should('contain.text', 'Group Name:');
-  });
+  })
 
   it('should open the expansion panel for a word and then delete it', () => {
     cy.get('[data-cy=expansion-panel-header]').first().click();

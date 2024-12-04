@@ -4,6 +4,7 @@ export class WordListPage {
   private readonly addWordButtonSelector = '[data-test=addWordButton]';
   private readonly wordGroupProfileSelector = '[data-test=wordGroupProfileButton]';
   private readonly anagramListItemsSelectorWords = '.anagram-nav-list .anagram-list-word'
+  private readonly anagramListItemsSelectorWordGroups = '.anagram-nav-list .anagram-list-word-group'
   private readonly anagramListItemsSelectorHistory = ".anagram-nav-list-history .anagram-list-item"
   private readonly snackBar = '.mat-mdc-simple-snack-bar';
 
@@ -23,8 +24,12 @@ export class WordListPage {
     return cy.get(this.wordGroupProfileSelector);
   }
 
-  getAnagramListItems() {
+  getAnagramListItemWords() {
     return cy.get(this.anagramListItemsSelectorWords)
+  }
+
+  getAnagramListItemWordGroups() {
+    return cy.get(this.anagramListItemsSelectorWordGroups)
   }
 
   getAnagramSearchHistory() {
