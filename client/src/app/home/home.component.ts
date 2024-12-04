@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-home-component',
@@ -23,13 +24,19 @@ import { MatIcon } from '@angular/material/icon';
         MatButtonModule,
         RouterLink,
         MatIcon,
+        MatSnackBarModule,
     ],
 })
 export class HomeComponent {
     roomForm: FormGroup;
     createdRoomId: string | null = null;
 
-    constructor(private fb: FormBuilder, private http: HttpClient, private clipboard: Clipboard) {
+    constructor(
+        private fb: FormBuilder,
+        private http: HttpClient,
+        private clipboard: Clipboard,
+        public snackBar: MatSnackBar
+    ) {
         this.roomForm = this.fb.group({
             name: ['']
         });
@@ -37,9 +44,15 @@ export class HomeComponent {
 
     createRoom() {
         const roomData = this.roomForm.value;
-        this.http.post<{ id: string }>('/api/rooms', roomData).subscribe(response => {
-            this.createdRoomId = response.id;
-        });
+
+
+        if (roomData.name !== '' && roomData.name !== null && roomData.name !== undefined) {
+            this.http.post<{ id: string }>('/api/rooms', roomData).subscribe(response => {
+                this.createdRoomId = response.id;
+            });
+        } else {
+            this.snackBar.open('Rooms need a non-empty name', 'Ok', { duration: 3000 });
+        }
     }
 
     copyLink() {

@@ -3,14 +3,14 @@
     <mat-card class="home-card">
       <mat-card-header>
         <mat-card-title>
-          Create Room, Room Name:
+          Create A Room
         </mat-card-title>
       </mat-card-header>
       <br>
       <mat-card-content style="text-align: center;">
         <form [formGroup]="roomForm" (ngSubmit)="createRoom()">
           <label for="name"></label>
-          <input mat-input id="name" formControlName="name"/>
+          <input mat-input id="name" formControlName="name" placeholder="Room Name"/>
           <br>
           <button mat-raised-button type="submit">Create Room</button>
         </form>
