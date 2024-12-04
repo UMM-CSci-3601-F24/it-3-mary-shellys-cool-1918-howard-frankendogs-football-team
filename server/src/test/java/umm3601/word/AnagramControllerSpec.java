@@ -666,7 +666,7 @@ class AnagramControllerSpec {
   void canGetWordsByWordGroup() throws IOException {
     // set up
     String targetWordGroup = "console";
-    when(ctx.pathParam("id")).thenReturn(targetWordGroup);
+    when(ctx.pathParam("wordGroup")).thenReturn(targetWordGroup);
     // call method
     anagramController.getWordsByWordGroup(ctx);
     // make sure everything is okay superficially
