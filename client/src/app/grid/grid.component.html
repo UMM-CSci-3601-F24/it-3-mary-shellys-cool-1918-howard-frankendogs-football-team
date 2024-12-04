@@ -2,30 +2,37 @@
 <div class="flex-row flex-wrap">
   <!-- Left Side: Control Dropdown Room Info -->
   <div class="column">
-    <!-- Room Information -->
-    <div>
-      <mat-card>
-        <h1 style="font-size: 2rem; margin: auto; margin-top: 2rem; text-align: center;">{{this.gridPackage.name}}</h1>
-        <p style="font-size: 1rem; margin: auto; margin-top: 1.2rem">Last Saved:</p>
-        <p style="font-size: 1rem; margin: auto;">{{this.gridPackage.lastSaved | date:'short'}}</p>
-        <div class="grid-buttons">
-          <button (click)="copyGridLink()">Copy Grid Link</button>
-          <button (click)="leaveGrid()">Leave Grid</button>
-        </div>
-      </mat-card>
-    </div>
-    <br />
+    @if (this.gridPackage.roomID !== null && this.gridPackage.roomID !== '') {
+      <!-- Room Information -->
+      <div>
+        <mat-card>
+          <h1 style="font-size: 2rem; margin: auto; margin-top: 2rem; text-align: center;">{{this.gridPackage.name}}</h1>
+          <p style="font-size: 1rem; margin: auto; margin-top: 1.2rem">Last Saved:</p>
+          <p style="font-size: 1rem; margin: auto;">{{this.gridPackage.lastSaved | date:'short'}}</p>
+          <div class="grid-buttons">
+            <button (click)="copyGridLink()">Copy Grid Link</button>
+            <button (click)="leaveGrid()">Leave Grid</button>
+          </div>
+        </mat-card>
+      </div>
+      <br/>
+    } @else {
+      <div>
+        <mat-card>
+          <h1 style="font-size: 2rem; margin: auto; margin-top: 2rem; text-align: center;">Playground Grid</h1>
+          <!-- <p style="font-size: 1rem; margin: auto; margin-top: 1.2rem">Last Saved:</p> -->
+          <p style="font-size: 1rem; margin: auto; margin-top: 1.2rem; margin-bottom: 1.2rem;">This Grid Cannot be saved</p>
+        </mat-card>
+      </div>
+      <br/>
+    }
     <!-- Control Instructions Drop down panel -->
     <div>
       <mat-card>
-        <!-- <mat-card-header>
-          <mat-card-title>Controls Key</mat-card-title>
-        </mat-card-header> -->
         <mat-expansion-panel hideToggle>
           <mat-expansion-panel-header class="pannel-text">
-
-            <mat-panel-description>
-            Controls Key<mat-icon> tips_and_updates </mat-icon>
+            <mat-panel-description >
+              Controls Key <mat-icon style="margin-left: auto"> tips_and_updates </mat-icon>
             </mat-panel-description>
           </mat-expansion-panel-header>
           <p> Typing/Letters types directly into the grid and move in the direction specified.
@@ -101,17 +108,9 @@
           <br />
           Highlight color: {{ currentColor }}
           <br />
-          <mat-button-toggle-group
-            appearance="legacy"
-            class="highlight-button-group"
-            [(ngModel)]="currentColor"
-          >
+          <mat-button-toggle-group appearance="legacy" class="highlight-button-group" [(ngModel)]="currentColor">
             @for (highlight of highlight; track highlight) {
-            <mat-button-toggle
-              class="highlight-button"
-              [value]="highlight"
-              >{{ highlight }}</mat-button-toggle
-            >
+            <mat-button-toggle class="highlight-button" [value]="highlight">{{ highlight }}</mat-button-toggle>
             }
           </mat-button-toggle-group>
         </div>
@@ -150,20 +149,11 @@
       @for (row of gridPackage.grid; track row; let rowIndex = $index) { @for
       (cell of row; track cell; let colIndex = $index) {
       <mat-grid-tile Rowspan="1" Colspan="1">
-        <app-grid-cell
-          tabindex="0"
-          [gridCell]="gridPackage.grid[rowIndex][colIndex]"
-          (keydown)="onKeydown($event, currentCol, currentRow)"
-          (click)="onClick($event, colIndex, rowIndex)"
-          [attr.row]="rowIndex"
-          [attr.col]="colIndex"
-          [row]="rowIndex"
-          [col]="colIndex"
-          [grid]="gridPackage.grid"
-          [currentColor]="currentColor"
-          [ngStyle]="{ height: cellSize + 'px', width: cellSize + 'px' }"
-          (gridChange)="onGridChange($event)"
-        ></app-grid-cell>
+        <app-grid-cell tabindex="0" [gridCell]="gridPackage.grid[rowIndex][colIndex]"
+          (keydown)="onKeydown($event, currentCol, currentRow)" (click)="onClick($event, colIndex, rowIndex)"
+          [attr.row]="rowIndex" [attr.col]="colIndex" [row]="rowIndex" [col]="colIndex" [grid]="gridPackage.grid"
+          [currentColor]="currentColor" [ngStyle]="{ height: cellSize + 'px', width: cellSize + 'px' }"
+          (gridChange)="onGridChange($event)"></app-grid-cell>
       </mat-grid-tile>
       } }
     </mat-grid-list>

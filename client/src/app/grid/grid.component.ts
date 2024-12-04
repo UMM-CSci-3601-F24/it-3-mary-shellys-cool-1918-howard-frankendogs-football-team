@@ -201,7 +201,6 @@ export class GridComponent {
 
   loadGrid(id: string) {
     this.gridService.getGridById(id).subscribe((activeGrid) => {
-      console.log(activeGrid._id);
       this.gridPackage.name = activeGrid.name;
       this.gridPackage._id = activeGrid._id;
       this.gridPackage.roomID = activeGrid.roomID;

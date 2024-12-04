@@ -30,9 +30,9 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'CSCI 3601 Iteration Template'`, () => {
+  it(`should have as Yippeee Tool Title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('CSCI 3601 Iteration Template');
+    expect(app.title).toContain('EEEE-Tool');
   });
 });

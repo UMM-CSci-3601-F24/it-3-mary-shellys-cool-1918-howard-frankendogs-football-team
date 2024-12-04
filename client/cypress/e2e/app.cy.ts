@@ -6,7 +6,7 @@ describe('App', () => {
   beforeEach(() => page.navigateTo());
 
   it('Should have the correct title', () => {
-    page.getAppTitle().should('contain', 'CSCI 3601 Iteration Template');
+    page.getAppTitle().should('contain', 'EEEEE-Tool');
   });
 
   it('The sidenav should open, navigate to "Grid","Home","anagram" and back to "Home"', () => {
@@ -56,4 +56,16 @@ describe('App', () => {
     cy.url().should('include', '/grids');
   });
 
+  it('should navigate to the playground grid', () => {
+    // Click on button
+    cy.get('[data-test="playground-grid-button"]').click();
+
+    // Verify that we navigate to the blank playground grid
+    cy.url().should('include', '/grid');
+  });
+
+  it('should navigate to the anagram page', () => {
+    cy.get('[data-test="anagram-button"]').click();
+    cy.url().should('include', '/anagram');
+  })
 });

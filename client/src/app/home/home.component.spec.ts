@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { HomeComponent } from './home.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -6,6 +6,10 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 describe('Home', () => {
 
@@ -13,15 +17,27 @@ describe('Home', () => {
   let fixture: ComponentFixture<HomeComponent>;
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
   let clipboardSpy: jasmine.SpyObj<Clipboard>;
+  let routerSpy: jasmine.SpyObj<Router>;
+  let snackBarSpy: jasmine.SpyObj<MatSnackBar>
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
     clipboardSpy = jasmine.createSpyObj('Clipboard', ['copy']);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
+
+    const fakeActivatedRoute = {
+      snapshot: { data: {} }
+
+    } as ActivatedRoute;
     TestBed.configureTestingModule({
-      imports: [MatCardModule, ReactiveFormsModule, HttpClientTestingModule, HomeComponent],
+      imports: [MatCardModule, ReactiveFormsModule, HttpClientTestingModule, HomeComponent, BrowserAnimationsModule],
       providers: [
         { provide: HttpClient, useValue: httpClientSpy },
-        { provide: Clipboard, useValue: clipboardSpy }
+        { provide: Clipboard, useValue: clipboardSpy },
+        { provide: ActivatedRoute, useValue: fakeActivatedRoute},
+        { provide: Router, useValue: routerSpy },
+        { provide: MatSnackBar, useValue: snackBarSpy }
       ]
     });
 
@@ -35,14 +51,28 @@ describe('Home', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create a room', () => {
+  it('should create a room', fakeAsync(() => {
     const mockResponse = { id: '12345' };
     httpClientSpy.post.and.returnValue(of(mockResponse));
+    component.roomForm.setValue({ name: 'Test Room' });
 
     component.createRoom();
-    expect(httpClientSpy.post).toHaveBeenCalledWith('/api/rooms', { name: '' });
+    tick();
+    expect(httpClientSpy.post).toHaveBeenCalledWith('/api/rooms', { name: 'Test Room' });
     expect(component.createdRoomId).toBe(mockResponse.id);
-  });
+    flush();
+  }));
+
+  // it('should disallow an empty room name', fakeAsync(() => {
+  //   component.roomForm.setValue({ name: '' });
+
+  //   component.createRoom();
+  //   tick();
+  //   expect(snackBarSpy.open).toHaveBeenCalled();
+  //   flush();
+  // }));
+  //
+  // Cannot figure this one out
 
   it('should copy the link', () => {
     component.createdRoomId = '12345';
@@ -50,6 +80,11 @@ describe('Home', () => {
 
     component.copyLink();
     expect(clipboardSpy.copy).toHaveBeenCalledWith(expectedLink);
+  });
+
+  it('should navigate to the about page', () => {
+    component.navigateToAbout();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/about']);
   });
 
 });
