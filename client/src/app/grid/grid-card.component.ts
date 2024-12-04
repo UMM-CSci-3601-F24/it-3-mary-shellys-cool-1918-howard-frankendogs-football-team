@@ -29,7 +29,6 @@ export class GridCardComponent {
     event.stopPropagation();
     if (confirm(`Are you sure you want to delete the grid: ${this.gridPackage.name}?`)) {
       this.gridService.deleteGrid(this.gridPackage._id).subscribe(response => {
-        console.log(`Deleted grid with ID: ${response.deletedId}`);
         this.gridDeleted.emit(response.deletedId);
       });
     }

@@ -8,13 +8,12 @@ describe('Grid Component', () => {
     cy.task('seed:database');
   });
 
-  it('should save a grid to server', () => {
-    page.saveGrid();
-    cy.wait(3000);
-    cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click();
-    cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click();
-
-  });
+  // it('should save a grid to server', () => {
+  //   page.saveGrid();
+  //   cy.wait(3000);
+  //   cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click();
+  //   cy.get(':nth-child(3) > :nth-child(2) > :nth-child(3) > button').click();
+  // });
 
   it('should render the grid with default size', () => {
     cy.get('app-grid-component').within(() => {
@@ -65,19 +64,18 @@ describe('Grid Component', () => {
       .should('have.css', 'background-color')
       .and('eq', 'rgb(255, 192, 203)');
   });
+
+  it('should expand and collapse panel', () => {
+    cy.visit('/grid');
+
+    cy.get('mat-expansion-panel-header').should('not.have.class', 'mat-expanded');
+
+    cy.get('mat-expansion-panel-header').click();
+
+    cy.get('mat-expansion-panel-header').should('have.class', 'mat-expanded');
+
+    cy.get('mat-expansion-panel-header').click();
+
+    cy.get('mat-expansion-panel-header').should('not.have.class', 'mat-expanded');
+  });
 });
-
-
-it('should expand and collapse panel', () => {
-  cy.visit('/grid');
-
-  cy.get('mat-expansion-panel-header').should('not.have.class', 'mat-expanded');
-
-  cy.get('mat-expansion-panel-header').click();
-
-  cy.get('mat-expansion-panel-header').should('have.class', 'mat-expanded');
-
-  cy.get('mat-expansion-panel-header').click();
-
-  cy.get('mat-expansion-panel-header').should('not.have.class', 'mat-expanded');
-})

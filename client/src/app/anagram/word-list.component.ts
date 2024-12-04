@@ -188,8 +188,9 @@ export class WordListComponent {
    */
   deleteWordGroup(group: string) {
     this.wordService.deleteWordGroup(group).subscribe(() => {
-      this.snackBar.open(`We deleted a word group!`, 'OK', {duration: 6000});
-    })
+      this.snackBar.open(`We deleted a word group!`, 'OK', { duration: 6000 });
+      this.forceUpdate.set(this.forceUpdate() + 1);
+    });
   }
 
   handlePageEvent($event: PageEvent, source: string) {
