@@ -666,7 +666,7 @@ class AnagramControllerSpec {
   void canGetWordsByWordGroup() throws IOException {
     // set up
     String targetWordGroup = "console";
-    when(ctx.pathParam("id")).thenReturn(targetWordGroup);
+    when(ctx.pathParam("wordGroup")).thenReturn(targetWordGroup);
     // call method
     anagramController.getWordsByWordGroup(ctx);
     // make sure everything is okay superficially
@@ -700,55 +700,20 @@ class AnagramControllerSpec {
     assertTrue(wordGroupCaptor.getValue().contains("slang"));
   }
 
-  // @Test
-  // // void addListWords() throws IOException {
-  // List<Map<String, String>> newWords = new ArrayList<>();
-  // Map<String, String> word1 = new HashMap<>();
-  // word1.put("word", "laptop");
-  // word1.put("wordGroup", "technology");
-  // Map<String, String> word2 = new HashMap<>();
-  // word2.put("word", "coffee");
-  // word2.put("wordGroup", "beverage");
-  // Map<String, String> word3 = new HashMap<>();
-  // word3.put("word", "book");
-  // word3.put("wordGroup", "literature");
-  // newWords.add(word1);
-  // newWords.add(word2);
-  // newWords.add(word3);
-  // String newWordsJson = javalinJackson.toJsonString(newWords, List.class);
-  // when(ctx.body()).thenReturn(newWordsJson);
-  // when(ctx.bodyValidator(any(Class.class)))
-  // .thenReturn(new BodyValidator<>(newWordsJson, List.class, () -> newWords));
-  // wordController.addListWords(ctx);
-  // verify(ctx).status(HttpStatus.CREATED);
-  // ArgumentCaptor<Map<String, Object>> mapsCaptor =
-  // ArgumentCaptor.forClass(Map.class);
-  // verify(ctx).json(mapsCaptor.capture());
-  // Map<String, Object> responseMap = mapsCaptor.getValue();
-  // List<String> insertedIds = (List<String>) responseMap.get("insertedIds");
-  // for (String id : insertedIds) {
-  // Document addedWord = db.getCollection("words").find(eq("_id", new
-  // ObjectId(id))).first();
-  // assertNotNull(addedWord);
-  // assertTrue(newWords.stream().anyMatch(word ->
-  // word.get("word").equals(addedWord.get("word"))
+  @Test
+  void deleteWordGroup() throws IOException {
+    String badWordGroup = "brainrot";
 
-  // @Test
-  // void deleteListWords() throws IOException {
-  //   String testWordGroup = "testGroup";
-  //   db.getCollection("words").insertMany(Arrays.asList(
-  //       new Document().append("word", "word1").append("wordGroup", testWordGroup),
-  //       new Document().append("word", "word2").append("wordGroup", testWordGroup),
-  //       new Document().append("word", "word3").append("wordGroup", "otherGroup") // This shouldn't be deleted
-  //   ));
-  //   assertEquals(2, db.getCollection("words")
-  //       .countDocuments(eq("wordGroup", testWordGroup)));
-  //   when(ctx.pathParam("wordGroup")).thenReturn(testWordGroup);
-  //   anagramController.deleteListWords(ctx);
-  //   verify(ctx).status(HttpStatus.OK);
-  //   assertEquals(0, db.getCollection("words")
-  //       .countDocuments(eq("wordGroup", testWordGroup)));
-  //   assertEquals(1, db.getCollection("words")
-  //       .countDocuments(eq("wordGroup", "otherGroup")));
-  // }
+    when(ctx.pathParam("wordGroup")).thenReturn(badWordGroup);
+
+    assertEquals(3, db.getCollection("words")
+        .countDocuments(eq("wordGroup", badWordGroup)));
+
+    anagramController.deleteWordGroup(ctx);
+
+    verify(ctx).status(HttpStatus.OK);
+
+    assertEquals(0, db.getCollection("words")
+    .countDocuments(eq("wordGroup", badWordGroup)));
+  }
 }
