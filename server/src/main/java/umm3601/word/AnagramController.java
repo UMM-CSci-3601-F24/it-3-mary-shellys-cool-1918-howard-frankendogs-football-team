@@ -33,8 +33,8 @@ public class AnagramController implements Controller {
 
   private static final String API_WORDS = "/api/anagram";
   private static final String API_WORD_BY_ID = "/api/anagram/{id}";
-  private static final String API_WORD_GROUPS = "/api/anagram/wordGroups";
-  private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/wordGroup/{id}";
+  private static final String API_WORD_GROUPS = "/api/anagram/{wordGroup}";
+  private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/wordGroup/{wordGroup}";
   // might need to be: "/api/anagram/wordGroups/{id}"
   private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history";
   static final String WORD_KEY = "word";
@@ -204,21 +204,37 @@ public class AnagramController implements Controller {
   }
 
   public void deleteWordGroup(Context ctx) {
-    String wordGroupString = ctx.pathParam(WORD_GROUP_KEY);
-    DeleteResult deletedWordGroup = wordCollection.deleteMany(eq("wordGroup", wordGroupString));
+    String wordGroupString = ctx.pathParam("wordGroup");
 
+  // For loop to delete all words in a word group
+
+  //   if (wordGroupString != "10000 Common Words") {
+  //   for (Word word : wordCollection.find(eq(WORD_GROUP_KEY, wordGroupString)).into(new ArrayList<>())) {
+  //     DeleteResult deletedWord = wordCollection.deleteOne(eq("_id", new ObjectId(word._id)));
+  //     if (deletedWord.getDeletedCount() < 1) {
+  //       ctx.status(HttpStatus.NOT_FOUND);
+  //       throw new NotFoundResponse(
+  //           "Was unable to delete Word "
+  //               + word.word
+  //               + "; Please try deleting a word group");
+  //     }
+  //   }
+  // }
+
+  // Delete all words in a word group using deleteMany
+
+  DeleteResult deletedWordGroup = wordCollection.deleteMany(eq("wordGroup", wordGroupString));
     System.out.println(wordGroupString);
-      if (deletedWordGroup.getDeletedCount() < 1) {
+    if (deletedWordGroup.getDeletedCount() < 1) {
         ctx.status(HttpStatus.NOT_FOUND);
         throw new NotFoundResponse(
-          "Was unable to delete Word Group "
-              + wordGroupString
-              + "; Please try deleting a word group");
-      }
+            "Was unable to delete Word Group "
+                + wordGroupString
+                + "; Please try deleting a word group");
+    }
 
-
-      ctx.status(HttpStatus.OK);
-  }
+    ctx.status(HttpStatus.OK);
+}
 
   @Override
   public void addRoutes(Javalin server) {
@@ -227,7 +243,7 @@ public class AnagramController implements Controller {
     server.get(API_WORD_GROUPS, this::getWordGroups);
     server.delete(API_WORD_BY_ID, this::deleteWord);
     server.post(API_WORDS, this::addNewWord);
-    server.delete(API_WORD_GROUPS, this::deleteWordGroup);
+    server.delete(API_WORDS_BY_WORDGROUP, this::deleteWordGroup);
     server.get(API_WORDS_BY_WORDGROUP, this::getWordsByWordGroup);
   }
 }
