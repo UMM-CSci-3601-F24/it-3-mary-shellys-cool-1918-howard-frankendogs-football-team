@@ -9,15 +9,15 @@
       <mat-card-content>
         <form [formGroup]="roomForm" (ngSubmit)="createRoom()">
           <label for="name">Room Name:</label>
-          <input mat-input id="name" formControlName="name" />
-          <button mat-raised-button type="submit">Create Room</button>
+          <input mat-input id="name" formControlName="name" data-test="room-name-input" />
+          <button mat-raised-button type="submit" data-test="create-room-button">Create Room</button>
         </form>
         @if (createdRoomId) {
           Created Room ID: {{ createdRoomId }}
           <br>
-          <button mat-button (click)="copyLink()">Copy Link</button>
+          <button mat-button (click)="copyLink()" data-test="copy-link-button">Copy Link</button>
           <br>
-          <button mat-button routerLink="/{{this.createdRoomId}}/grids">Go to Room Grids</button>
+          <button mat-button routerLink="/{{this.createdRoomId}}/grids" data-test="go-to-room-grids-button">Go to Room Grids</button>
         }
       </mat-card-content>
     </mat-card>
