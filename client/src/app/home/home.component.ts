@@ -41,7 +41,7 @@ export class HomeComponent {
             name: ['']
         });
     }
-
+z
     createRoom() {
         const roomData = this.roomForm.value;
 
