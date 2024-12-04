@@ -151,7 +151,7 @@ public class GridControllerSpec {
     assertEquals("The requested grid was not found", exception.getMessage());
   }
 
-   @Test
+  @Test
   public void canSaveGrid() throws IOException {
     Grid newGrid = new Grid();
 
@@ -171,10 +171,8 @@ public class GridControllerSpec {
 
     Grid capturedGrid = gridCaptor.getValue();
     assertNotNull(capturedGrid._id);
-    System.out.println(capturedGrid._id);
 
     Document addedGrid = db.getCollection("rooms")
-        .find(new Document("_id", new ObjectId(capturedGrid._id))).first();
+      .find(new Document("_id", new ObjectId(capturedGrid._id))).first();
   }
-
 }

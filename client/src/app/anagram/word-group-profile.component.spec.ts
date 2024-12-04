@@ -7,8 +7,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRouteStub } from 'src/testing/activated-route-stub';
 import { ActivatedRoute } from '@angular/router';
 import { Word } from './word';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-const COMMON_IMPORTS: unknown[] = [RouterTestingModule];
+const COMMON_IMPORTS: unknown[] = [RouterTestingModule, BrowserAnimationsModule];
 
 describe('WordGroupProfileComponent', () => {
   let wordGroupProfile: WordGroupProfileComponent;
@@ -42,7 +43,7 @@ describe('WordGroupProfileComponent', () => {
     expect(wordGroupProfile.words()).toBeTruthy();
   });
 
-  it("should navigate to specific word group profile", ()=> {
+  it("should navigate to specific wordfile:///home/and10393/Desktop/it-3-mary-shellys-cool-1918-howard-frankendogs-football-team/client/coverage/client/src/app/anagram/word-list.component.ts.html group profile", ()=> {
     const desiredGroup: Word[] = MockWordService.wordsInGroup;
     /*
     From lab 4, test "should navigate to a specific user profile":
@@ -51,5 +52,12 @@ describe('WordGroupProfileComponent', () => {
     */
     activatedRoute.setParamMap({id: desiredGroup[0].wordGroup})
     expect(wordGroupProfile.words()).toEqual(desiredGroup);
+  });
+
+  it('should not blow up when calling deleteWord()', () => {
+    // This is a smoke test, just testing that the world does not blow up
+    wordGroupProfile.deleteWord("Bad Word");
+    fixture.detectChanges();
+    fixture.isStable();
   });
 });

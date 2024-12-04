@@ -393,7 +393,6 @@ class AnagramControllerSpec {
     verify(ctx).status(HttpStatus.OK);
 
     assertEquals(3, searchContextCaptor.getValue().words.size());
-    System.out.println(searchContextCaptor.getValue().words);
 
     List<String> words = searchContextCaptor.getValue().words.stream()
         .map(word -> word.word).collect(Collectors.toList());

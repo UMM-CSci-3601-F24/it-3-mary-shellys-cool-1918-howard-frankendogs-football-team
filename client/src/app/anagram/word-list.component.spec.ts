@@ -53,8 +53,6 @@ describe('Word List', () => {
   it("deletes a word 'Keenan'", () => {
     wordList.deleteWord("Keenan_id");
     fixture.detectChanges();
-    // console.log("deletes a word 'Keenan'")
-    // console.log(wordList.filteredWords());
     expect(wordList.serverFilteredContext().words.length).toBe(4);
     expect(wordList.filteredWords().length).toBe(4);
     expect(
@@ -100,6 +98,14 @@ describe('Word List', () => {
         ).length
     ).toBe(1);
   });
+  // deleteWordGroup() smoke test for snack bar
+  it('should not blow up when calling deleteWord()', () => {
+    // This is a smoke test, just testing that the world does not blow up
+    expect(wordList.forceUpdate()).toEqual(0);
+    wordList.deleteWordGroup("BadWords");
+    fixture.detectChanges();
+    fixture.isStable();
+   });
 });
 
 describe('max function', () => {
@@ -125,7 +131,6 @@ describe('max function', () => {
     expect(wordList.max(5,10)).toBe(10);
     expect(wordList.max(8,2)).toBe(8);
     expect(wordList.max(4,4)).toBe(4);
-
   });
 })
 

@@ -207,7 +207,6 @@ public class AnagramController implements Controller {
     String wordGroupString = ctx.pathParam("wordGroup");
 
   DeleteResult deletedWordGroup = wordCollection.deleteMany(eq("wordGroup", wordGroupString));
-    System.out.println(wordGroupString);
     if (deletedWordGroup.getDeletedCount() < 1) {
         ctx.status(HttpStatus.NOT_FOUND);
         throw new NotFoundResponse(
@@ -215,7 +214,6 @@ public class AnagramController implements Controller {
                 + wordGroupString
                 + "; Please try deleting a word group");
     }
-
     ctx.status(HttpStatus.OK);
 }
 
