@@ -107,8 +107,6 @@ export class WordListComponent {
     // takes list of words returned by server
     // then sends them through the client side sortWords()
     const serverFilteredWords = this.serverFilteredContext().words;
-    console.log("trying to print filtered words");
-    console.log(serverFilteredWords);
     return this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
