@@ -1,83 +1,87 @@
 .icon {
-    font-size: 4rem;
-   height: auto;
-   width: auto;
+  font-size: 4rem;
+  height: auto;
+  width: auto;
 
 }
 
-.room-card, .grid-route-card, .anagram-route-card {
-    width: 20rem;
-    margin: 0;
-    padding: 1.25rem;
-    border: 0.0625rem solid #ccc;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
-    text-align: center;
-    justify-content: center;
-    display: flex;
+.room-card,
+.grid-route-card,
+.anagram-route-card {
+  width: 20rem;
+  margin: 0;
+  padding: 1.25rem;
+  border: 0.0625rem solid #ccc;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  text-align: center;
+  justify-content: center;
+  display: flex;
 }
 
-.room-card button, .grid-route-card button, .anagram-route-card button {
-
-    padding: 0.625rem 1.25rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    border: none;
-    border-radius: 0.25rem;
-    background-color: #007bff;
-    color: white;
-    transition: background-color 0.3s ease;
-    width: 100%;
+.room-card button,
+.grid-route-card button,
+.anagram-route-card button {
+  padding: 0.625rem 1.25rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
+  width: 100%;
 }
 
-.room-card button:hover, .grid-route-card button:hover, .anagram-route-card button:hover {
-    background-color: #0056b3;
+.room-card button:hover,
+.grid-route-card button:hover,
+.anagram-route-card button:hover {
+  background-color: #0056b3;
 }
 
 .flex-row {
-    margin-top: 10rem;
-    justify-content: center;
-    gap: 1rem;
+  justify-content: center;
+  gap: 1rem;
 }
 
 mat-card-header {
-    justify-content: center;
-    display: flex;
-    margin-bottom: 1rem;
+  justify-content: center;
+  display: flex;
+  margin-bottom: 1rem;
 }
 
 mat-card-content {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .room-form {
-    justify-content: center;
+  justify-content: center;
 }
 
 .room-card button {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 .about-button {
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 3rem;
-    height: 3rem;
-    font-size: 1.5rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
 }
 
 .about-button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
