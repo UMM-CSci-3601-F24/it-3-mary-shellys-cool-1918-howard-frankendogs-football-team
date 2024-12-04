@@ -17,38 +17,31 @@ describe('Anagram Solver', () => {
   });
 
   it('Should show 5 words', () => {
-    page.getAnagramListItems().should('have.length.at.least', 5);
+    page. getAnagramListItemWords().should('have.length.at.least', 5);
   });
 
-  /**
+
   it('should type something into the contains filter and check that elements returned are correct', () => {
-    cy.get('[data-test=wordContainsInput]').type('can',{ force: true });
-    page.getAnagramListItems().each( e => {
-      cy.wrap(e).find('.anagram-list-word').should('include.text', 'a');
-      cy.wrap(e).find('.anagram-list-word').should('include.text', 'n');
-      cy.wrap(e).find('.anagram-list-word').should('include.text', 'c');
+    cy.get('[data-test=wordContainsInput]').type('can', { force: true });
+    page. getAnagramListItemWords().each(e => {
+      cy.wrap(e).should('include.text', 'can');
     });
   });
 
   it('should type something into the wordGroup filter and check that elements returned are correct', () => {
-    cy.get('[data-test=wordGroupInput]').type('1000',{ force: true });
-    page.getAnagramListItems().each( e => {
-      cy.wrap(e).find('.anagram-list-wordGroup').contains('10000 Common Words', {matchCase: false});
+    cy.get('[data-test=wordGroupInput]').type('1000', { force: true });
+    page. getAnagramListItemWordGroups().each(e => {
+      cy.wrap(e).should('include.text', '1000');
     });
   });
 
-   I cannot get these to work with current code.
-    We should come back to it.
-     - Josie
-  **/
+  it('should make a search and show search in search history', () => {
+    cy.get('[data-test=wordGroupInput]').type('2005',{ force: true });
+    cy.get('[data-test=wordContainsInput]').type('year',{ force: true });
+    cy.get('.anagram-search-history-contains').first().should('include.text', 'year');
+    cy.get('.anagram-search-history-wordGroup').first().should('include.text', '2005');
+  });
 
-  // it('should make a search and show search in search history', () => {
-  //   cy.get('[data-test=wordGroupInput]').type('2005',{ force: true });
-  //   cy.get('[data-test=wordContainsInput]').type('year',{ force: true });
-  //   cy.get('.anagram-search-history-contains').first().should('include.text', 'year');
-  //   cy.get('.anagram-search-history-wordGroup').first().should('include.text', '2005');
-  // });
-  // this test is screwy
   it('should click add word group and go to right url', () => {
     page.addWordButton().click();
     cy.url().should(url => expect(url.endsWith('/anagram/new')).to.be.true);

@@ -2,6 +2,19 @@
 <div class="flex-row flex-wrap">
   <!-- Left Side: Control Dropdown Room Info -->
   <div class="column">
+    <!-- Room Information -->
+    <div>
+      <mat-card>
+        <h1 style="font-size: 2rem; margin: auto; margin-top: 2rem; text-align: center;">{{this.gridPackage.name}}</h1>
+        <p style="font-size: 1rem; margin: auto; margin-top: 1.2rem">Last Saved:</p>
+        <p style="font-size: 1rem; margin: auto;">{{this.gridPackage.lastSaved | date:'short'}}</p>
+        <div class="grid-buttons">
+          <button (click)="copyGridLink()">Copy Grid Link</button>
+          <button (click)="leaveGrid()">Leave Grid</button>
+        </div>
+      </mat-card>
+    </div>
+    <br />
     <!-- Control Instructions Drop down panel -->
     <div>
       <mat-card>
@@ -59,38 +72,6 @@
         </mat-expansion-panel>
       </mat-card>
     </div>
-    <!-- Room Information -->
-    <br />
-    @if (this.gridPackage.roomID !== null){
-    <div>
-      <button
-        class="save-button"
-        data-test="saveGridButton"
-        (click)="saveGrid()"
-      >
-        Save Grid
-      </button>
-      <div>
-        <h3>Saved Grids</h3>
-        @for (grid of this.savedGrids; track grid._id) {
-        <div>
-          <button
-            routerLink="/{{ gridPackage.roomID }}/grid/{{ grid._id }}"
-            (click)="loadGrid(grid._id)"
-          >
-            {{ grid._id }}
-          </button>
-        </div>
-        }
-      </div>
-    </div>
-    } @else {
-    <div>
-      <mat-card>
-        <mat-card-content>Rooms Coming Soon!</mat-card-content>
-      </mat-card>
-    </div>
-    }
   </div>
   <!-- Right Side: Control Inputs -->
   <div class="flex-row flex-wrap column">
@@ -101,33 +82,18 @@
       <mat-card-content>
         <div class="flex-row flex-wrap">
           <!-- height and width -->
-          <div>
-            <p style="margin: 0">Height</p>
-            <input
-              matInput
-              [(ngModel)]="gridHeight"
-              type="number"
-              (input)="onSizeInput()"
-              placeholder="{{ gridHeight }}"
-            />
-            <p style="margin: 0">Width</p>
-            <input
-              matInput
-              [(ngModel)]="gridWidth"
-              type="number"
-              (input)="onSizeInput()"
-              placeholder="{{ gridWidth }}"
-            />
+          <div class="control-group">
+            <p>Height</p>
+            <input matInput [(ngModel)]="gridHeight" type="number" (input)="onSizeInput()"
+              placeholder="{{ gridHeight }}" />
+            <p>Width</p>
+            <input matInput [(ngModel)]="gridWidth" type="number" (input)="onSizeInput()"
+              placeholder="{{ gridWidth }}" />
           </div>
           <!-- Cell Size -->
-          <div style="margin-left: 10px;">
-            Cell Size:<br />
-            <input
-              matInput
-              [(ngModel)]="cellSize"
-              type="number"
-              placeholder="{{ cellSize }}"
-            />
+          <div class="control-group">
+            <p>Cell Size</p>
+            <input matInput [(ngModel)]="cellSize" type="number" placeholder="{{ cellSize }}" />
           </div>
         </div>
         <!-- Highlight Colors -->
@@ -150,31 +116,36 @@
           </mat-button-toggle-group>
         </div>
         <!-- Typing Direction -->
-        <div>
+        <div class="control-group">
           <button mat-button (click)="cycleTypingDirection()">
             Cycle Typing Direction
           </button>
           <p>Current Typing Direction is {{ typeDirection }}</p>
         </div>
-        <div>
         <!-- Delete Direction Toggle -->
-        <button mat-button (click)="deleteDirectionToggle()">
-          Delete Direction
-        </button>
-        <p>Delete Direction Linked To Type Direction: {{ deleteDirectionBool }}</p>
-      </div>
+        <div class="control-group">
+          <button mat-button (click)="deleteDirectionToggle()">
+            Delete Direction
+          </button>
+          <p>Delete Direction Linked To Type Direction: {{ deleteDirectionBool }}</p>
+        </div>
+        @if (this.gridPackage.roomID !== null){
+        <div class="control-group">
+          <button class="save-button" data-test="saveGridButton" (click)="saveGrid()">
+            Save Grid
+          </button>
+        </div>
+        }
       </mat-card-content>
     </mat-card>
   </div>
 </div>
 <!-- Grid -->
 <div class="flex-row">
-  <div
-    [ngStyle]="{
+  <div [ngStyle]="{
       height: gridHeight * cellSize + 'px',
       width: gridWidth * cellSize + 'px'
-    }"
-  >
+    }">
     <mat-grid-list cols="{{ gridWidth }}" gridHeight="1:1" gutterSize="0">
       @for (row of gridPackage.grid; track row; let rowIndex = $index) { @for
       (cell of row; track cell; let colIndex = $index) {
@@ -198,6 +169,3 @@
     </mat-grid-list>
   </div>
 </div>
-
-
-

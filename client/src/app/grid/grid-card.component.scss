@@ -4,12 +4,14 @@ mat-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin: 1rem;
+    margin: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     padding: 1rem;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
     outline: 0.3125rem solid lightgrey;
-    position: relative;
+    // position: center;
 
     &:hover {
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
@@ -30,6 +32,10 @@ mat-card {
         font-size: 1.2rem;
         font-weight: bold;
         padding-top: 0.3125rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 15rem; /* Ensure the title does not exceed the card width */
     }
 
     mat-card-subtitle {
