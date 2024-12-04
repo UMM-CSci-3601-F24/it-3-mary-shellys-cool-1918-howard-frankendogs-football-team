@@ -93,6 +93,7 @@ public class AnagramController implements Controller {
 
   public void getWordsByWordGroup(Context ctx) {
     String wordGroup = ctx.pathParam("id");
+    System.out.println(wordGroup);
     Bson sortOrder = Sorts.ascending("word");
     ArrayList<Word> matchingWords = wordCollection
       .find(regex(WORD_GROUP_KEY, wordGroup))
@@ -202,41 +203,31 @@ public class AnagramController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
-  // public void deleteListWords(Context ctx) {
-  // // ctx passes wordGroup as the name of the group not the ids of the elements
-  // in
-  // // group
-  // String deleteWordGroup = ctx.pathParam("wordGroup");
-  // DeleteResult deleteResult = wordCollection.deleteMany(eq("wordGroup",
-  // deleteWordGroup));
+  public void deleteWordGroup(Context ctx) {
+    String wordGroupString = ctx.pathParam(WORD_GROUP_KEY);
+    DeleteResult deletedWordGroup = wordCollection.deleteMany(eq("wordGroup", wordGroupString));
 
-  // if (deleteResult.getDeletedCount() == 0) {
-  // ctx.status(HttpStatus.NOT_FOUND);
-  // throw new NotFoundResponse(
-  // "Was unable to delete word group "
-  // + deleteWordGroup
-  // + "; perhaps illegal word group or no items found in the system?");
-  // }
-  // ctx.status(HttpStatus.OK);
-  // }
+    System.out.println(wordGroupString);
+      if (deletedWordGroup.getDeletedCount() < 1) {
+        ctx.status(HttpStatus.NOT_FOUND);
+        throw new NotFoundResponse(
+          "Was unable to delete Word Group "
+              + wordGroupString
+              + "; Please try deleting a word group");
+      }
+
+
+      ctx.status(HttpStatus.OK);
+  }
 
   @Override
   public void addRoutes(Javalin server) {
-
     server.get(API_WORDS, this::getWords);
-
     // server.get(API_WORDS_SEARCH_HISTORY, this::getSearches);
-
     server.get(API_WORD_GROUPS, this::getWordGroups);
-
     server.delete(API_WORD_BY_ID, this::deleteWord);
-
     server.post(API_WORDS, this::addNewWord);
-
-    // server.post(API_WORDS, this::addListWords);
-
-    // server.delete(API_WORDS_BY_WORDGROUP, this::deleteListWords);
-
+    server.delete(API_WORD_GROUPS, this::deleteWordGroup);
     server.get(API_WORDS_BY_WORDGROUP, this::getWordsByWordGroup);
   }
 }
