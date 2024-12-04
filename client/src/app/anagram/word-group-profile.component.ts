@@ -34,7 +34,7 @@ export class WordGroupProfileComponent {
   pageNumber = signal<number>(0);
 
   constructor(
-    private snackBar: MatSnackBar,
+    public snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private wordService: WordService
   ) {}

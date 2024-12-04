@@ -108,6 +108,8 @@ export class WordListComponent {
     );
   
   filteredWords = computed(() => {
+    // takes list of words returned by server
+    // then sends them through the client side sortWords()
     const serverFilteredWords = this.serverFilteredContext().words;
     return this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
@@ -132,7 +134,22 @@ export class WordListComponent {
         this.searchesPageNumber()*this.searchesPageSize(),
         Math.min((this.searchesPageNumber() + 1)*this.searchesPageSize(), this.getNumSearches()));
   })
+  /**
+   * For use by search history links
+   * updates active params and by proxy gets new words
+   * @param contains
+   * @param wordGroup
+   */
+  updateParams(contains?: string, wordGroup?: string ) {
+    if(contains){
+      this.contains.set(contains);
+    } else this.contains.set(null);
+    if(wordGroup) {
+      this.group.set(wordGroup);
+    } else this.group.set(null);
+  }
 
+  // returns all word group names as a string[]
   loadWordGroups() {
     this.roomService.getWordGroups().subscribe(wordGroups => {
       this.wordGroups = wordGroups

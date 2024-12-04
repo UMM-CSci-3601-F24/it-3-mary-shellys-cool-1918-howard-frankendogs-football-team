@@ -79,9 +79,9 @@
           routerLink="/anagram/new"
           data-test="addWordButton"
         >
-          <mat-icon class="md-24" aria-label="Add Word List">add</mat-icon>
+          <mat-icon class="md-24" aria-label="Add Word Group">add</mat-icon>
         </button>
-        <button
+        <!-- <button
           mat-fab
           class="delete-wordGroup-fab"
           matTooltip="Delete Word Group"
@@ -90,8 +90,8 @@
           routerLink="/anagram"
           data-test="deleteWordGroupButton"
         >
-          <mat-icon class="md-24" aria-label="Add Word List">delete</mat-icon>
-        </button>
+          <mat-icon class="md-24" aria-label="Delete Word Group">delete</mat-icon>
+        </button> -->
       </mat-card-content>
     </mat-card>
   </div>
@@ -195,6 +195,9 @@
     @if(serverFilteredContext()){
     <div class="flex-1">
       <mat-card>
+        <mat-card-header>
+          <mat-card-title>Search History</mat-card-title>
+        </mat-card-header>
         <mat-card-content>
           <mat-list class="anagram-nav-list-history">
             @if(searchHistory().length === 0){
@@ -202,15 +205,17 @@
             } @for(search of searchHistory().slice(max(searchHistory().length -
             40, 0),searchHistory().length).reverse(); track search._id) {
             <div class="anagram-list-item">
-              @if(search.contains !== null){
-              <span matListItemLine class="anagram-search-history-contains"
-                >Contains: "{{ search.contains }}"</span
-              >
-              } @if(search.wordGroup !== null){
-              <span matListItemLine class="anagram-search-history-wordGroup"
-                >From word group: "{{ search.wordGroup }}"</span
-              >
-              }
+              <button (click)="updateParams(search.contains, search.wordGroup)" class="search-history-button">
+                @if(search.contains !== null){
+                  <span matListItemLine class="anagram-search-history-contains"
+                    >Contains: "{{ search.contains }}"</span
+                  >
+                  } @if(search.wordGroup !== null){
+                  <span matListItemLine class="anagram-search-history-wordGroup"
+                    >From word group: "{{ search.wordGroup }}"</span
+                  >
+                  }
+                </button>
               <br />
             </div>
             }
