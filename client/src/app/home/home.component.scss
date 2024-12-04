@@ -57,3 +57,26 @@ mat-card-content {
 .room-card button {
     margin-top: 2rem;
 }
+
+.about-button {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.about-button:hover {
+    background-color: #0056b3;
+}

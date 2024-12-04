@@ -1,0 +1,12 @@
+
+<div class="about-container">
+    <mat-card *ngFor="let developer of developers" class="developer-card">
+        <img mat-card-image [src]="developer.image" alt="{{ developer.name }}" class="developer-image">
+        <mat-card-header style="display: flex; justify-content: center;">
+            <mat-card-title>{{ developer.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p>{{ developer.bio }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>

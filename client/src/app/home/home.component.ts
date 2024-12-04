@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-home-component',
@@ -35,13 +36,14 @@ export class HomeComponent {
         private fb: FormBuilder,
         private http: HttpClient,
         private clipboard: Clipboard,
-        public snackBar: MatSnackBar
+        public snackBar: MatSnackBar,
+        private router: Router
     ) {
         this.roomForm = this.fb.group({
             name: ['']
         });
     }
-z
+
     createRoom() {
         const roomData = this.roomForm.value;
 
@@ -59,5 +61,9 @@ z
             const link = `${window.location.origin}/${this.createdRoomId}/grids`;
             this.clipboard.copy(link);
         }
+    }
+
+    navigateToAbout() {
+        this.router.navigate(['/about']);
     }
 }

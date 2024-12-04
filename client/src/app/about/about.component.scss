@@ -1,0 +1,19 @@
+
+.about-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.developer-card {
+    width: 20rem;
+    text-align: center;
+}
+
+.developer-image {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+}
