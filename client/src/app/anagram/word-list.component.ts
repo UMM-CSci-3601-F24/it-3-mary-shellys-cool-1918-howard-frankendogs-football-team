@@ -52,7 +52,7 @@ export class WordListComponent {
   // client side sorting
   sortType = signal<string | undefined>(undefined);
   sortOrder = signal<boolean | undefined>(false);
-  sortByWordOrGroup = signal<string | undefined>(undefined);
+  sortByWordOrGroup = signal<string | undefined>('word');
   //server side filtering
   contains = signal<string|undefined>('');
   group = signal<string|undefined>(undefined);
