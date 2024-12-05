@@ -23,7 +23,7 @@ export class AboutComponent {
     {
       name: 'Josie Barber',
       image: '../../assets/images/Josie.jpg',
-      bio: 'Worked on both front and back end development. Implemented websocketting, room codes, typing across grids, and many base functionalities for grids.'
+      bio: 'Worked on both front and back end development. Implemented websocketting, room codes, typing across grids, and many of the base functionalities for grids.'
     },
     {
       name: 'Owen Beyer',
@@ -45,7 +45,7 @@ export class AboutComponent {
     {
       name: 'Keenan McCall',
       image: '../../assets/images/Keenan.jpg',
-      bio: 'I worked mostly on the anagram page with most of my focus being organizing the filtering well as the sorting and such. We also worked on importing a starting list of words into the website that could be used or deleted in the future.'
+      bio: 'Worked mostly on the anagram page with most of my focus being organizing the filtering well as the sorting and such. Also worked on importing a starting list of words into the website that could be used or deleted in the future.'
     },
     {
       name: 'MacKenzie Amoako',
