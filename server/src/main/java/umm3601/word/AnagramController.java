@@ -38,6 +38,7 @@ public class AnagramController implements Controller {
   // might need to be: "/api/anagram/wordGroups/{id}"
   private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history";
   static final String WORD_KEY = "word";
+  static final String LENGTH_KEY = "length";
   static final String WORD_GROUP_KEY = "wordGroup";
   static final String SORT_ORDER_KEY = "sortOrder";
   static final String FILTER_TYPE_KEY = "filterType";
@@ -123,21 +124,21 @@ public class AnagramController implements Controller {
     // if searching for contains will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
       if ("exact".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
-        //if filter type is exact it runs following code
-          String exactWord = ctx.queryParam(WORD_KEY).replace('_', '.');
-          //Because . are wildcards, replaces underscores with periods
-          Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); //makes a pattern
-          filters.add(regex(WORD_KEY, pattern)); //adds a regex with
-          newSearch.setContains(ctx.queryParam(WORD_KEY));
-        } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
-            for (char c : searchedWord.toCharArray()) {
-              charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
-          }
-          for (Map.Entry<Character, Integer> entry : charCountMap.entrySet()) {
-            char c = entry.getKey();
-            int count = entry.getValue();
-            String regexPattern = "(?i)(.*" + Pattern.quote(String.valueOf(c)) + ".*){" + count + "}";
-            filters.add(regex("word", Pattern.compile(regexPattern)));
+        // if filter type is exact it runs following code
+        String exactWord = ctx.queryParam(WORD_KEY).replace('_', '.');
+        // Because . are wildcards, replaces underscores with periods
+        Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); // makes a pattern
+        filters.add(regex(WORD_KEY, pattern)); // adds a regex with
+        newSearch.setContains(ctx.queryParam(WORD_KEY));
+      } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
+        for (char c : searchedWord.toCharArray()) {
+          charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
+        }
+        for (Map.Entry<Character, Integer> entry : charCountMap.entrySet()) {
+          char c = entry.getKey();
+          int count = entry.getValue();
+          String regexPattern = "(?i)(.*" + Pattern.quote(String.valueOf(c)) + ".*){" + count + "}";
+          filters.add(regex("word", Pattern.compile(regexPattern)));
         }
       }
     }
@@ -147,12 +148,22 @@ public class AnagramController implements Controller {
       filters.add(regex(WORD_GROUP_KEY, pattern));
       newSearch.setWordGroup(ctx.queryParam(WORD_GROUP_KEY));
     }
+
+    if (ctx.queryParamMap().containsKey(LENGTH_KEY)) {
+      int targetLength = ctx.queryParamAsClass(LENGTH_KEY, Integer.class)
+      .check(it -> it > 0, "Word length must be greater than zero; you provided " + ctx.queryParam(LENGTH_KEY)).get();
+      Document query = new Document("$where", "this." + WORD_KEY + ".length == " + targetLength);
+      // Document query = new Document(WORD_KEY, new Document("$strLenCP", targetLength));
+      filters.add(query);
+    }
+
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
     // log search into database
     if ((ctx.queryParam(WORD_KEY) != null && ctx.queryParam(WORD_KEY) != "")
         || (ctx.queryParam(WORD_GROUP_KEY) != null && ctx.queryParam(WORD_GROUP_KEY) != "")) {
       searchCollection.insertOne(newSearch);
     }
+
     // return filter to be applied to db in getWords()
     return combinedFilter;
   }

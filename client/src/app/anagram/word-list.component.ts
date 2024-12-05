@@ -55,6 +55,7 @@ export class WordListComponent {
   //server side filtering
   contains = signal<string|undefined>('');
   group = signal<string|undefined>(undefined);
+  length = signal<number|undefined>(undefined);
   forceUpdate = signal<number>(0);
   filterType = signal<string|undefined>("exact");
   //pagination values
@@ -77,15 +78,17 @@ export class WordListComponent {
   private group$ = toObservable(this.group);
   private filterType$ = toObservable(this.filterType);
   private forceUpdate$ = toObservable(this.forceUpdate);
+  private length$ = toObservable(this.length);
 
   serverFilteredContext =
     toSignal(
-      combineLatest([this.contains$, this.group$, this.filterType$, this.forceUpdate$]).pipe(
+      combineLatest([this.contains$, this.group$, this.filterType$, this.forceUpdate$, this.length$]).pipe(
         switchMap(([word, wordGroup, filterType]) =>
           this.wordService.getWords({
             word,
             wordGroup,
             filterType,
+            length,
           })
         ),
         catchError((err) => {
