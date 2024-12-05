@@ -88,7 +88,7 @@ export class GridComponent {
 
     this.route.paramMap.subscribe(params => {
       this.gridPackage.roomID = params.get('roomID');
-      this.gridPackage._id = params.get('id')
+      this.gridPackage._id = params.get('id');
     });
 
     if (this.gridPackage._id !== null && this.gridPackage._id !== '') {
@@ -108,7 +108,10 @@ export class GridComponent {
         col?: number;
       }; // all of these are optional to allow heartbeat messages to pass through
 
-      if (msg.type === 'GRID_CELL_UPDATE' && this.gridPackage._id === msg.gridID) {
+      if (
+        msg.type === 'GRID_CELL_UPDATE' &&
+        this.gridPackage._id === msg.gridID
+      ) {
         // this.gridPackage.grid[msg.row][msg.col] = msg.cell;
 
         this.gridPackage.grid[msg.row][msg.col].color = msg.cell.color;
@@ -116,19 +119,23 @@ export class GridComponent {
         this.gridPackage.grid[msg.row][msg.col].value = msg.cell.value;
 
         if (this.gridPackage.grid[msg.row + 1][msg.col]) {
-          this.gridPackage.grid[msg.row + 1][msg.col].edges.top = msg.cell.edges.bottom;
+          this.gridPackage.grid[msg.row + 1][msg.col].edges.top =
+            msg.cell.edges.bottom;
           this.updateCellColor(msg.row + 1, msg.col);
         }
         if (this.gridPackage.grid[msg.row - 1][msg.col]) {
-          this.gridPackage.grid[msg.row - 1][msg.col].edges.bottom = msg.cell.edges.top;
+          this.gridPackage.grid[msg.row - 1][msg.col].edges.bottom =
+            msg.cell.edges.top;
           this.updateCellColor(msg.row - 1, msg.col);
         }
         if (this.gridPackage.grid[msg.row][msg.col + 1]) {
-          this.gridPackage.grid[msg.row][msg.col + 1].edges.left = msg.cell.edges.right;
+          this.gridPackage.grid[msg.row][msg.col + 1].edges.left =
+            msg.cell.edges.right;
           this.updateCellColor(msg.row, msg.col + 1);
         }
         if (this.gridPackage.grid[msg.row][msg.col - 1]) {
-          this.gridPackage.grid[msg.row][msg.col - 1].edges.right = msg.cell.edges.left;
+          this.gridPackage.grid[msg.row][msg.col - 1].edges.right =
+            msg.cell.edges.left;
           this.updateCellColor(msg.row, msg.col - 1);
         }
       }
@@ -144,10 +151,9 @@ export class GridComponent {
   /**
    * Handles the input size change event.
    * Reinitializes the grid based on the new size.
+        MatInputModule, 
    */
   onSizeInput() {
-    console.log(this.gridWidth);
-    console.log(this.gridHeight);
     this.initializeGrid();
   }
 
@@ -163,6 +169,7 @@ export class GridComponent {
         this.gridPackage.grid[row].push(new GridCell());
       }
     }
+    this.gridSideBolder();
   }
 
   saveGrid() {
@@ -194,7 +201,6 @@ export class GridComponent {
 
   loadGrid(id: string) {
     this.gridService.getGridById(id).subscribe((activeGrid) => {
-      console.log(activeGrid._id);
       this.gridPackage.name = activeGrid.name;
       this.gridPackage._id = activeGrid._id;
       this.gridPackage.roomID = activeGrid.roomID;
@@ -203,7 +209,7 @@ export class GridComponent {
     });
   }
 
-  onGridChange(event: { row: number, col: number, cell: GridCell }) {
+  onGridChange(event: { row: number; col: number; cell: GridCell }) {
     const message = {
       type: 'GRID_CELL_UPDATE',
       cell: event.cell,
@@ -227,6 +233,24 @@ export class GridComponent {
   }
 
   /**
+   * bolds the outside boarder of the whole grid,
+   * for loop goes from left to right of the grid, when row = 0 and then row = gridHight
+   * for loop goes from top to bottom of the grid, when col = 0 and then col = gridWidth
+   */
+  gridSideBolder() {
+    let col = 0;
+    let row = 0;
+    for (col; col <= this.gridWidth - 1; col++) {
+      this.gridPackage.grid[0][col].edges.top = true;
+      this.gridPackage.grid[this.gridHeight - 1][col].edges.bottom = true;
+    }
+    for (row; row <= this.gridHeight - 1; row++) {
+      this.gridPackage.grid[row][0].edges.left = true;
+      this.gridPackage.grid[row][this.gridWidth - 1].edges.right = true;
+    }
+  }
+
+  /**
    * Handles the keydown event on a grid cell.
    * Moves the focus or modifies the cell value based on the key pressed.
    *
@@ -239,8 +263,6 @@ export class GridComponent {
     const inputElement = this.elRef.nativeElement.querySelector(
       `app-grid-cell[col="${col}"][row="${row}"] input`
     );
-
-    console.log('keydown', event.key, col, row);
 
     if (this.focusTimeout) {
       clearTimeout(this.focusTimeout);
@@ -295,7 +317,6 @@ export class GridComponent {
             break;
           default:
             if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
-
               this.renderer.setProperty(inputElement, 'value', event.key);
               inputElement.dispatchEvent(new Event('input'));
               cell.value = event.key;
@@ -355,12 +376,9 @@ export class GridComponent {
       this.currentCol = col;
       this.currentRow = row;
 
-      console.log(col, row);
-
       const cellInput = document.querySelector(
         `app-grid-cell[col="${col}"][row="${row}"] input`
       );
-      console.log(cellInput);
 
       if (cellInput) {
         setTimeout(() => (cellInput as HTMLElement).focus());
@@ -376,7 +394,6 @@ export class GridComponent {
     this.currentDirectionIndex =
       (this.currentDirectionIndex + 1) % this.typingDirections.length;
     this.typeDirection = this.typingDirections[this.currentDirectionIndex];
-    console.log(`Typing direction changed to: ${this.typeDirection}`);
   }
 
   /**
@@ -388,7 +405,12 @@ export class GridComponent {
 
   updateCellColor(row: number, col: number) {
     const cell = this.gridPackage.grid[row][col];
-    if (cell.edges.top && cell.edges.right && cell.edges.bottom && cell.edges.left) {
+    if (
+      cell.edges.top &&
+      cell.edges.right &&
+      cell.edges.bottom &&
+      cell.edges.left
+    ) {
       cell.color = 'black';
     }
   }

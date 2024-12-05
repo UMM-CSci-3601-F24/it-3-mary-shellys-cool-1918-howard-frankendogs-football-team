@@ -83,8 +83,6 @@ export class MockWordService extends WordService {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getWords(_filters: {word?: string; wordGroup?: string}): Observable<SearchContext> {
-    console.log("trying to print test words");
-    console.log(this.testWords);
     const searchContext: SearchContext = { words: this.testWords, searches: MockWordService.testSearches };
     return of(searchContext);
   }
@@ -94,14 +92,13 @@ export class MockWordService extends WordService {
   getWordsByWordGroup(wordGroup: string): Observable<Word[]> {
     return of(MockWordService.wordsInGroup);
   }
+  
   deleteWord(id: string): Observable<void> {
     const temp: Word[] = [];
     for (let i = 0; i < this.testWords.length; i++){
       if (this.testWords[i]._id !== id) {
         temp.push(this.testWords[i]);
       }
-
-      console.log("hello" + temp);
     }
     this.testWords = temp;
     return of(void 0);
