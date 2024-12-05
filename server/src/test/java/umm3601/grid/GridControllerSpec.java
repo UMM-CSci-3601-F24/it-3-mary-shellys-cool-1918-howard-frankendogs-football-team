@@ -123,7 +123,10 @@ public class GridControllerSpec {
   @Test
   void canGetGridById() throws IOException {
     MongoCollection<Document> gridDocuments = db.getCollection("grids");
-    Document testGrid = new Document().append("roomID", "testRoomID").append("grid", new ArrayList<>()).append("_id", new ObjectId());
+    Document testGrid = new Document()
+      .append("roomID", "testRoomID")
+      .append("grid", new ArrayList<>())
+      .append("_id", new ObjectId());
     gridDocuments.insertOne(testGrid);
     String targetGridId = testGrid.getObjectId("_id").toHexString();
 
