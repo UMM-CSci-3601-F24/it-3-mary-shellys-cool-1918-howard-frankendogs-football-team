@@ -122,14 +122,14 @@ public class AnagramController implements Controller {
 
     // if searching for contains will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_KEY)) {
-      if ("exact".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
+      if ("exact".equals(filterType)) {
         //if filter type is exact it runs following code
           String exactWord = ctx.queryParam(WORD_KEY).replace('_', '.');
           //Because . are wildcards, replaces underscores with periods
           Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); //makes a pattern
           filters.add(regex(WORD_KEY, pattern)); //adds a regex with
           newSearch.setContains(ctx.queryParam(WORD_KEY));
-        } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
+        } else if ("contains".equals(filterType)) {
             for (char c : searchedWord.toCharArray()) {
               charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
           }
@@ -166,7 +166,7 @@ public class AnagramController implements Controller {
   // ctx.status(HttpStatus.OK);
   // }
 
-  private Bson constructSortingOrder(Context ctx) {
+  public Bson constructSortingOrder(Context ctx) {
     String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "word");
     String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "false");
 

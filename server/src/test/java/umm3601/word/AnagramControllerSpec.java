@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -62,10 +63,7 @@ class AnagramControllerSpec {
   @Mock
   private Context ctx;
 
-  // @Captor
-  // private ArgumentCaptor<ArrayList<Word>> searchContextCaptor;
-
-  // @Captor
+  @Captor
   private ArgumentCaptor<ArrayList<Search>> searchArrayListCaptor;
 
   @Captor
@@ -82,6 +80,9 @@ class AnagramControllerSpec {
 
   @Captor
   private ArgumentCaptor<Map<String, String>> mapCaptor;
+
+  @Captor
+  private ArgumentCaptor<Bson> bsonCaptor;
 
   @BeforeAll
   static void setupAll() {
@@ -307,7 +308,6 @@ class AnagramControllerSpec {
 
   @Test
   public void testConstructFilterExactWordKey() {
-
     Word newWord = new Word();
     newWord.word = "word";
     newWord.wordGroup = "testwords";
@@ -325,7 +325,6 @@ class AnagramControllerSpec {
 
   @Test
   public void testConstructFilterContainsWordKey() {
-
     Word newWord = new Word();
     newWord.word = "word";
     newWord.wordGroup = "testwords";
@@ -714,5 +713,49 @@ class AnagramControllerSpec {
 
     assertEquals(0, db.getCollection("words")
     .countDocuments(eq("wordGroup", badWordGroup)));
+  }
+
+  @Test
+  void deleteWordGroupNotFound() throws IOException {
+    String badWordGroup = "names";
+    when(ctx.pathParam("wordGroup")).thenReturn(badWordGroup);
+    // good practice to include lower line, but don't have words under that name in seed
+    // anagramController.deleteWordGroup(ctx);
+
+    assertEquals(0, db.getCollection("words")
+        .countDocuments(eq("wordGroup", badWordGroup)));
+
+    assertThrows(NotFoundResponse.class, () -> {
+        anagramController.deleteWordGroup(ctx);
+    });
+
+    verify(ctx).status(HttpStatus.NOT_FOUND);
+
+    assertEquals(0, db.getCollection("words")
+    .countDocuments(eq("wordGroup", badWordGroup)));
+  }
+
+  @Test
+  void sortOrderDesc() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam("sortType")).thenReturn("alphabetical");
+    when(ctx.queryParam("sortOrder")).thenReturn("desc");
+
+    Bson order = anagramController.constructSortingOrder(ctx);
+
+    assertEquals("{\"alphabetical\": -1}", order.toString());
+  }
+
+  @Test
+  void sortOrderAsc() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam("sortType")).thenReturn("alphabetical");
+    when(ctx.queryParam("sortOrder")).thenReturn("asc");
+
+    Bson order = anagramController.constructSortingOrder(ctx);
+
+    assertEquals("{\"alphabetical\": 1}", order.toString());
   }
 }

@@ -2,6 +2,8 @@ package umm3601.room;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
@@ -29,12 +32,16 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import io.javalin.Javalin;
+import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import io.javalin.http.NotFoundResponse;
+import io.javalin.json.JavalinJackson;
 import io.javalin.validation.BodyValidator;
 
 public class RoomControllerSpec {
   private static MongoClient mongoClient;
+    private static JavalinJackson javalinJackson = new JavalinJackson();
   private static MongoDatabase db;
 
   @Mock
@@ -103,7 +110,82 @@ public class RoomControllerSpec {
   }
 
   @Test
-  public void canGetRoomById() throws IOException {
+  void addRoomNoName() throws IOException {
+    String newRoomJson = """
+        {
+          "_id": {
+            "$oid": "674f6e1924168925c758d88e"
+          },
+          "id": "674f6e1924168925c758d88e"
+        }
+        """;
+    when(ctx.body()).thenReturn(newRoomJson);
+
+    when(ctx.bodyValidator(Room.class))
+        .then(value -> new BodyValidator<Room>(newRoomJson, Room.class,
+            () -> javalinJackson.fromJsonString(newRoomJson, Room.class)));
+
+    RuntimeJsonMappingException exception = assertThrows(RuntimeJsonMappingException.class, () -> {
+      roomController.addRoom(ctx);
+    });
+
+    String exceptionMessage = exception.getMessage(); //.get("REQUEST_BODY").get(0).toString();
+    assertTrue(exceptionMessage.contains("Failed to parse body as grid:"));
+  }
+
+
+  @Test
+  void addRoomNullName() throws IOException {
+    String newRoomJson = """
+        {
+          "_id": {
+            "$oid": "674f6e1924168925c758d88e"
+          },
+          "name": null,
+          "id": "674f6e1924168925c758d88e"
+        }
+        """;
+    when(ctx.body()).thenReturn(newRoomJson);
+
+    when(ctx.bodyValidator(Room.class))
+        .then(value -> new BodyValidator<Room>(newRoomJson, Room.class,
+            () -> javalinJackson.fromJsonString(newRoomJson, Room.class)));
+
+    RuntimeJsonMappingException exception = assertThrows(RuntimeJsonMappingException.class, () -> {
+      roomController.addRoom(ctx);
+    });
+
+    String exceptionMessage = exception.getMessage(); //.get("REQUEST_BODY").get(0).toString();
+    assertTrue(exceptionMessage.contains("Failed to parse body as grid:"));
+  }
+
+  @Test
+  void addRoomEmptyName() throws IOException {
+    String newRoomJson = """
+        {
+          "_id": {
+            "$oid": "674f6e1924168925c758d88e"
+          },
+          "name": "",
+          "id": "674f6e1924168925c758d88e"
+        }
+        """;
+    when(ctx.body()).thenReturn(newRoomJson);
+
+    when(ctx.bodyValidator(Room.class))
+        .then(value -> new BodyValidator<Room>(newRoomJson, Room.class,
+            () -> javalinJackson.fromJsonString(newRoomJson, Room.class)));
+
+    RuntimeJsonMappingException exception = assertThrows(RuntimeJsonMappingException.class, () -> {
+      roomController.addRoom(ctx);
+    });
+
+    String exceptionMessage = exception.getMessage(); //.get("REQUEST_BODY").get(0).toString();
+    assertTrue(exceptionMessage.contains("Failed to parse body as grid:"));
+  }
+
+  @Test
+  public void getRoomById() throws IOException {
     MongoCollection<Document> roomDocuments = db.getCollection("rooms");
     Document testRoom = new Document().append("name", "Test Room");
     roomDocuments.insertOne(testRoom);
@@ -117,4 +199,27 @@ public class RoomControllerSpec {
     verify(ctx).status(HttpStatus.OK);
     assertEquals(roomId, roomCaptor.getValue().getId());
   }
+
+  @Test
+  public void getRoomByIdBad() throws IOException {
+    when(ctx.pathParam("id")).thenReturn("bad");
+
+    Throwable exception = assertThrows(BadRequestResponse.class, () -> {
+      roomController.getRoomById(ctx);
+    });
+
+    assertEquals("The requested room id wasn't a legal Mongo Object ID", exception.getMessage());
+  }
+
+  @Test
+  public void getRoomByIdNonExistent() throws IOException {
+    when(ctx.pathParam("id")).thenReturn("588935f5c668650dc77df581");
+
+    Throwable exception = assertThrows(NotFoundResponse.class, () -> {
+      roomController.getRoomById(ctx);
+    });
+
+    assertEquals("The requested room was not found", exception.getMessage());
+  }
+
 }
