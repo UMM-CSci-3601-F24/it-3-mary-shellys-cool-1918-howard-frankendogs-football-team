@@ -41,7 +41,8 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
     MatInputModule,
     MatSlideToggleModule,
     MatExpansionModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatButtonModule,
   ],
   templateUrl: './word-list.component.html',
   styleUrl: './word-list.component.scss'
@@ -51,7 +52,7 @@ export class WordListComponent {
   // client side sorting
   sortType = signal<string | undefined>(undefined);
   sortOrder = signal<boolean | undefined>(false);
-  sortByWordOrGroup = signal<string | undefined>(undefined);
+  sortByWordOrGroup = signal<string | undefined>('word');
   //server side filtering
   contains = signal<string|undefined>('');
   group = signal<string|undefined>(undefined);
@@ -76,14 +77,14 @@ export class WordListComponent {
 
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
+  private length$ = toObservable(this.length);
   private filterType$ = toObservable(this.filterType);
   private forceUpdate$ = toObservable(this.forceUpdate);
-  private length$ = toObservable(this.length);
 
   serverFilteredContext =
     toSignal(
-      combineLatest([this.contains$, this.group$, this.filterType$, this.forceUpdate$, this.length$]).pipe(
-        switchMap(([word, wordGroup, filterType]) =>
+      combineLatest([this.contains$, this.group$, this.filterType$, this.length$, this.forceUpdate$,]).pipe(
+        switchMap(([word, wordGroup, filterType, length]) =>
           this.wordService.getWords({
             word,
             wordGroup,
@@ -105,23 +106,28 @@ export class WordListComponent {
           return of<SearchContext>();
         }),
         tap(() => {
-
         })
       )
     );
-  
+
   filteredWords = computed(() => {
     // takes list of words returned by server
     // then sends them through the client side sortWords()
     const serverFilteredWords = this.serverFilteredContext().words;
-    return this.wordService.sortWords(serverFilteredWords, {
+    const sortedWords = this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
       sortByWordOrGroup: this.sortByWordOrGroup(),
     });
+    return sortedWords;
   });
 
  displayWords= computed(() => {
+    // Reset the page number when sort parameters change
+    this.sortType();
+    this.sortOrder();
+    this.sortByWordOrGroup();
+    this.forceUpdate();
     return this.filteredWords()
       .slice(
         this.wordsPageNumber()*this.wordsPageSize(),
