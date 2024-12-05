@@ -7,6 +7,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRouteStub } from 'src/testing/activated-route-stub';
 import { ActivatedRoute } from '@angular/router';
 import { Word } from './word';
+import { PageEvent } from '@angular/material/paginator';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const COMMON_IMPORTS: unknown[] = [RouterTestingModule];
 
@@ -20,7 +22,7 @@ describe('WordGroupProfileComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [WordGroupProfileComponent, COMMON_IMPORTS],
+      imports: [WordGroupProfileComponent, BrowserAnimationsModule, COMMON_IMPORTS],
       providers: [
         { provide: WordService, useValue: new MockWordService() },
         { provide: ActivatedRoute, useValue: activatedRoute }
@@ -51,5 +53,21 @@ describe('WordGroupProfileComponent', () => {
     */
     activatedRoute.setParamMap({id: desiredGroup[0].wordGroup})
     expect(wordGroupProfile.words()).toEqual(desiredGroup);
+  });
+
+  it('should update page number and size on page event', () => {
+    const pageEvent = { pageIndex: 1, pageSize: 10, length: 100 } as PageEvent;
+    wordGroupProfile.handlePageEvent(pageEvent);
+    expect(wordGroupProfile.pageNumber()).toBe(1);
+    expect(wordGroupProfile.pageSize()).toBe(10);
+  });
+
+  it('should display correct number of words per page', () => {
+    wordGroupProfile.pageSize.set(2);
+    wordGroupProfile.pageNumber.set(0);
+    expect(wordGroupProfile.displayWords().length).toBe(2);
+
+    wordGroupProfile.pageNumber.set(1);
+    expect(wordGroupProfile.displayWords().length).toBe(2);
   });
 });
