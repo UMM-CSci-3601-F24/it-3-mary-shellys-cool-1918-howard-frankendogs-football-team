@@ -52,17 +52,21 @@ export class WordService {
       if(filters.sortType === "alphabetical"){
         if(filters.sortByWordOrGroup =="word") {
           filteredWords.sort((a, b) => a.word.localeCompare(b.word));
+          console.log("sorting by word alphabetically");
         }
         else {
           filteredWords.sort((a, b) => a.wordGroup.localeCompare(b.wordGroup));
+          console.log("sorting by wordGroup alphabetically");
         }
       }
       if(filters.sortType === "length") {
         if(filters.sortByWordOrGroup =="word") {
           filteredWords.sort((a, b) => a.word.length - b.word.length);
+          console.log("sorting by word length");
         }
         else {
           filteredWords.sort((a, b) => a.wordGroup.length - b.wordGroup.length);
+          console.log("sorting by wordGroup length");
         }
       }
     }
@@ -81,6 +85,6 @@ export class WordService {
   }
 
   deleteWordGroup(wordGroup: string): Observable<void> {
-    return this.httpClient.delete<void>(`${this.wordUrl}/${wordGroup}`);
+    return this.httpClient.delete<void>(`${this.wordUrl}/wordGroup/${wordGroup}`);
   }
 }
