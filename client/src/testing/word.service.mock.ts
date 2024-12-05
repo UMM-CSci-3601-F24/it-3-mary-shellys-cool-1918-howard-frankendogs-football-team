@@ -86,8 +86,6 @@ export class MockWordService extends WordService {
     const searchContext: SearchContext = { words: this.testWords, searches: MockWordService.testSearches };
     return of(searchContext);
   }
-
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getWordsByWordGroup(wordGroup: string): Observable<Word[]> {
     return of(MockWordService.wordsInGroup);
@@ -102,5 +100,9 @@ export class MockWordService extends WordService {
     }
     this.testWords = temp;
     return of(void 0);
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  deleteWordGroup(wordGroup: string): Observable<void> {
+      return new Observable<void>;
   }
 }

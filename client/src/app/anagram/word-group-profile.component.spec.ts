@@ -10,7 +10,7 @@ import { Word } from './word';
 import { PageEvent } from '@angular/material/paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-const COMMON_IMPORTS: unknown[] = [RouterTestingModule];
+const COMMON_IMPORTS: unknown[] = [RouterTestingModule, BrowserAnimationsModule];
 
 describe('WordGroupProfileComponent', () => {
   let wordGroupProfile: WordGroupProfileComponent;
@@ -69,5 +69,12 @@ describe('WordGroupProfileComponent', () => {
 
     wordGroupProfile.pageNumber.set(1);
     expect(wordGroupProfile.displayWords().length).toBe(2);
+  });
+
+  it('should not blow up when calling deleteWord()', () => {
+    // This is a smoke test, just testing that the world does not blow up
+    wordGroupProfile.deleteWord("Bad Word");
+    fixture.detectChanges();
+    fixture.isStable();
   });
 });

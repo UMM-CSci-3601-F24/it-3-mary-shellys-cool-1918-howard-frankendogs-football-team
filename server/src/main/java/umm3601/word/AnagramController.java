@@ -176,7 +176,7 @@ public class AnagramController implements Controller {
   // ctx.status(HttpStatus.OK);
   // }
 
-  private Bson constructSortingOrder(Context ctx) {
+  public Bson constructSortingOrder(Context ctx) {
     String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortType"), "word");
     String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "false");
 
@@ -217,7 +217,6 @@ public class AnagramController implements Controller {
     String wordGroupString = ctx.pathParam("wordGroup");
 
   DeleteResult deletedWordGroup = wordCollection.deleteMany(eq("wordGroup", wordGroupString));
-    System.out.println(wordGroupString);
     if (deletedWordGroup.getDeletedCount() < 1) {
         ctx.status(HttpStatus.NOT_FOUND);
         throw new NotFoundResponse(
@@ -225,7 +224,6 @@ public class AnagramController implements Controller {
                 + wordGroupString
                 + "; Please try deleting a word group");
     }
-
     ctx.status(HttpStatus.OK);
 }
 

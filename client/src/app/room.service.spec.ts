@@ -1,9 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RoomService } from './room.service';
+import { HttpClient } from '@angular/common/http';
+import { Room } from './room';
+import { of } from 'rxjs';
 
 describe('RoomService', () => {
   let service: RoomService;
+  let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
@@ -11,6 +15,7 @@ describe('RoomService', () => {
       imports: [HttpClientTestingModule],
       providers: [RoomService]
     });
+    httpClient = TestBed.inject(HttpClient);
     service = TestBed.inject(RoomService);
     httpTestingController = TestBed.inject(HttpTestingController);
   });
@@ -45,6 +50,20 @@ describe('RoomService', () => {
     const req = httpTestingController.expectOne('/api/rooms');
     expect(req.request.method).toEqual('POST');
     req.flush(newRoom);
+  });
+
+  it('should get room by id', () => {
+    const testRoom: Room = {
+      _id: "targetId",
+      name: "My Room Name"
+    }
+      const mockedMethod = spyOn(httpClient, "get").and.returnValue(of(testRoom));
+      service.getRoomById(testRoom._id).subscribe(() => {
+        expect(mockedMethod).withContext("one call").toHaveBeenCalledTimes(1);
+        expect(mockedMethod)
+          .withContext("talks to correct endpoint")
+          .toHaveBeenCalledWith(`/api/rooms/`+testRoom._id);
+      })
   });
 
   it('should get all word groups', () => {

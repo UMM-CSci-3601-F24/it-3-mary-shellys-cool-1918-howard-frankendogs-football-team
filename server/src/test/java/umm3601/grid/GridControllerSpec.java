@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static com.mongodb.client.model.Filters.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -46,6 +47,7 @@ public class GridControllerSpec {
   private static MongoClient mongoClient;
   private static MongoDatabase db;
   private static JavalinJackson javalinJackson = new JavalinJackson();
+  private ObjectId gridId;
 
   @Mock
   private Context ctx;
@@ -86,6 +88,11 @@ public class GridControllerSpec {
     List<Document> testGrids = new ArrayList<>();
     testGrids.add(new Document().append("roomID", "testRoomID").append("grid", new ArrayList<>()));
     gridDocuments.insertMany(testGrids);
+    gridId = new ObjectId();
+    Document testGridWithId = new Document()
+        .append("_id", gridId)
+        .append("roomID", "My Room");
+    gridDocuments.insertOne(testGridWithId);
     gridController = new GridController(db);
   }
 
@@ -116,17 +123,20 @@ public class GridControllerSpec {
   @Test
   void canGetGridById() throws IOException {
     MongoCollection<Document> gridDocuments = db.getCollection("grids");
-    Document testGrid = new Document().append("roomID", "testRoomID").append("grid", new ArrayList<>());
+    Document testGrid = new Document()
+      .append("roomID", "testRoomID")
+      .append("grid", new ArrayList<>())
+      .append("_id", new ObjectId());
     gridDocuments.insertOne(testGrid);
-    String gridId = testGrid.getObjectId("_id").toHexString();
+    String targetGridId = testGrid.getObjectId("_id").toHexString();
 
-    when(ctx.pathParam("id")).thenReturn(gridId);
+    when(ctx.pathParam("id")).thenReturn(targetGridId);
 
     gridController.getGrid(ctx);
 
     verify(ctx).json(gridCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
-    assertEquals(gridId, gridCaptor.getValue()._id);
+    assertEquals(targetGridId, gridCaptor.getValue()._id);
   }
 
   @Test
@@ -151,7 +161,7 @@ public class GridControllerSpec {
     assertEquals("The requested grid was not found", exception.getMessage());
   }
 
-   @Test
+  @Test
   public void canSaveGrid() throws IOException {
     Grid newGrid = new Grid();
 
@@ -171,7 +181,6 @@ public class GridControllerSpec {
 
     Grid capturedGrid = gridCaptor.getValue();
     assertNotNull(capturedGrid._id);
-    System.out.println(capturedGrid._id);
 
     Document addedGrid = db.getCollection("rooms")
         .find(new Document("_id", new ObjectId(capturedGrid._id))).first();
@@ -181,15 +190,15 @@ public class GridControllerSpec {
   void canGetGridsByRoom() throws IOException {
     MongoCollection<Document> gridDocuments = db.getCollection("grids");
     Document testGrid1 = new Document()
-      .append("roomID", "room1")
-      .append("grid", new ArrayList<>())
-      .append("name", "Test Grid 1")
-      .append("lastSaved", new Date());
+        .append("roomID", "room1")
+        .append("grid", new ArrayList<>())
+        .append("name", "Test Grid 1")
+        .append("lastSaved", new Date());
     Document testGrid2 = new Document()
-      .append("roomID", "room1")
-      .append("grid", new ArrayList<>())
-      .append("name", "Test Grid 2")
-      .append("lastSaved", new Date());
+        .append("roomID", "room1")
+        .append("grid", new ArrayList<>())
+        .append("name", "Test Grid 2")
+        .append("lastSaved", new Date());
     gridDocuments.insertOne(testGrid1);
     gridDocuments.insertOne(testGrid2);
 
@@ -203,20 +212,42 @@ public class GridControllerSpec {
   }
 
   @Test
-  void canDeleteGrid() throws IOException {
-    MongoCollection<Document> gridDocuments = db.getCollection("grids");
-    Document testGrid = new Document().append("roomID", "testRoomID").append("grid", new ArrayList<>());
-    gridDocuments.insertOne(testGrid);
-    String gridId = testGrid.getObjectId("_id").toHexString();
+  void deleteGrid() throws IOException {
+    String testID = gridId.toHexString();
+    when(ctx.pathParam("id")).thenReturn(testID);
 
-    when(ctx.pathParam("id")).thenReturn(gridId);
+    assertEquals(1, db.getCollection("grids")
+        .countDocuments(eq("_id", new ObjectId(testID))));
 
     gridController.deleteGrid(ctx);
 
-    verify(ctx).json(mapCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
-    assertEquals(gridId, mapCaptor.getValue().get("deletedId"));
-    assertEquals(0, gridDocuments.countDocuments(new Document("_id", new ObjectId(gridId))));
+
+    assertEquals(0, db.getCollection("grids")
+        .countDocuments(eq("_id", new ObjectId(testID))));
+  }
+
+  @Test
+  void deleteGridWithBadID() throws IOException {
+    when(ctx.pathParam("id")).thenReturn("bad");
+
+    Throwable exception = assertThrows(BadRequestResponse.class, () -> {
+      gridController.deleteGrid(ctx);
+    });
+
+    assertEquals("The requested grid id wasn't a legal Mongo Object ID", exception.getMessage());
+  }
+
+  @Test
+  public void deleteGridWithNonexistentId() throws IOException {
+    String id = "588935f5c668650dc77df581";
+    when(ctx.pathParam("id")).thenReturn(id);
+
+    Throwable exception = assertThrows(NotFoundResponse.class, () -> {
+      gridController.deleteGrid(ctx);
+    });
+
+    assertEquals("The requested grid was not found", exception.getMessage());
   }
 
 }

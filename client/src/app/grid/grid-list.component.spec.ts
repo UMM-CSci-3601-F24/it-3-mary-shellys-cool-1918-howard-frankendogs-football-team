@@ -5,6 +5,8 @@ import { RoomService } from '../room.service';
 
 import { GridListComponent } from './grid-list.component';
 import { GridPackage } from './gridPackage';
+import { GridService } from './grid.service';
+import { MockGridService } from 'src/testing/grid.service.mock';
 
 describe('GridListComponent', () => {
   let component: GridListComponent;
@@ -16,7 +18,8 @@ describe('GridListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [GridListComponent, RouterTestingModule],
       providers: [
-        { provide: RoomService, useValue: roomService }
+        { provide: RoomService, useValue: roomService },
+        { provide: GridService, useValue: new MockGridService() }
       ]
     })
     .compileComponents();

@@ -99,6 +99,14 @@ describe('Word List', () => {
         ).length
     ).toBe(1);
   });
+  // deleteWordGroup() smoke test for snack bar
+  it('should not blow up when calling deleteWord()', () => {
+    // This is a smoke test, just testing that the world does not blow up
+    expect(wordList.forceUpdate()).toEqual(0);
+    wordList.deleteWordGroup("BadWords");
+    fixture.detectChanges();
+    fixture.isStable();
+   });
 });
 
 describe('support functions', () => {

@@ -32,7 +32,9 @@ export class WordService {
         httpParams = httpParams.set(this.filterTypeKey, filters.filterType);
       }
       if (filters.length) {
-        httpParams = httpParams.set(this.lengthKey, filters.length);
+        if (filters.length > 0 ) {
+          httpParams = httpParams.set(this.lengthKey, filters.length);
+        }
       }
     }
     return this.httpClient.get<SearchContext>(this.wordUrl, {

@@ -88,6 +88,18 @@ describe('WordService', () => {
           .toHaveBeenCalledWith(wordService.wordUrl, {params: new HttpParams().set('wordGroup', 'teach')});
       });
     });
+    it('correctly calls api/anagram with filter parameter filterType', () => {
+      const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testWords));
+
+      wordService.getWords({filterType: 'exact'}).subscribe(() => {
+        expect(mockedMethod)
+          .withContext('one call')
+          .toHaveBeenCalledTimes(1);
+        expect(mockedMethod)
+          .withContext('talks to correct endpoint')
+          .toHaveBeenCalledWith(wordService.wordUrl, {params: new HttpParams().set('filterType', 'exact')});
+      });
+    });
     it('correctly calls api/anagram with more than one filter parameters', () => {
       const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testWords));
 
@@ -113,7 +125,7 @@ describe('WordService', () => {
     });
   });
 
-  describe('sorting on the client (alphabetical, by length)', () => {
+  describe('sorting on the client (alphabetical)', () => {
     it('returns the list in the correct way when sorting by word', () => {
       const filteredWords = wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false, sortByWordOrGroup: "word"});
       expect(filteredWords[0].word).toBe('El');
@@ -122,6 +134,14 @@ describe('WordService', () => {
       expect(filteredWords[3].word).toBe('Mac');
       expect(filteredWords[4].word).toBe('Nic');
     })
+    it('returns the list in the correct way when sorting by word reversed', () => {
+      const filteredWords = wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: true, sortByWordOrGroup: "word"});
+      expect(filteredWords[0].word).toBe('Nic');
+      expect(filteredWords[1].word).toBe('Mac');
+      expect(filteredWords[2].word).toBe('Kennan');
+      expect(filteredWords[3].word).toBe('Jakob');
+      expect(filteredWords[4].word).toBe('El');
+    })
     it('returns the list in the correct way when sorting by wordGroup', () => {
       const filteredWords = wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: false, sortByWordOrGroup: "wordGroup"});
       expect(filteredWords[0].wordGroup).toBe('teachers');
@@ -129,6 +149,14 @@ describe('WordService', () => {
       expect(filteredWords[2].wordGroup).toBe('team member');
       expect(filteredWords[3].wordGroup).toBe('team member');
       expect(filteredWords[4].wordGroup).toBe('team members');
+    })
+    it('returns the list in the correct way when sorting by wordGroup reversed', () => {
+      const filteredWords = wordService.sortWords(testWords, {sortType: "alphabetical", sortOrder: true, sortByWordOrGroup: "wordGroup"});
+      expect(filteredWords[0].wordGroup).toBe('team members');
+      expect(filteredWords[1].wordGroup).toBe('team member');
+      expect(filteredWords[2].wordGroup).toBe('team member');
+      expect(filteredWords[3].wordGroup).toBe('team member');
+      expect(filteredWords[4].wordGroup).toBe('teachers');
     })
   })
 
@@ -145,6 +173,18 @@ describe('WordService', () => {
       expect(filteredWords[4].word.length).toBe(6)
     })
 
+    it('returns the list in the correct order when sorting by word reversed', () => {
+      const filteredWords = wordService.sortWords(testWords, {sortType: "length", sortOrder: true, sortByWordOrGroup: "word"});
+      expect(filteredWords[4].word).toBe('El');
+      expect(filteredWords[4].word.length).toBe(2);
+      expect(filteredWords[3].word.length).toBe(3)
+      expect(filteredWords[2].word.length).toBe(3)
+      expect(filteredWords[1].word).toBe('Jakob');
+      expect(filteredWords[1].word.length).toBe(5)
+      expect(filteredWords[0].word).toBe('Kennan');
+      expect(filteredWords[0].word.length).toBe(6)
+    })
+
     it('returns the list in the correct order when sorting by wordGroup', () => {
       const filteredWords = wordService.sortWords(testWords, {sortType: "length", sortOrder: false, sortByWordOrGroup: "wordGroup"});
       expect(filteredWords[0].wordGroup).toBe('teachers');
@@ -152,6 +192,15 @@ describe('WordService', () => {
       expect(filteredWords[2].wordGroup).toBe('team member');
       expect(filteredWords[3].wordGroup).toBe('team member');
       expect(filteredWords[4].wordGroup).toBe('team members');
+    })
+
+    it('returns the list in the correct order when sorting by wordGroup, reversed', () => {
+      const filteredWords = wordService.sortWords(testWords, {sortType: "length", sortOrder: true, sortByWordOrGroup: "wordGroup"});
+      expect(filteredWords[4].wordGroup).toBe('teachers');
+      expect(filteredWords[3].wordGroup).toBe('team member');
+      expect(filteredWords[2].wordGroup).toBe('team member');
+      expect(filteredWords[1].wordGroup).toBe('team member');
+      expect(filteredWords[0].wordGroup).toBe('team members');
     })
 })
 
@@ -196,20 +245,22 @@ describe('WordService', () => {
     }))
   })
 
-  // describe('Deleting a wordGroup', () => {
-  //   it('talks to correct endpoint with correct param', waitForAsync(() => {
-  //     const targetGroup: string = testWords[1].wordGroup
+  describe('Deleting a wordGroup', () => {
+    it('talks to correct endpoint with correct param', waitForAsync(() => {
+      const targetGroup: string = testWords[1].wordGroup
 
-  //     const mockedMethod = spyOn(httpClient, 'delete')
-  //       .and
-  //       .returnValue(of(targetGroup));
+      const mockedMethod = spyOn(httpClient, 'delete')
+        .and
+        .returnValue(of(targetGroup));
 
-  //     wordService.deleteWordGroup(targetGroup).subscribe(() => {
-  //       expect(mockedMethod).withContext('one call').toHaveBeenCalledTimes(1);
-  //       expect(mockedMethod).withContext('talks to correct endpoint').toHaveBeenCalledWith(`${wordService.wordUrl}/${targetGroup}`);
-  //     });
-  //   }))
-  // })
+      wordService.deleteWordGroup(targetGroup).subscribe(() => {
+        expect(mockedMethod).withContext('one call').toHaveBeenCalledTimes(1);
+        expect(mockedMethod)
+          .withContext('talks to correct endpoint')
+          .toHaveBeenCalledWith(`${wordService.wordUrl}/wordGroup/${targetGroup}`);
+      });
+    }))
+  })
 
   describe("Word Group Profiles", () => {
     it('calls api/wordGroup/id where id is `team member`', waitForAsync(() => {
