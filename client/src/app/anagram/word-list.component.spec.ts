@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Search } from './search';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PageEvent } from '@angular/material/paginator';
 
 const COMMON_IMPORTS: unknown[] = [
   RouterTestingModule,
@@ -108,7 +109,7 @@ describe('Word List', () => {
    });
 });
 
-describe('max function', () => {
+describe('support functions', () => {
   let wordList: WordListComponent;
   let fixture: ComponentFixture<WordListComponent>;
 
@@ -132,5 +133,136 @@ describe('max function', () => {
     expect(wordList.max(8,2)).toBe(8);
     expect(wordList.max(4,4)).toBe(4);
   });
+
+  it('update params() should update params from undefined to new params', () => {
+    expect(wordList.contains()).toBe('');
+    expect(wordList.group()).toBe(undefined);
+    wordList.updateParams("hehe", "haha");
+    expect(wordList.contains()).toBe("hehe");
+    expect(wordList.group()).toBe("haha");
+  });
+
+  it('updateParams() can clear params', () => {
+    //tests updateParams when pass (null, null)
+    wordList.updateParams("contains", "group");
+    wordList.updateParams(null, null);
+    expect(wordList.contains()).toBeNull();
+    expect(wordList.group()).toBe(null);
+    //tests updateParams when pass no params
+    wordList.updateParams("contains", "group");
+    wordList.updateParams();
+    expect(wordList.contains()).toBe(null);
+    expect(wordList.group()).toBe(null);
+  });
+
+  it('updateParams() handles updating one params', () => {
+    //tests passing in just a contains param
+    wordList.updateParams("contains", "group");
+    wordList.updateParams("contains2");
+    expect(wordList.contains()).toBe("contains2");
+    expect(wordList.group()).toBeNull();
+    //tests passing in just a contains param in different format
+    wordList.updateParams("contains", "group");
+    wordList.updateParams("contains2", null);
+    expect(wordList.contains()).toBe("contains2");
+    expect(wordList.group()).toBeNull();
+    //tests passing in just a wordGroup param
+    wordList.updateParams("contains", "group");
+    wordList.updateParams(null, "group1");
+    expect(wordList.contains()).toBeNull();
+    expect(wordList.group()).toBe("group1");
+  });
 })
+
+describe('handlePageEvent', () => {
+  let wordList: WordListComponent;
+  let fixture: ComponentFixture<WordListComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [COMMON_IMPORTS, WordListComponent],
+      providers: [{ provide: WordService, useValue: new MockWordService() }],
+    });
+  });
+
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(WordListComponent);
+      wordList = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+  }));
+
+  it('should update wordsPageNumber and wordsPageSize for word list paginator', () => {
+    const event = { pageIndex: 1, pageSize: 50 } as PageEvent;
+    wordList.handlePageEvent(event, "word list paginator");
+    expect(wordList.wordsPageNumber()).toBe(1);
+    expect(wordList.wordsPageSize()).toBe(50);
+  });
+
+  it('should update searchesPageNumber and searchesPageSize for search history paginator', () => {
+    const event = { pageIndex: 2, pageSize: 100 } as PageEvent;
+    wordList.handlePageEvent(event, "search history paginator");
+    expect(wordList.searchesPageNumber()).toBe(2);
+    expect(wordList.searchesPageSize()).toBe(100);
+  });
+});
+
+describe('getNumWords and getNumSearches', () => {
+  let wordList: WordListComponent;
+  let fixture: ComponentFixture<WordListComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [COMMON_IMPORTS, WordListComponent],
+      providers: [{ provide: WordService, useValue: new MockWordService() }],
+    });
+  });
+
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(WordListComponent);
+      wordList = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+  }));
+
+  it('should return the correct number of words', () => {
+    expect(wordList.getNumWords()).toBe(5);
+  });
+
+  it('should return the correct number of searches', () => {
+    expect(wordList.getNumSearches()).toBe(3);
+  });
+});
+
+describe('getNumWords and getNumSearches when context is undefined', () => {
+  let wordList: WordListComponent;
+  let fixture: ComponentFixture<WordListComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [COMMON_IMPORTS, WordListComponent],
+      providers: [{ provide: WordService, useValue: new MockWordService() }],
+    });
+  });
+
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(WordListComponent);
+      wordList = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+  }));
+
+  it('should return 0 when words are undefined', () => {
+    wordList.serverFilteredContext().words = undefined;
+    expect(wordList.getNumWords()).toBe(0);
+  });
+
+  it('should return 0 when searches are undefined', () => {
+    wordList.serverFilteredContext().searches = undefined;
+    expect(wordList.getNumSearches()).toBe(0);
+  });
+});
 

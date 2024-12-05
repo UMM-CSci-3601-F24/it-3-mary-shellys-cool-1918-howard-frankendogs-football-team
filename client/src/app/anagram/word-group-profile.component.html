@@ -1,5 +1,5 @@
 <div>
-  @if(words()){
+  @if(displayWords()){
     <mat-card>
       <mat-card-header class="word-group-title">
         <mat-card-title>Group Name: {{wordGroup()}}</mat-card-title>
@@ -9,7 +9,7 @@
       <mat-grid-list cols="4" rowHeight="30px" class="word-group-list" >
         @if(words().length === 0 ){
           <mat-list-item>No Words in Word Group</mat-list-item>
-        } @for(word of words(); track word._id) {
+        } @for(word of displayWords(); track word._id) {
           <mat-grid-tile >
             <div class="word-group-list-item">
               <span>{{word.word}}</span>
@@ -24,6 +24,17 @@
           </mat-grid-tile>
         }
       </mat-grid-list>
+      <mat-card-actions>
+        <mat-paginator
+        [length]="getNumWords()"
+        [pageSize]="100"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="handlePageEvent($event)"
+        aria-label="Select page"
+        data-test="word-list-mat-paginator"
+      >
+      </mat-paginator>
+      </mat-card-actions>
     </mat-card>
   } @else {
     <mat-card>

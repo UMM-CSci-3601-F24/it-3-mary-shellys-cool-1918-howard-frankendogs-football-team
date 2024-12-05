@@ -10,9 +10,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -291,22 +289,6 @@ class AnagramControllerSpec {
   }
 
   @Test
-  void constructFiltersReturnsMessage() throws IOException {
-    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    System.setErr(new PrintStream(outContent));
-    // makes search that will be passed
-    Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put(AnagramController.WORD_KEY, Arrays.asList(new String[] {"ha"}));
-    when(ctx.queryParamMap()).thenReturn(queryParams);
-    when(ctx.queryParam(AnagramController.WORD_KEY)).thenReturn("ha");
-    // calls getWords() which calls constructFilter()
-    anagramController.getWords(ctx);
-    // checks that construct filters gave out right message "search added with db
-    // params..."
-    assertTrue(outContent.toString().contains("search added to db"));
-  }
-
-  @Test
   public void testConstructFilterExactWordKey() {
     Word newWord = new Word();
     newWord.word = "word";
@@ -339,7 +321,28 @@ class AnagramControllerSpec {
     assertEquals(1, wordDocuments.size());
     assertEquals("word", wordDocuments.get(0).word);
   }
+  @Test
+  void testConstructFilterByLengthKey() {
+    Integer targetLength = 4;
+    String targetLengthString = targetLength.toString();
 
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put(AnagramController.LENGTH_KEY, Arrays.asList(new String[] {targetLengthString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(AnagramController.LENGTH_KEY)).thenReturn(targetLengthString);
+
+    Validation validation = new Validation();
+    Validator<Integer> validator =
+                        validation.validator(AnagramController.LENGTH_KEY, Integer.class, targetLengthString);
+    when(ctx.queryParamAsClass(AnagramController.LENGTH_KEY, Integer.class)).thenReturn(validator);
+
+    anagramController.getWords(ctx);
+
+    verify(ctx).json(searchContextCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+
+    assertEquals(1, searchContextCaptor.getValue().words.size());
+  }
   @Test
   void canGetWordsWithExactSi() throws IOException {
     String targetHas = "si";

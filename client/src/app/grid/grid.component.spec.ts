@@ -374,6 +374,39 @@ describe('GridComponent', () => {
 
     expect(navigateSpy).toHaveBeenCalledWith(['/testRoomId/grids']);
   });
+
+  it('should bold outside edges on initialization of a grid', fakeAsync(() => {
+    component.gridPackage.grid = [
+      [new GridCell(), new GridCell()],
+      [new GridCell(), new GridCell()]
+    ]
+
+    component.gridHeight = 2
+    component.gridWidth = 2
+
+
+    component.initializeGrid();
+    // component.gridSideBolder();
+    tick();
+
+    // Top
+    expect(component.gridPackage.grid[0][0].edges.top).toBe(true);
+    expect(component.gridPackage.grid[0][1].edges.top).toBe(true);
+
+    // // Right
+    expect(component.gridPackage.grid[1][1].edges.right).toBe(true);
+    expect(component.gridPackage.grid[0][1].edges.right).toBe(true);
+
+    // // Bottom
+    expect(component.gridPackage.grid[1][1].edges.bottom).toBe(true);
+    expect(component.gridPackage.grid[1][0].edges.bottom).toBe(true);
+
+    // // Left
+    expect(component.gridPackage.grid[0][0].edges.left).toBe(true);
+    expect(component.gridPackage.grid[1][0].edges.left).toBe(true);
+
+
+  }));
 });
 
 

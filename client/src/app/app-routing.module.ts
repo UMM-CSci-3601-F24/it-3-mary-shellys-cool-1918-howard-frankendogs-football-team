@@ -6,6 +6,7 @@ import { AddWordComponent } from './anagram/add-word.component';
 import { HomeComponent } from './home/home.component';
 import { RoomGridsComponent } from './grid/room-grids.component';
 import { WordGroupProfileComponent } from './anagram/word-group-profile.component';
+import { AboutComponent } from './about/about.component';
 
 
 // Note that the 'users/new' route needs to come before 'users/:id'.
@@ -23,7 +24,8 @@ const routes: Routes = [
   {path: 'anagram/new', component: AddWordComponent, title: 'Add Word'},
 
   {path: 'anagram/:id', component: WordListComponent, title: 'Anagram'},
-  {path: 'anagram/wordGroup/:id', component: WordGroupProfileComponent, title: "Word Group Profile"}
+  {path: 'anagram/wordGroup/:id', component: WordGroupProfileComponent, title: "Word Group Profile"},
+  {path: 'about', component: AboutComponent, title: 'About'}
 ];
 
 @NgModule({

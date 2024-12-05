@@ -20,6 +20,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SearchContext } from './searchContext';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { RoomService } from '../room.service';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-word-list-component',
@@ -39,7 +40,9 @@ import { RoomService } from '../room.service';
     MatListModule,
     MatInputModule,
     MatSlideToggleModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatPaginatorModule,
+    MatButtonModule,
   ],
   templateUrl: './word-list.component.html',
   styleUrl: './word-list.component.scss'
@@ -49,17 +52,21 @@ export class WordListComponent {
   // client side sorting
   sortType = signal<string | undefined>(undefined);
   sortOrder = signal<boolean | undefined>(false);
-  sortByWordOrGroup = signal<string | undefined>(undefined);
+  sortByWordOrGroup = signal<string | undefined>('word');
   //server side filtering
   contains = signal<string|undefined>('');
   group = signal<string|undefined>(undefined);
+  length = signal<number|undefined>(undefined);
   forceUpdate = signal<number>(0);
-
   filterType = signal<string|undefined>("exact");
-
-  wordGroups: string[];
-
+  //pagination values
+  wordsPageSize = signal<number>(25);
+  wordsPageNumber = signal<number>(0);
+  searchesPageSize = signal<number>(25);
+  searchesPageNumber = signal<number>(0);
+  // Misc
   errMsg = signal<string | undefined>(undefined);
+  wordGroups: string[];
 
   constructor(
     private wordService: WordService,
@@ -70,17 +77,19 @@ export class WordListComponent {
 
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
+  private length$ = toObservable(this.length);
   private filterType$ = toObservable(this.filterType);
   private forceUpdate$ = toObservable(this.forceUpdate);
 
   serverFilteredContext =
     toSignal(
-      combineLatest([this.contains$, this.group$, this.filterType$, this.forceUpdate$]).pipe(
-        switchMap(([word, wordGroup, filterType]) =>
+      combineLatest([this.contains$, this.group$, this.filterType$, this.length$, this.forceUpdate$,]).pipe(
+        switchMap(([word, wordGroup, filterType, length]) =>
           this.wordService.getWords({
             word,
             wordGroup,
             filterType,
+            length,
           })
         ),
         catchError((err) => {
@@ -97,33 +106,59 @@ export class WordListComponent {
           return of<SearchContext>();
         }),
         tap(() => {
-
         })
       )
     );
 
-  // serverFilterType =
-  //   toSignal(this.filterType$);
-
   filteredWords = computed(() => {
     // takes list of words returned by server
-    // then sends them through the client side sortWords)
+    // then sends them through the client side sortWords()
     const serverFilteredWords = this.serverFilteredContext().words;
-    return this.wordService.sortWords(serverFilteredWords, {
+    const sortedWords = this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
       sortByWordOrGroup: this.sortByWordOrGroup(),
     });
+    return sortedWords;
+  });
+
+ displayWords= computed(() => {
+    // Reset the page number when sort parameters change
+    this.sortType();
+    this.sortOrder();
+    this.sortByWordOrGroup();
+    this.forceUpdate();
+    return this.filteredWords()
+      .slice(
+        this.wordsPageNumber()*this.wordsPageSize(),
+        Math.min((this.wordsPageNumber() + 1)*this.wordsPageSize(), this.getNumWords()));
   });
 
   /**
    * returns list of searches given by server
    */
   searchHistory = computed(() => {
-    const searches = this.serverFilteredContext().searches;
-    return searches;
+    return this.serverFilteredContext().searches
+      .slice(
+        this.searchesPageNumber()*this.searchesPageSize(),
+        Math.min((this.searchesPageNumber() + 1)*this.searchesPageSize(), this.getNumSearches()));
   })
+  /**
+   * For use by search history links
+   * updates active params and by proxy gets new words
+   * @param contains
+   * @param wordGroup
+   */
+  updateParams(contains?: string, wordGroup?: string ) {
+    if(contains){
+      this.contains.set(contains);
+    } else this.contains.set(null);
+    if(wordGroup) {
+      this.group.set(wordGroup);
+    } else this.group.set(null);
+  }
 
+  // returns all word group names as a string[]
   loadWordGroups() {
     this.roomService.getWordGroups().subscribe(wordGroups => {
       this.wordGroups = wordGroups
@@ -154,7 +189,6 @@ export class WordListComponent {
     });
   }
 
-
   /**
    * Deletes all words in the wordGroup
    * pulls group from the wordGroup search box as of 10/20/24
@@ -166,6 +200,32 @@ export class WordListComponent {
       this.forceUpdate.set(this.forceUpdate() + 1);
     });
   }
+
+  handlePageEvent($event: PageEvent, source: string) {
+    if (source == "word list paginator") {
+      this.wordsPageNumber.set($event.pageIndex);
+      this.wordsPageSize.set($event.pageSize);
+    } else if (source == "search history paginator") {
+      this.searchesPageNumber.set($event.pageIndex);
+      this.searchesPageSize.set($event.pageSize);
+    }
+  }
+
+  // gets the number of words that match current params
+  getNumWords = computed(() => {
+    if (this.serverFilteredContext().words === undefined) {
+      return 0;
+    }
+    return this.serverFilteredContext().words.length
+  });
+
+  // gets the number of searches that match current params
+  getNumSearches = computed(() => {
+    if (this.serverFilteredContext().searches === undefined) {
+      return 0;
+    }
+    return this.serverFilteredContext().searches.length
+  });
 
   max(arg0: number,arg1: number): number {
     if (arg0 >= arg1){
