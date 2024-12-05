@@ -41,7 +41,8 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
     MatInputModule,
     MatSlideToggleModule,
     MatExpansionModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatButtonModule,
   ],
   templateUrl: './word-list.component.html',
   styleUrl: './word-list.component.scss'
@@ -109,19 +110,25 @@ export class WordListComponent {
         })
       )
     );
-  
+
   filteredWords = computed(() => {
     // takes list of words returned by server
     // then sends them through the client side sortWords()
     const serverFilteredWords = this.serverFilteredContext().words;
-    return this.wordService.sortWords(serverFilteredWords, {
+    const sortedWords = this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
       sortOrder: this.sortOrder(),
       sortByWordOrGroup: this.sortByWordOrGroup(),
     });
+    return sortedWords;
   });
 
  displayWords= computed(() => {
+    // Reset the page number when sort parameters change
+    this.sortType();
+    this.sortOrder();
+    this.sortByWordOrGroup();
+    this.forceUpdate();
     return this.filteredWords()
       .slice(
         this.wordsPageNumber()*this.wordsPageSize(),
