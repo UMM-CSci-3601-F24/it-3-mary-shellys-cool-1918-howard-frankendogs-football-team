@@ -123,17 +123,17 @@ public class GridControllerSpec {
   @Test
   void canGetGridById() throws IOException {
     MongoCollection<Document> gridDocuments = db.getCollection("grids");
-    Document testGrid = new Document().append("roomID", "testRoomID").append("grid", new ArrayList<>());
+    Document testGrid = new Document().append("roomID", "testRoomID").append("grid", new ArrayList<>()).append("_id", new ObjectId());
     gridDocuments.insertOne(testGrid);
-    String gridId = testGrid.getObjectId("_id").toHexString();
+    String targetGridId = testGrid.getObjectId("_id").toHexString();
 
-    when(ctx.pathParam("id")).thenReturn(gridId);
+    when(ctx.pathParam("id")).thenReturn(targetGridId);
 
     gridController.getGrid(ctx);
 
     verify(ctx).json(gridCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
-    assertEquals(gridId, gridCaptor.getValue()._id);
+    assertEquals(targetGridId, gridCaptor.getValue()._id);
   }
 
   @Test

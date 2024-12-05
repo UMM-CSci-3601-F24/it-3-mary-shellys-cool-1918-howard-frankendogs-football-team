@@ -44,7 +44,7 @@ describe('WordGroupProfileComponent', () => {
     expect(wordGroupProfile.words()).toBeTruthy();
   });
 
-  it("should navigate to specific wordfile:///home/and10393/Desktop/it-3-mary-shellys-cool-1918-howard-frankendogs-football-team/client/coverage/client/src/app/anagram/word-list.component.ts.html group profile", ()=> {
+  it("should navigate to specific word group profile", ()=> {
     const desiredGroup: Word[] = MockWordService.wordsInGroup;
     /*
     From lab 4, test "should navigate to a specific user profile":
