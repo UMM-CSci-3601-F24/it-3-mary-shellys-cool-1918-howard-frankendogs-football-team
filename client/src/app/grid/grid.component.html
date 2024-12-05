@@ -36,45 +36,45 @@
             </mat-panel-description>
           </mat-expansion-panel-header>
           <p>
-            Clicking on a cell in the grid will focus onto that cell, allowing you to type.
+            <strong>Clicking</strong> on a cell in the grid will focus onto that cell, allowing you to type.
           </p>
-          <p> Typing when clicked into the grid will fill the focused cell with the typed character and move across the grid in the specified typing direction.
+          <p> <strong>Typing</strong> when clicked into the grid will fill the focused cell with the typed character and move across the grid in the specified typing direction.
             (Default direction is right)</p>
           <p>
-            Backspace deletes the current cell value and moves to the left.
+            <strong>Backspace</strong> deletes the current cell value and moves to the left.
             If "Delete Direction Linked To Type Direction" is true, it will move opposite the typing direction instead.
           </p>
           <p>
-            Ctrl + Backspace deletes current cell value without moving.
+            <strong>Ctrl + Backspace</strong> deletes current cell value without moving.
           </p>
           <p>
-            Arrow Keys navigate through the grid in the respective direction.
+            <strong>Arrow Keys</strong> navigate through the grid in the respective direction.
           </p>
           <p>
-            Ctrl + Arrow Keys bold the edge in the respective direction. If all edges are bolded on a given cell the
-            cell background goes black, and you cannot highlight it
+            <strong>Ctrl + Arrow Keys</strong> bold the edge in the respective direction. If all edges are bolded on a given cell the
+            cell background goes black, and you cannot highlight it.
           </p>
           <p>
-            Ctrl + Left Click will bold all edges, and black out the cell background.
+            <strong>Ctrl + Left Click</strong> will bold all edges, and black out the cell background.
           </p>
           <p>
-            Alt + left click on a blacked-out cell will turn the cell white, while keeping edges bold.
+            <strong>Alt + Left Click</strong> on a blacked-out cell will turn the cell white, while keeping edges bold.
             This also means you can highlight the cell.
           </p>
           <p>
-            Right Click will highlight the cell background to the current selected color.
-            You can unhighlight the cell by Right-Clicking Again with the same color as the cell selected.
+            <strong>Right Click</strong> will highlight the cell background to the current selected color.
+            You can unhighlight the cell by <strong>Right-Clicking</strong> Again with the same color as the cell selected.
           </p>
           <p>
-            Holding Shift And Dragging your mouse out of the current cell will highlight it.
+            <strong>Holding Shift and Dragging</strong> your mouse out of the current cell will highlight it.
             This is to highlight multiple cells at once.
           </p>
           <p>
-            The Hight Input makes the grid shorter/taller.
-            The Width Input makes the grid thinner/thicker
+            The <strong>Height Input</strong> makes the grid shorter/taller.
+            The <strong>Width Input</strong> makes the grid thinner/thicker.
           </p>
           <p>
-            The Size Input makes the cells themselves larger/smaller.
+            The <strong>Size Input</strong> makes the cells themselves larger/smaller.
           </p>
         </mat-expansion-panel>
       </mat-card>
@@ -120,7 +120,7 @@
             Cycle Typing Direction
           </button>
           <p class="status-text">Current Typing Direction:</p>
-          <p class="status-text">{{ typeDirection }}</p>
+          <p class="status-text">{{ typeDirection | uppercase }}</p>
 
         </div>
         <!-- Delete Direction Toggle -->
@@ -129,7 +129,7 @@
             Toggle Linked Delete Direction
           </button>
           <p class="status-text">Delete Direction Linked To Type Direction: </p>
-          <p class="status-text">{{ deleteDirectionBool ? 'On' : 'Off' }}</p>
+          <p class="status-text">{{ deleteDirectionBool ? 'ON' : 'OFF' }}</p>
         </div>
         @if (this.gridPackage.roomID !== null){
         <div class="control-group">
