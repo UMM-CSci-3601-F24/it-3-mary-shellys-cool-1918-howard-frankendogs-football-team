@@ -42,6 +42,33 @@
   margin-top: 5px;
 }
 
+.control-group button {
+  padding: 0.625rem 1.25rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  // border: 2px solid white;
+  border-radius: 0.25rem;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-weight: normal;
+}
+
+.control-group button:hover {
+  background-color: #0056b3;
+}
+
+.control-group .status-text {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  text-align: center;
+  font-weight: normal;
+
+}
+
 .grid-buttons {
   display: flex;
   flex-direction: column;
