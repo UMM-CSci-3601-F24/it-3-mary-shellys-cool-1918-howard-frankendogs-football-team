@@ -6,9 +6,4 @@ export interface Word {
   _id: string;
   wordGroup: string;
   word: string;
-  // length: number;
-
-  // future implementations
-  // definition: string;
-  // PartSpeech: string;
 }
