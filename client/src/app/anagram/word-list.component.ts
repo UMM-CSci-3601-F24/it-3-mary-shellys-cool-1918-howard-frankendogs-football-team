@@ -76,14 +76,14 @@ export class WordListComponent {
 
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
+  private length$ = toObservable(this.length);
   private filterType$ = toObservable(this.filterType);
   private forceUpdate$ = toObservable(this.forceUpdate);
-  private length$ = toObservable(this.length);
 
   serverFilteredContext =
     toSignal(
-      combineLatest([this.contains$, this.group$, this.filterType$, this.forceUpdate$, this.length$]).pipe(
-        switchMap(([word, wordGroup, filterType]) =>
+      combineLatest([this.contains$, this.group$, this.filterType$, this.length$, this.forceUpdate$,]).pipe(
+        switchMap(([word, wordGroup, filterType, length]) =>
           this.wordService.getWords({
             word,
             wordGroup,
@@ -105,11 +105,10 @@ export class WordListComponent {
           return of<SearchContext>();
         }),
         tap(() => {
-
         })
       )
     );
-  
+
   filteredWords = computed(() => {
     // takes list of words returned by server
     // then sends them through the client side sortWords()
