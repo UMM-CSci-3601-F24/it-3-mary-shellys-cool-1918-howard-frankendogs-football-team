@@ -152,7 +152,6 @@ public class AnagramController implements Controller {
     if ((ctx.queryParam(WORD_KEY) != null && ctx.queryParam(WORD_KEY) != "")
         || (ctx.queryParam(WORD_GROUP_KEY) != null && ctx.queryParam(WORD_GROUP_KEY) != "")) {
       searchCollection.insertOne(newSearch);
-      System.err.println("search added to db with params: " + combinedFilter.toString());
     }
     // return filter to be applied to db in getWords()
     return combinedFilter;
