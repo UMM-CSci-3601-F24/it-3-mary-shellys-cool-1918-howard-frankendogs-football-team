@@ -138,10 +138,10 @@ export class WordListComponent {
    * returns list of searches given by server
    */
   searchHistory = computed(() => {
-    return this.serverFilteredContext().searches
-      .slice(
-        this.searchesPageNumber()*this.searchesPageSize(),
-        Math.min((this.searchesPageNumber() + 1)*this.searchesPageSize(), this.getNumSearches()));
+    const indexFirstSearch = this.searchesPageNumber()*this.searchesPageSize()
+    return this.serverFilteredContext()
+      .searches
+      .slice(indexFirstSearch, Math.min((indexFirstSearch + this.searchesPageSize()), this.getNumSearches()));
   })
   /**
    * For use by search history links
@@ -149,12 +149,14 @@ export class WordListComponent {
    * @param contains
    * @param wordGroup
    */
-  updateParams(contains?: string, wordGroup?: string ) {
+  updateParams(contains?: string, wordGroup?: string , filterType?: string) {
     if(contains){
       this.contains.set(contains);
     } else this.contains.set(null);
     if(wordGroup) {
       this.group.set(wordGroup);
+    } if(filterType) {
+      this.filterType.set(filterType);
     } else this.group.set(null);
   }
 
