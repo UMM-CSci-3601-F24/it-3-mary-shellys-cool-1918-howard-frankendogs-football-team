@@ -5,6 +5,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.regex;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,13 +86,18 @@ public class AnagramController implements Controller {
         .find(combinedFilter)
         .sort(sortingOrder)
         .into(new ArrayList<>());
-    ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
+    Bson antiChronological = Sorts.descending("timeStamp");
+    ArrayList<Search> searches = searchCollection
+      .find()
+      .sort(antiChronological)
+      .into(new ArrayList<>());
     // turn array lists into SearchContext and return
     SearchContext results = new SearchContext(matchingWords, searches);
     ctx.json(results);
     ctx.status(HttpStatus.OK);
   }
-
+  // this is a specialty method that does not log a search into the history
+  // this is used in word group profile pages
   public void getWordsByWordGroup(Context ctx) {
     String wordGroup = ctx.pathParam("wordGroup");
     System.out.println(wordGroup);
@@ -129,7 +135,6 @@ public class AnagramController implements Controller {
         // Because . are wildcards, replaces underscores with periods
         Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); // makes a pattern
         filters.add(regex(WORD_KEY, pattern)); // adds a regex with
-        newSearch.setContains(ctx.queryParam(WORD_KEY));
       } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
         for (char c : searchedWord.toCharArray()) {
           charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
@@ -141,6 +146,8 @@ public class AnagramController implements Controller {
           filters.add(regex("word", Pattern.compile(regexPattern)));
         }
       }
+      newSearch.setFilterType(filterType);
+      newSearch.setContains(ctx.queryParam(WORD_KEY));
     }
     // if searching by word group will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
@@ -148,7 +155,7 @@ public class AnagramController implements Controller {
       filters.add(regex(WORD_GROUP_KEY, pattern));
       newSearch.setWordGroup(ctx.queryParam(WORD_GROUP_KEY));
     }
-
+    // search by length
     if (ctx.queryParamMap().containsKey(LENGTH_KEY)) {
       int targetLength = ctx.queryParamAsClass(LENGTH_KEY, Integer.class)
       .check(it -> it > 0, "Word length must be greater than zero; you provided " + ctx.queryParam(LENGTH_KEY)).get();
@@ -161,6 +168,7 @@ public class AnagramController implements Controller {
     // log search into database
     if ((ctx.queryParam(WORD_KEY) != null && ctx.queryParam(WORD_KEY) != "")
         || (ctx.queryParam(WORD_GROUP_KEY) != null && ctx.queryParam(WORD_GROUP_KEY) != "")) {
+      newSearch.setTimeStamp(new Date());
       searchCollection.insertOne(newSearch);
     }
 
