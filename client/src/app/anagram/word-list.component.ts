@@ -75,12 +75,16 @@ export class WordListComponent {
       this.loadWordGroups();
   }
 
+  // Observables
   private contains$ = toObservable(this.contains);
   private group$ = toObservable(this.group);
   private length$ = toObservable(this.length);
   private filterType$ = toObservable(this.filterType);
   private forceUpdate$ = toObservable(this.forceUpdate);
 
+  /**
+   * Takes observables and passes them to wordService to get the matching words from the server
+   */
   serverFilteredContext =
     toSignal(
       combineLatest([this.contains$, this.group$, this.filterType$, this.length$, this.forceUpdate$,]).pipe(
@@ -112,7 +116,7 @@ export class WordListComponent {
 
   filteredWords = computed(() => {
     // takes list of words returned by server
-    // then sends them through the client side sortWords()
+    // then sends them through sortWords() in the word service
     const serverFilteredWords = this.serverFilteredContext().words;
     const sortedWords = this.wordService.sortWords(serverFilteredWords, {
       sortType: this.sortType(),
@@ -128,6 +132,7 @@ export class WordListComponent {
     this.sortOrder();
     this.sortByWordOrGroup();
     this.forceUpdate();
+    // pagination
     return this.filteredWords()
       .slice(
         this.wordsPageNumber()*this.wordsPageSize(),
@@ -136,6 +141,7 @@ export class WordListComponent {
 
   /**
    * returns list of searches given by server
+   * applies pagination
    */
   searchHistory = computed(() => {
     return this.serverFilteredContext().searches
@@ -191,7 +197,7 @@ export class WordListComponent {
 
   /**
    * Deletes all words in the wordGroup
-   * pulls group from the wordGroup search box as of 10/20/24
+   * As of 12/8/24 this is getting the group to be deleted by the word group filter parameter box
    * @param group - name of wordGroup to be deleted
    */
   deleteWordGroup(group: string) {
@@ -201,6 +207,11 @@ export class WordListComponent {
     });
   }
 
+  /**
+   * Handles page events for pagination
+   * @param $event if the page number or size was changes
+   * @param source which pagination control panel the event came from
+   */
   handlePageEvent($event: PageEvent, source: string) {
     if (source == "word list paginator") {
       this.wordsPageNumber.set($event.pageIndex);
@@ -219,7 +230,7 @@ export class WordListComponent {
     return this.serverFilteredContext().words.length
   });
 
-  // gets the number of searches that match current params
+  // gets the number of searches in the search history
   getNumSearches = computed(() => {
     if (this.serverFilteredContext().searches === undefined) {
       return 0;
@@ -227,6 +238,8 @@ export class WordListComponent {
     return this.serverFilteredContext().searches.length
   });
 
+  // Simple max function used for search history
+  // This call to this function is removed in unimplemented branch `searchHistory`
   max(arg0: number,arg1: number): number {
     if (arg0 >= arg1){
       return arg0;

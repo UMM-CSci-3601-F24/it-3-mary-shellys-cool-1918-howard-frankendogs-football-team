@@ -15,7 +15,7 @@ export class WebSocketService {
     `${environment.wsURl} ` check the environment to see what URL to build with
     if the project is not building successfully use the urls bellow:
     the local url is: `ws://localhost:4567/api/websocket`
-    the production url is: `wss://138.197.75.137.nip.io/api/websocket`
+    the production url is: `wss://[your droplet ip address].nip.io/api/websocket`
     */
     this.socket$ = new WebSocketSubject(`${environment.wsURL}`);
     this.socket$.subscribe(
