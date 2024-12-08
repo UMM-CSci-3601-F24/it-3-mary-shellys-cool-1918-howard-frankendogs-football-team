@@ -10,6 +10,8 @@
   - [Updating the server or client code](#updating-the-server-or-client-code)
 - [Additional Docker Compose commands](#additional-docker-compose-commands)
 - [Using a custom domain](#using-a-custom-domain)
+- [Quick Guide](#quick-guide)
+- [Run locally](#run-locally)
 
 ## Summary
 
@@ -18,8 +20,9 @@ to be used as a tool for deploying simple web applications. This is by no means 
 comprehensive guide, and you are encouraged to reach out to classmates, faculty, and
 TAs (through Slack, for example) with questions.
 
-Most of this will happen in a terminal window, which is yet another reason to take
-some time to learn how to use the Unix shell.
+This project can be run locally or through Digital Ocean. This guide is focused on Digital Ocean deployment.
+For a quick guide for how to run the project locally, jump to the ["run locally"](#run-locally) section at the bottom of this guide.
+For a more in depth guide on running the project locally look [here](DEVELOPMENT.md).
 
 ### Some terminology
 
@@ -133,3 +136,32 @@ There are many more commands and options for `docker-compose`. They are all docu
 
 If you have purchased a domain for your project and would like to use it, set its
 DNS `A record` to the IP of your droplet. Stop and remove your containers with `docker-compose down` and then you can use `nano` or similar to edit the `.env` file and change `APP_HOST` to the domain you wish to use. After that use `docker-compose up -d` to start it up again.
+
+## Quick Guide
+
+Updating the droplet for people familiar with Digital Ocean
+
+1. in terminal ssh into droplet, sign in
+2. cd into repo
+3. git pull or switch branches
+4. `docker-compose down --rmi all`
+5. `docker-compose up --build -d`
+
+## Run locally
+
+This is a shortened version of the guide found [here](DEVELOPMENT.md)
+
+If this is the first time you are running this project do these two initial steps before continuing;
+
+1. in a new terminal run `npm install`
+2. Set up the database by opening a new terminal and running `cd database` and doing one of the following:
+   1. if you are on Mac, then run `mongoseed.sh`.
+   2. If on a windows computer, then run `mongoseed.bat`
+
+If this is not the first time you have run this program locally, or you have finished tje above steps, do the following:
+
+1. in a new terminal run `cd server`
+2. run `./gradlew run`
+3. In a new terminal run `cd client`
+4. run `ng serve`
+5. Open a browser to <http://localhost:4200/>
