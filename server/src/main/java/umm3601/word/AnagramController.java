@@ -1,8 +1,12 @@
 package umm3601.word;
+import umm3601.Controller;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.regex;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Sorts;
+import com.mongodb.client.result.DeleteResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,19 +19,13 @@ import org.bson.Document;
 import org.bson.UuidRepresentation;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
-
 import org.mongojack.JacksonMongoCollection;
-
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Sorts;
-import com.mongodb.client.result.DeleteResult;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
-import umm3601.Controller;
 
 public class AnagramController implements Controller {
 
@@ -35,8 +33,8 @@ public class AnagramController implements Controller {
   private static final String API_WORD_BY_ID = "/api/anagram/{id}";
   private static final String API_WORD_GROUPS = "/api/anagram/{wordGroup}";
   private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/wordGroup/{wordGroup}";
-  // might need to be: "/api/anagram/wordGroups/{id}"
-  private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history";
+  // private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history"; // Tied to methods used to debug search history
+
   static final String WORD_KEY = "word";
   static final String LENGTH_KEY = "length";
   static final String WORD_GROUP_KEY = "wordGroup";
@@ -59,6 +57,10 @@ public class AnagramController implements Controller {
         UuidRepresentation.STANDARD);
   }
 
+  /**
+   * Gets one word by id from the database
+   * @param ctx, context from server containing id of target word
+   */
   public void getWord(Context ctx) {
     String id = ctx.pathParam("id");
     Word word;
@@ -76,6 +78,12 @@ public class AnagramController implements Controller {
     }
   }
 
+  /**
+   * Gets words and search history from the database
+   * Logs the request in the search history
+   * @param ctx
+   * @return A search context (made of words and search history)
+   */
   public void getWords(Context ctx) {
     Bson combinedFilter = constructFilter(ctx);
     Bson sortingOrder = constructSortingOrder(ctx);
@@ -92,6 +100,7 @@ public class AnagramController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
+  // gets words by word group, but does not log the search into the search history
   public void getWordsByWordGroup(Context ctx) {
     String wordGroup = ctx.pathParam("wordGroup");
     System.out.println(wordGroup);
@@ -104,6 +113,7 @@ public class AnagramController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
+  // gets all unique word groups of words in the database
   public void getWordGroups(Context ctx) {
     ArrayList<String> wordGroups = wordCollection
         // want to find all of the word groups across the words and to add
@@ -129,7 +139,7 @@ public class AnagramController implements Controller {
         // Because . are wildcards, replaces underscores with periods
         Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); // makes a pattern
         filters.add(regex(WORD_KEY, pattern)); // adds a regex with
-        newSearch.setContains(ctx.queryParam(WORD_KEY));
+        newSearch.setContains(ctx.queryParam(WORD_KEY)); // logs search into search history, changed in `search history` branch
       } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
         for (char c : searchedWord.toCharArray()) {
           charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
@@ -148,20 +158,20 @@ public class AnagramController implements Controller {
       filters.add(regex(WORD_GROUP_KEY, pattern));
       newSearch.setWordGroup(ctx.queryParam(WORD_GROUP_KEY));
     }
-
+    // if searching by word length will enter this loop
     if (ctx.queryParamMap().containsKey(LENGTH_KEY)) {
       int targetLength = ctx.queryParamAsClass(LENGTH_KEY, Integer.class)
       .check(it -> it > 0, "Word length must be greater than zero; you provided " + ctx.queryParam(LENGTH_KEY)).get();
+      // the client disconnects from the server before it gets to this check as of 12/8/24
       Document query = new Document("$where", "this." + WORD_KEY + ".length == " + targetLength);
-      // Document query = new Document(WORD_KEY, new Document("$strLenCP", targetLength));
       filters.add(query);
     }
 
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
-    // log search into database
+
     if ((ctx.queryParam(WORD_KEY) != null && ctx.queryParam(WORD_KEY) != "")
         || (ctx.queryParam(WORD_GROUP_KEY) != null && ctx.queryParam(WORD_GROUP_KEY) != "")) {
-      searchCollection.insertOne(newSearch);
+      searchCollection.insertOne(newSearch); // log search into database
     }
 
     // return filter to be applied to db in getWords()
@@ -170,6 +180,7 @@ public class AnagramController implements Controller {
 
   // used for debugging setting up db, might be used again for debugging limiting
   // saved searches
+  // might also be used when tying search history to a room
   // public void getSearches(Context ctx) {
   // ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
   // ctx.json(searches);
