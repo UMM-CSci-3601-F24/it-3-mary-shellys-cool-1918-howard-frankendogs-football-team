@@ -8,8 +8,8 @@
         >
       </mat-card-header>
       <mat-card-content>
-        <!-- Filtering is done in Mongo/server side -->
         <div class="flex-row gap-8 flex-wrap">
+          <!-- "Contains" text entry box -->
           <mat-form-field class="input-field">
             <mat-label>Input letters</mat-label>
             <input
@@ -19,7 +19,7 @@
               [(ngModel)]="contains"
             />
           </mat-form-field>
-
+          <!-- Word group text entry box -->
           <mat-form-field class="input-field">
             <mat-label>Word Group</mat-label>
             <input
@@ -29,12 +29,20 @@
               [(ngModel)]="group"
             />
           </mat-form-field>
+          <!-- Input length (filtering) Number entry box -->
           <mat-form-field class="imput-field">
             <mat-label>Input length</mat-label>
-            <input matInput data-test="wordLengthInput" type="number" placeholder="Filter by length" [(ngModel)]="length">
+            <input
+              matInput
+              data-test="wordLengthInput"
+              type="number"
+              placeholder="Filter by length"
+              [(ngModel)]="length"
+            />
           </mat-form-field>
         </div>
         <div>
+          <!-- Filter type radio buttons -->
           <label for="filterType">Filter Type</label>
           <mat-radio-group
             [(ngModel)]="filterType"
@@ -45,7 +53,7 @@
             <mat-radio-button value="contains">Contains</mat-radio-button>
           </mat-radio-group>
         </div>
-        <!-- Sorting is done on the client -->
+        <!-- Sort type dropdown -->
         <mat-form-field class="input-field">
           <mat-label>Sort</mat-label>
           <mat-select [(ngModel)]="sortType" data-test="sortTypeSelect">
@@ -54,6 +62,7 @@
             <mat-option value="length">Length</mat-option>
           </mat-select>
         </mat-form-field>
+        <!-- Sort type radio button {word, wordGroup}-->
         <div>
           <label for="sortOrder">Sort Order</label>
           <mat-radio-group
@@ -64,6 +73,7 @@
             <mat-radio-button checked value="word">word</mat-radio-button>
             <mat-radio-button value="wordGroup">wordGroup</mat-radio-button>
           </mat-radio-group>
+          <!-- Sort order toggle {low to high, high to low} -->
           <p>
             <mat-slide-toggle
               class="sortOrder"
@@ -75,6 +85,7 @@
             </mat-slide-toggle>
           </p>
         </div>
+        <!-- Add new word group button -->
         <button
           mat-fab
           class="add-word-fab"
@@ -85,27 +96,31 @@
         >
           <mat-icon class="md-24" aria-label="Add Word Group">add</mat-icon>
         </button>
+        <!-- Delete word group button -->
         <button
-        mat-fab
-        class="delete-wordGroup-fab"
-        matTooltip="Delete Word Group"
-        matTooltipPosition="right"
-        (click)="deleteWordGroup(group())"
-        routerLink="/anagram"
-        data-test="deleteWordGroupButton"
-      >
-        <mat-icon class="md-24" aria-label="Delete Word Group">delete</mat-icon>
-      </button>
+          mat-fab
+          class="delete-wordGroup-fab"
+          matTooltip="Delete Word Group"
+          matTooltipPosition="right"
+          (click)="deleteWordGroup(group())"
+          routerLink="/anagram"
+          data-test="deleteWordGroupButton"
+        >
+          <mat-icon class="md-24" aria-label="Delete Word Group"
+            >delete</mat-icon
+          >
+        </button>
       </mat-card-content>
     </mat-card>
   </div>
-  <!-- Word List Links -->
+  <!-- Word Group Links -->
   <div class="flex-row column right">
     <mat-card>
       <mat-card-header>Word Lists</mat-card-header>
-      <mat-card-subtitle style="visibility: hidden"
+      <!-- This was from we were thinking of having word groups belong to rooms -->
+      <!-- <mat-card-subtitle style="visibility: hidden"
         >Groups from room :
-      </mat-card-subtitle>
+      </mat-card-subtitle> -->
       <mat-card-content>
         @for (group of this.wordGroups; track group) {
         <div>
@@ -169,15 +184,16 @@
           }
         </mat-card-content>
         <mat-card-actions>
+          <!-- pagination -->
           <mat-paginator
-          [length]="getNumWords()"
-          [pageSize]="25"
-          [pageSizeOptions]="[5, 10, 25, 100]"
-          (page)="handlePageEvent($event, 'word list paginator')"
-          aria-label="Select page"
-          data-test="word-list-mat-paginator"
-        >
-        </mat-paginator>
+            [length]="getNumWords()"
+            [pageSize]="25"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            (page)="handlePageEvent($event, 'word list paginator')"
+            aria-label="Select page"
+            data-test="word-list-mat-paginator"
+          >
+          </mat-paginator>
         </mat-card-actions>
       </mat-card>
     </div>
@@ -209,32 +225,36 @@
             } @for(search of searchHistory().slice(max(searchHistory().length -
             40, 0),searchHistory().length).reverse(); track search._id) {
             <div class="anagram-list-item">
-              <button (click)="updateParams(search.contains, search.wordGroup)" class="search-history-button">
+              <button
+                (click)="updateParams(search.contains, search.wordGroup)"
+                class="search-history-button"
+              >
                 @if(search.contains !== null){
-                  <span matListItemLine class="anagram-search-history-contains"
-                    >Contains: "{{ search.contains }}"</span
-                  >
-                  } @if(search.wordGroup !== null){
-                  <span matListItemLine class="anagram-search-history-wordGroup"
-                    >From word group: "{{ search.wordGroup }}"</span
-                  >
-                  }
-                </button>
+                <span matListItemLine class="anagram-search-history-contains"
+                  >Contains: "{{ search.contains }}"</span
+                >
+                } @if(search.wordGroup !== null){
+                <span matListItemLine class="anagram-search-history-wordGroup"
+                  >From word group: "{{ search.wordGroup }}"</span
+                >
+                }
+              </button>
               <br />
             </div>
             }
           </mat-list>
         </mat-card-content>
         <mat-card-actions>
+          <!-- Pagination -->
           <mat-paginator
-          [length]="getNumSearches()"
-          [pageSize]="25"
-          [pageSizeOptions]="[5, 10, 25, 100]"
-          (page)="handlePageEvent($event, 'search history paginator')"
-          aria-label="Select page"
-          data-test="search-history-mat-paginator"
-        >
-        </mat-paginator>
+            [length]="getNumSearches()"
+            [pageSize]="25"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            (page)="handlePageEvent($event, 'search history paginator')"
+            aria-label="Select page"
+            data-test="search-history-mat-paginator"
+          >
+          </mat-paginator>
         </mat-card-actions>
       </mat-card>
     </div>
