@@ -1,84 +1,20 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/82Q09jAd)
-# CSCI 3601 Iteration Template <!-- omit in toc -->
+# YIPEEEE-Tool <!-- omit in toc -->
 
-- [Development](#development)
-  - [Common commands](#common-commands)
-- [Deployment](#deployment)
-- [Resources](#resources)
-- [Changing the name](#changing-the-name)
-- [Contributors](#contributors)
+- [Summary](#summary)
+- [Features-Anagram](#features-anagram)
+- [Features-Grid](#features-grid)
 
-Josie, El, Owen, Iteration 2, fall 2024 
+## Summary
 
-This is your starter code for Iteration 1.
+YIPEEEEE-Tool is a tool designed to help in solving online puzzles. We have a Anagram Solver that you can give search parameters so you get a small handful of words back. It also allows you to import your own custom words if we don't have all of the words you need already. We also have the ability to create "rooms" that you can share with your friends. These rooms contain grids that are customizable for your puzzling needs. these grids update in real time so working with groups of any size is easy!
 
-There is quite a lot of example code in this production template that you don't
-want or need down the road, but is included to help you get started.
-As you work on your project, you should replace these pieces with
-elements of your project and _remove whatever you don't need_ (e.g., markdown
-files, JSON data files, or any remnants of the labs). We include, for example,
-the `User` parts of the previous labs. These are almost certainly not relevant
-to your project and should be removed once you've started.
+## Features-Anagram
 
-:bangbang: Keeping things like the support for our `User` types will
-artificially inflate your test coverage results, making it look like you have
-much better coverage than you actually do. This is neither cool nor helpful,
-so you really should remove our code fairly early in your iteration.
+The anagram solver has base 10k words in it, and if need be you can import your own words. You are able to add these words to custom word groups, and you can sort by individual words or word groups. You can filter to find words while only knowing a few letters, if you have the word sell, you can use s__l, and the _'s mean that it is looking for words that have the letter s first, and l fourth. <!-- Brain bad expalin ts someone else beef it up :(>
 
-:exclamation: You should remove this sentence and the text above, and
-replace them with at least an elevator pitch description of your project so that
-if someone comes to this repo they'll know what the project is about.
+## Features-Grid
 
-## [Development](DEVELOPMENT.md)
-
-Instructions on setting up the development environment and working with the code are in [the development guide](DEVELOPMENT.md).
-
-### Common commands
-
-From the `server` directory:
-
-- `./gradlew run` to start the server
-- `./gradlew test` to test the server
-- `./gradlew checkstyleMain` to run Checkstyle on the server Java code in the `src/main` folder
-- `./gradlew checkstyleTest` to run Checkstyle on the server Java code in the `src/test` folder
-- `./gradlew check` will run the tests, run the Checkstyle checks, and generate coverage reports in one command
-
-From the `client` directory:
-
-- `ng serve` to run the client
-- `ng test` to test the client
-  - Or `ng test --no-watch --code-coverage` to run the client tests once and
-    also compute the code coverage.
-- `ng e2e` and `ng e2e --watch` to run end-to-end tests
-
-From the `database` directory:
-
-- `./mongoseed.sh` (or `.\mongoseed.bat` on Windows) to seed the database
-
-## [Deployment](DEPLOYMENT.md)
-
-Instructions on how to create a DigitalOcean Droplet and setup your project are in [the deployment guide](DEPLOYMENT.md).
-
-## [Resources](RESOURCES.md)
-
-Additional resources on tooling and techniques are in [the resources list](RESOURCES.md).
-
-## Changing the name
-
-The project by default has the name "CSCI 3601 Iteration Template". There are a few places you need to change to make this the name you want:
-
-- The title in this README.md
-- [`client/src/app/app.component.ts`](client/src/app/app.component.ts)
-  - The `title` variable
-  - Also the associated unit and E2E tests will need to be changed.
-- [`client/src/app/app.component.html`](client/src/app/app.component.html)
-  - The `mat-toolbar` element for the navigation drawer is just "Client" by default.
-- [`client/src/index.html`](client/src/index.html)
-  - The `title` element
-
-You can go ahead and remove this section of the README once you have changed the name.
-
-## Contributors
+ Our grids are located in rooms that you can share a link with friends to get access too. these grids update in real time so multiple people can edit them at once. These grids are higly coustomisable as you can make them as small/large as you need. the grids can also be uneven. You can bold the edges of cells to stop yourself from typing through them, and if all four edges are bolded, the cell itself goes black. You can also highlight cells to show that some sections are done or sompthing along those lines. 
 
 The contributors to this project can be seen [here](../../graphs/contributors).
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
@@ -96,4 +32,4 @@ The contributors to this project can be seen [here](../../graphs/contributors).
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+ALL-CONTRIBUTORS-LIST:END
