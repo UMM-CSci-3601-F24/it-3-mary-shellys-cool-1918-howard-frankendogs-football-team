@@ -33,7 +33,8 @@ public class AnagramController implements Controller {
   private static final String API_WORD_BY_ID = "/api/anagram/{id}";
   private static final String API_WORD_GROUPS = "/api/anagram/{wordGroup}";
   private static final String API_WORDS_BY_WORDGROUP = "/api/anagram/wordGroup/{wordGroup}";
-  // private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history"; // Tied to methods used to debug search history
+  // private static final String API_WORDS_SEARCH_HISTORY = "/api/anagram/history";
+  // API_WORDS_SEARCH HISTORY is tied to methods used to debug search history
 
   static final String WORD_KEY = "word";
   static final String LENGTH_KEY = "length";
@@ -139,7 +140,8 @@ public class AnagramController implements Controller {
         // Because . are wildcards, replaces underscores with periods
         Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); // makes a pattern
         filters.add(regex(WORD_KEY, pattern)); // adds a regex with
-        newSearch.setContains(ctx.queryParam(WORD_KEY)); // logs search into search history, changed in `search history` branch
+        newSearch.setContains(ctx.queryParam(WORD_KEY)); // logs search into search history,
+        // above line is changed in `search history` branch
       } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
         for (char c : searchedWord.toCharArray()) {
           charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);

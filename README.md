@@ -1,20 +1,22 @@
 # YIPEEEE-Tool <!-- omit in toc -->
 
 - [Summary](#summary)
-- [Features-Anagram](#features-anagram)
-- [Features-Grid](#features-grid)
+- [The Anagram](#the-anagram)
+- [Grids](#grids)
 
 ## Summary
 
-YIPEEEEE-Tool is a tool designed to help in solving online puzzles. We have a Anagram Solver that you can give search parameters so you get a small handful of words back. It also allows you to import your own custom words if we don't have all of the words you need already. We also have the ability to create "rooms" that you can share with your friends. These rooms contain grids that are customizable for your puzzling needs. these grids update in real time so working with groups of any size is easy!
+YIPEEEEE-Tool is a tool designed to help in solving online puzzles. We have a Anagram Solver that you can give search parameters so you get a small handful of words back. It also allows you to import your own custom words if we don't have all of the words you need already. We also have the ability to create "rooms" that you can share with your friends. These rooms contain grids that are customizable for your puzzling needs. These grids update in real time so working with groups of any size is easy!
 
-## Features-Anagram
+## The Anagram
 
-The anagram solver has base 10k words in it, and if need be you can import your own words. You are able to add these words to custom word groups, and you can sort by individual words or word groups. You can filter to find words while only knowing a few letters, if you have the word sell, you can use s__l, and the _'s mean that it is looking for words that have the letter s first, and l fourth. <!-- Brain bad expalin ts someone else beef it up :(>
+The anagram comes with a default set of 10k words. if you want more words in the database you can import your own words by pressing the plus button bellow the search parameters box. Words you add will be part of a word group, which is something you can search by. The anagram supports searching for words where you do not know all of the letters. You can do this by entering underscores "_" where unknown letters are in the filter by contents box when filtering by "exact". For example, if you have the word sell, you can use s__l, to looking for words that contain an "s" followed by two letters then a "l".
 
-## Features-Grid
+## Grids
 
- Our grids are located in rooms that you can share a link with friends to get access too. these grids update in real time so multiple people can edit them at once. These grids are higly coustomisable as you can make them as small/large as you need. the grids can also be uneven. You can bold the edges of cells to stop yourself from typing through them, and if all four edges are bolded, the cell itself goes black. You can also highlight cells to show that some sections are done or sompthing along those lines. 
+ On opening our application you will have the option to work with an un-savable grid. This allows you to get a feel for the controls without making or entering a room.
+
+ To save or access previously saved grids create a new room on the home page or have someone in a room share a link. Once inside of a grid if multiple people are looking a the same grid then the grid will update in real time so multiple people can edit it at once. These grids are highly customizable as you can make them as small/large as you need. The grids can also be uneven. You can bold the edges of cells. When bolded these edges act as barriers to stop yourself from typing through them. If all four edges of a cell are bolded, the cell itself goes black. You can also highlight cells to show that some sections are done or something along those lines.
 
 The contributors to this project can be seen [here](../../graphs/contributors).
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
