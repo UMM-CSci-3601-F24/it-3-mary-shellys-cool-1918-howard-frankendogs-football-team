@@ -60,7 +60,7 @@ public class AnagramController implements Controller {
 
   /**
    * Gets one word by id from the database
-   * @param ctx, context from server containing id of target word
+   * @param ctx context from server containing id of target word
    */
   public void getWord(Context ctx) {
     String id = ctx.pathParam("id");

@@ -82,7 +82,7 @@ public class GridController implements Controller {
 
   /**
    * Gets all grids belonging to the room
-   * @param ctx, context containing the room id
+   * @param ctx context containing the room id
    */
   public void getGridsByRoom(Context ctx) {
     System.out.println("entered getGridsByRoom() in grid controller.java");
@@ -96,7 +96,7 @@ public class GridController implements Controller {
 
   /**
    * Deletes one grid by id
-   * @param ctx, context from client, containing id of grid to delete
+   * @param ctx context from client, containing id of grid to delete
    */
   public void deleteGrid(Context ctx) {
     String id = ctx.pathParam("id");
