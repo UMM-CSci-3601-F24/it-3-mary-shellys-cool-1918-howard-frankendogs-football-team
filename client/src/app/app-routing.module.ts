@@ -8,10 +8,6 @@ import { RoomGridsComponent } from './grid/room-grids.component';
 import { WordGroupProfileComponent } from './anagram/word-group-profile.component';
 import { AboutComponent } from './about/about.component';
 
-
-// Note that the 'users/new' route needs to come before 'users/:id'.
-// If 'users/:id' came first, it would accidentally catch requests to
-// 'users/new'; the router would just think that the string 'new' is a user ID.
 const routes: Routes = [
   {path: '', component: HomeComponent, title: 'Home'},
   {path: ':roomID/grids', component: RoomGridsComponent, title: 'Room Grids'},

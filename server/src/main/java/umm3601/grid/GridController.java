@@ -1,6 +1,5 @@
 package umm3601.grid;
-
-import static com.mongodb.client.model.Filters.eq;
+import umm3601.Controller;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,13 +12,13 @@ import org.mongojack.JacksonMongoCollection;
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
+import static com.mongodb.client.model.Filters.eq;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
-import umm3601.Controller;
 
 public class GridController implements Controller {
 
@@ -47,6 +46,7 @@ public class GridController implements Controller {
     grid.lastSaved = new Date();
 
     if (grid._id != null) {
+      // if the grid already has an ID, write over the copy in the server
       gridCollection.replaceOneById(grid._id, grid);
     } else {
       gridCollection.insertOne(grid);
@@ -61,17 +61,18 @@ public class GridController implements Controller {
 
     try {
       grid = gridCollection.find(eq("_id", new ObjectId(id))).first();
-      } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       throw new BadRequestResponse("The requested grid id wasn't a legal Mongo Object ID");
-      }
-      if (grid == null) {
+    }
+    if (grid == null) {
       throw new NotFoundResponse("The requested grid was not found");
-      } else {
+    } else {
       ctx.json(grid);
       ctx.status(HttpStatus.OK);
     }
   }
 
+  // returns all grids in the database
   public void getGrids(Context ctx) {
     ArrayList<Grid> gridsList = gridCollection
         .find().into(new ArrayList<>());
@@ -79,6 +80,10 @@ public class GridController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
+  /**
+   * Gets all grids belonging to the room
+   * @param ctx context containing the room id
+   */
   public void getGridsByRoom(Context ctx) {
     System.out.println("entered getGridsByRoom() in grid controller.java");
     String roomID = ctx.pathParam("roomID");
@@ -89,7 +94,11 @@ public class GridController implements Controller {
     ctx.status(HttpStatus.OK);
   }
 
-   public void deleteGrid(Context ctx) {
+  /**
+   * Deletes one grid by id
+   * @param ctx context from client, containing id of grid to delete
+   */
+  public void deleteGrid(Context ctx) {
     String id = ctx.pathParam("id");
     ObjectId objectId;
 
