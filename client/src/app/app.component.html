@@ -2,20 +2,16 @@
   <mat-sidenav #drawer class="sidenav" fixedInViewport [autoFocus]="false">
     <mat-toolbar>Client</mat-toolbar>
     <mat-nav-list class="sidenav-list" role="navigation">
-
-      <!-- Side navigation links -->
-
+      <!-- Vertical navigation side bar links -->
       <a mat-list-item routerLink="/" routerLinkActive="drawer-list-item-active"
         #routerLinkActiveInstance="routerLinkActive" [routerLinkActiveOptions]="{exact: true}" (click)="drawer.close()">
         <mat-icon matListItemIcon>home</mat-icon>
         Home
       </a>
-
       <a mat-list-item routerLink="/grid" routerLinkActive="drawer-list-item-active" (click)="drawer.close()">
         <mat-icon matListItemIcon>border_all</mat-icon>
         Grid
       </a>
-
       <a mat-list-item routerLink="/anagram" routerLinkActive="drawer-list-item-active" (click)="drawer.close()">
         <mat-icon matListItemIcon>hdr_auto</mat-icon>
         Anagram Generator

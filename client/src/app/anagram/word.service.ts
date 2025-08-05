@@ -18,6 +18,11 @@ export class WordService {
 
   constructor(private httpClient: HttpClient) { }
 
+  /**
+   * Gets words with params applied and search history from server
+   * @param filters {word, wordGroup, filter type(word or word group), length}
+   * @returns Search Context (from server, made of words and search history)
+   */
   getWords(filters?: { word?: string; wordGroup?: string; filterType?: string; length?: number }): Observable<SearchContext> {
 
     let httpParams: HttpParams = new HttpParams();

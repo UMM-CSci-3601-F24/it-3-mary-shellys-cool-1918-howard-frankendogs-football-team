@@ -13,6 +13,7 @@ export class RoomService {
 
   constructor(private http: HttpClient) { }
 
+  // this is not a valid route server side
   getRooms(): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrl);
   }
@@ -21,19 +22,26 @@ export class RoomService {
     return this.http.post<string>(this.apiUrl, { name: room });
   }
 
-  // getRoom(roomID: string) {
-  //   return this.http.post<string>(this.apiUrl, { _id: roomID });
-  // }
+  /**
+   * Get information of a room, buu room id
+   * @param roomId
+   * @returns the room (composed of the room name and ID)
+   */
+  getRoomById(roomId: string): Observable<Room> {
+    return this.http.get<Room>(`${this.apiUrl}/${roomId}`);
+  }
 
+  /**
+   * Return grids belonging to a specific room
+   * @param roomId room the user is in
+   * @returns all grids that belong to the room
+   */
   getGridsByRoomId(roomId: string): Observable<GridPackage[]> {
     return this.http.get<GridPackage[]>(`/api/${roomId}/grids`);
   }
 
+  // gets all unique word groups from words in server
   getWordGroups(): Observable<string[]> {
     return this.http.get<string[]>(`/api/anagram/wordGroups`);
-  }
-
-  getRoomById(roomId: string): Observable<Room> {
-    return this.http.get<Room>(`${this.apiUrl}/${roomId}`);
   }
 }
