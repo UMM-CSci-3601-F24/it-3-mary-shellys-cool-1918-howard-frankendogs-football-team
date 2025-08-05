@@ -144,24 +144,30 @@ export class WordListComponent {
    * applies pagination
    */
   searchHistory = computed(() => {
-    return this.serverFilteredContext().searches
-      .slice(
-        this.searchesPageNumber()*this.searchesPageSize(),
-        Math.min((this.searchesPageNumber() + 1)*this.searchesPageSize(), this.getNumSearches()));
+    const indexFirstSearch = this.searchesPageNumber()*this.searchesPageSize()
+    return this.serverFilteredContext()
+      .searches
+      .slice(indexFirstSearch, Math.min((indexFirstSearch + this.searchesPageSize()), this.getNumSearches()));
   })
   /**
    * For use by search history links
    * updates active params and by proxy gets new words
    * @param contains
    * @param wordGroup
+   * @param filterType
    */
-  updateParams(contains?: string, wordGroup?: string ) {
+  updateParams(contains?: string, wordGroup?: string, filterType?: string) {
     if(contains){
       this.contains.set(contains);
     } else this.contains.set(null);
+
     if(wordGroup) {
       this.group.set(wordGroup);
     } else this.group.set(null);
+
+    if(filterType) {
+      this.filterType.set(filterType);
+    } else this.filterType.set("exact");
   }
 
   // returns all word group names as a string[]

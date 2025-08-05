@@ -137,22 +137,26 @@ describe('support functions', () => {
   it('update params() should update params from undefined to new params', () => {
     expect(wordList.contains()).toBe('');
     expect(wordList.group()).toBe(undefined);
-    wordList.updateParams("hehe", "haha");
+    expect(wordList.filterType()).toBe("exact"); // has a default value of "exact"
+    wordList.updateParams("hehe", "haha","contains");
     expect(wordList.contains()).toBe("hehe");
     expect(wordList.group()).toBe("haha");
+    expect(wordList.filterType()).toBe("contains");
   });
 
   it('updateParams() can clear params', () => {
     //tests updateParams when pass (null, null)
-    wordList.updateParams("contains", "group");
-    wordList.updateParams(null, null);
-    expect(wordList.contains()).toBeNull();
+    wordList.updateParams("contains letters", "group name", "contains");
+    wordList.updateParams(null, null, null);
+    expect(wordList.contains()).toBe(null);
     expect(wordList.group()).toBe(null);
+    expect(wordList.filterType()).toEqual("exact");
     //tests updateParams when pass no params
-    wordList.updateParams("contains", "group");
+    wordList.updateParams("contains", "group", "contains");
     wordList.updateParams();
     expect(wordList.contains()).toBe(null);
     expect(wordList.group()).toBe(null);
+    expect(wordList.filterType()).toEqual("exact");
   });
 
   it('updateParams() handles updating one params', () => {
@@ -163,14 +167,23 @@ describe('support functions', () => {
     expect(wordList.group()).toBeNull();
     //tests passing in just a contains param in different format
     wordList.updateParams("contains", "group");
-    wordList.updateParams("contains2", null);
+    wordList.updateParams("contains2", null, null);
     expect(wordList.contains()).toBe("contains2");
     expect(wordList.group()).toBeNull();
+     expect(wordList.filterType()).toEqual("exact")
     //tests passing in just a wordGroup param
     wordList.updateParams("contains", "group");
-    wordList.updateParams(null, "group1");
+    wordList.updateParams(null, "group1", null);
     expect(wordList.contains()).toBeNull();
     expect(wordList.group()).toBe("group1");
+     expect(wordList.filterType()).toEqual("exact")
+    // testing passing in just a filterType param
+    // this would never actually be used
+    wordList.updateParams("contains","group","exact");
+    wordList.updateParams(null,null,"contains")
+    expect(wordList.contains()).toBeNull()
+    expect(wordList.group()).toBeNull()
+    expect(wordList.filterType()).toEqual("contains")
   });
 })
 

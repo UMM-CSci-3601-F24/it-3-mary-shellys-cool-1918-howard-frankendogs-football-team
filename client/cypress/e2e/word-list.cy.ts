@@ -38,8 +38,15 @@ describe('Anagram Solver', () => {
   it('should make a search and show search in search history', () => {
     cy.get('[data-test=wordGroupInput]').type('2005',{ force: true });
     cy.get('[data-test=wordContainsInput]').type('year',{ force: true });
-    cy.get('.anagram-search-history-contains').first().should('include.text', 'year');
+    cy.get('.anagram-search-history-contains').first().should('include.text', 'Contains: "year" by: exact');
     cy.get('.anagram-search-history-wordGroup').first().should('include.text', '2005');
+  });
+
+  it ('Should select a search from search history and apply search', () => {
+    page.getAnagramSearchHistory().first().click();
+    cy.get('[data-test=wordGroupInput]').should("have.value", "2005");
+    cy.get('[data-test=wordContainsInput]').should("have.value", "year");
+    cy.get('input[type="radio"][value="exact"]').check({force: true}).should('be.checked');
   });
 
   it('should click add word group and go to right url', () => {

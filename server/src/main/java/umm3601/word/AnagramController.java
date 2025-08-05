@@ -9,6 +9,7 @@ import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.DeleteResult;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,14 +95,18 @@ public class AnagramController implements Controller {
         .find(combinedFilter)
         .sort(sortingOrder)
         .into(new ArrayList<>());
-    ArrayList<Search> searches = searchCollection.find().into(new ArrayList<>());
+    Bson antiChronological = Sorts.descending("timeStamp");
+    ArrayList<Search> searches = searchCollection
+      .find()
+      .sort(antiChronological)
+      .into(new ArrayList<>());
     // turn array lists into SearchContext and return
     SearchContext results = new SearchContext(matchingWords, searches);
     ctx.json(results);
     ctx.status(HttpStatus.OK);
   }
-
-  // gets words by word group, but does not log the search into the search history
+  // this is a specialty method that does not log a search into the history
+  // this is used in word group profile pages
   public void getWordsByWordGroup(Context ctx) {
     String wordGroup = ctx.pathParam("wordGroup");
     System.out.println(wordGroup);
@@ -140,8 +145,6 @@ public class AnagramController implements Controller {
         // Because . are wildcards, replaces underscores with periods
         Pattern pattern = Pattern.compile(exactWord, Pattern.CASE_INSENSITIVE); // makes a pattern
         filters.add(regex(WORD_KEY, pattern)); // adds a regex with
-        newSearch.setContains(ctx.queryParam(WORD_KEY)); // logs search into search history,
-        // above line is changed in `search history` branch
       } else if ("contains".equals(filterType) && ctx.queryParamMap().containsKey(WORD_KEY)) {
         for (char c : searchedWord.toCharArray()) {
           charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
@@ -153,6 +156,8 @@ public class AnagramController implements Controller {
           filters.add(regex("word", Pattern.compile(regexPattern)));
         }
       }
+      newSearch.setFilterType(filterType);
+      newSearch.setContains(ctx.queryParam(WORD_KEY));
     }
     // if searching by word group will enter this loop
     if (ctx.queryParamMap().containsKey(WORD_GROUP_KEY)) {
@@ -173,7 +178,8 @@ public class AnagramController implements Controller {
 
     if ((ctx.queryParam(WORD_KEY) != null && ctx.queryParam(WORD_KEY) != "")
         || (ctx.queryParam(WORD_GROUP_KEY) != null && ctx.queryParam(WORD_GROUP_KEY) != "")) {
-      searchCollection.insertOne(newSearch); // log search into database
+      newSearch.setTimeStamp(new Date());
+      searchCollection.insertOne(newSearch);
     }
 
     // return filter to be applied to db in getWords()

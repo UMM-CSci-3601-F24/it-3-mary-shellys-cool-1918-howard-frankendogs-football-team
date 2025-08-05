@@ -222,16 +222,23 @@
           <mat-list class="anagram-nav-list-history">
             @if(searchHistory().length === 0){
             <p>No Saved Searches</p>
-            } @for(search of searchHistory().slice(max(searchHistory().length -
-            40, 0),searchHistory().length).reverse(); track search._id) {
+            } @for(search of searchHistory().reverse(); track search._id) {
             <div class="anagram-list-item">
               <button
-                (click)="updateParams(search.contains, search.wordGroup)"
+                (click)="
+                  updateParams(
+                    search.contains,
+                    search.wordGroup,
+                    search.filterType
+                  )
+                "
                 class="search-history-button"
               >
-                @if(search.contains !== null){
+                @if(search.filterType !== null && search.contains !== null){
                 <span matListItemLine class="anagram-search-history-contains"
-                  >Contains: "{{ search.contains }}"</span
+                  >Contains: "{{ search.contains }}" by: {{
+                    search.filterType
+                  }}</span
                 >
                 } @if(search.wordGroup !== null){
                 <span matListItemLine class="anagram-search-history-wordGroup"
@@ -248,7 +255,7 @@
           <!-- Pagination -->
           <mat-paginator
             [length]="getNumSearches()"
-            [pageSize]="25"
+            [pageSize]="10"
             [pageSizeOptions]="[5, 10, 25, 100]"
             (page)="handlePageEvent($event, 'search history paginator')"
             aria-label="Select page"
