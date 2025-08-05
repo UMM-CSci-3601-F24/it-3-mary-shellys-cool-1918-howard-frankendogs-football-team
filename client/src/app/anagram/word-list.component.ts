@@ -154,16 +154,20 @@ export class WordListComponent {
    * updates active params and by proxy gets new words
    * @param contains
    * @param wordGroup
+   * @param filterType
    */
-  updateParams(contains?: string, wordGroup?: string , filterType?: string) {
+  updateParams(contains?: string, wordGroup?: string, filterType?: string) {
     if(contains){
       this.contains.set(contains);
     } else this.contains.set(null);
+
     if(wordGroup) {
       this.group.set(wordGroup);
-    } if(filterType) {
-      this.filterType.set(filterType);
     } else this.group.set(null);
+
+    if(filterType) {
+      this.filterType.set(filterType);
+    } else this.filterType.set("exact");
   }
 
   // returns all word group names as a string[]

@@ -63,17 +63,23 @@ export class MockWordService extends WordService {
     {
       _id: "sigma_id",
       contains: null,
-      wordGroup: "Laugh"
+      wordGroup: "Laugh",
+      timeStamp: new Date("2024-12-06T00:36:20.660Z"),
+      filterType: "contains"
     },
     {
       _id: "alhpa_id",
       contains: "Haha",
-      wordGroup: "Laugh"
+      wordGroup: "Laugh",
+      timeStamp: new Date("2024-13-06T00:36:20.660Z"),
+      filterType: "contains"
     },
     {
       _id: "theskibidizer_id",
       contains: "hehe",
-      wordGroup: null
+      wordGroup: null,
+      timeStamp: new Date("2024-14-06T00:36:20.660Z"),
+      filterType: "exact"
     }
   ]
 
@@ -90,7 +96,7 @@ export class MockWordService extends WordService {
   getWordsByWordGroup(wordGroup: string): Observable<Word[]> {
     return of(MockWordService.wordsInGroup);
   }
-  
+
   deleteWord(id: string): Observable<void> {
     const temp: Word[] = [];
     for (let i = 0; i < this.testWords.length; i++){
